@@ -1,0 +1,17 @@
+source 'https://github.com/CocoaPods/Specs'
+platform :ios, '7.0'
+pod 'SDWebImage'
+pod 'Reachability'
+pod 'AFNetworking'
+pod 'MBProgressHUD'
+pod 'MJExtension'
+pod 'TSMessages'
+pod 'UMengAnalytics'
+pod 'RKNotificationHub'
+pod 'MJRefresh'
+pod 'FXBlurView'
+pod "pop"
+pod 'YLGIFImage'
+pod 'MWPhotoBrowser'
+pod 'FlickerNumber'
+

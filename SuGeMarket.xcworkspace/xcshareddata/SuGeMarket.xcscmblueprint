@@ -1,0 +1,44 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "696A7211DB0473C465847A33B0F7256D05B69F9F",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "25BE05715E87067937ABBB971755D38F2350505F" : 0,
+    "27E7E273-D6EA-4E8E-A620-2DB0B708DDE6" : 0,
+    "696A7211DB0473C465847A33B0F7256D05B69F9F" : 0,
+    "097850823A5D75A7F191902A6DA19E7AECE8FAA1" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "3A2522D9-2A97-49F5-80A3-8C1B954C0067",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "25BE05715E87067937ABBB971755D38F2350505F" : "%E8%8B%8F%E6%A0%BC%E6%97%B6%E4%BB%A3",
+    "27E7E273-D6EA-4E8E-A620-2DB0B708DDE6" : "SuGeMarket-newmaster-master",
+    "696A7211DB0473C465847A33B0F7256D05B69F9F" : "sugemall_josin\/",
+    "097850823A5D75A7F191902A6DA19E7AECE8FAA1" : "SuGeMarket"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "SuGeMarket",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "SuGeMarket.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Josin22\/SuGeMarket.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "097850823A5D75A7F191902A6DA19E7AECE8FAA1"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/1860ios\/-.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "25BE05715E87067937ABBB971755D38F2350505F"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Josin22\/SuGeMarket.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "27E7E273-D6EA-4E8E-A620-2DB0B708DDE6"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/1860ios\/sugemall_josin.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "696A7211DB0473C465847A33B0F7256D05B69F9F"
+    }
+  ]
+}

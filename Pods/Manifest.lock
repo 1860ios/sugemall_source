@@ -1,0 +1,82 @@
+PODS:
+  - AFNetworking (2.5.3):
+    - AFNetworking/NSURLConnection (= 2.5.3)
+    - AFNetworking/NSURLSession (= 2.5.3)
+    - AFNetworking/Reachability (= 2.5.3)
+    - AFNetworking/Security (= 2.5.3)
+    - AFNetworking/Serialization (= 2.5.3)
+    - AFNetworking/UIKit (= 2.5.3)
+  - AFNetworking/NSURLConnection (2.5.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.3)
+  - AFNetworking/Security (2.5.3)
+  - AFNetworking/Serialization (2.5.3)
+  - AFNetworking/UIKit (2.5.3):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - DACircularProgress (2.3.1)
+  - FlickerNumber (0.2.1)
+  - FXBlurView (1.6.3)
+  - HexColors (2.2.1)
+  - MBProgressHUD (0.9.1)
+  - MJExtension (2.0.1)
+  - MJRefresh (1.4.6)
+  - MWPhotoBrowser (1.4.1):
+    - DACircularProgress
+    - MBProgressHUD (~> 0.8)
+    - PSTCollectionView (~> 1.2)
+    - SDWebImage (~> 3.7)
+  - pop (1.0.7)
+  - PSTCollectionView (1.2.3)
+  - Reachability (3.2)
+  - RKNotificationHub (1.0.5)
+  - SDWebImage (3.7.2):
+    - SDWebImage/Core (= 3.7.2)
+  - SDWebImage/Core (3.7.2)
+  - TSMessages (0.9.12):
+    - HexColors
+  - UMengAnalytics (3.4.6)
+  - YLGIFImage (0.11)
+
+DEPENDENCIES:
+  - AFNetworking
+  - FlickerNumber
+  - FXBlurView
+  - MBProgressHUD
+  - MJExtension
+  - MJRefresh
+  - MWPhotoBrowser
+  - pop
+  - Reachability
+  - RKNotificationHub
+  - SDWebImage
+  - TSMessages
+  - UMengAnalytics
+  - YLGIFImage
+
+SPEC CHECKSUMS:
+  AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
+  DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
+  FlickerNumber: 8174dfb1ccbdb4841c249912a911c09ca88bf715
+  FXBlurView: c6d23f3d35af2c6282296a2930f61c6e2c788d01
+  HexColors: abfd172e329dab59888614ccba6f216cec59289d
+  MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
+  MJExtension: 524b4b939199ea34dc9e822babb915238c3c9167
+  MJRefresh: 2eaa3fd8f67fbb86497840fb0167446f7eb61dc7
+  MWPhotoBrowser: 2531e682860d62b8a7ba8659de02eb9040e431e5
+  pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
+  PSTCollectionView: 6749df92885353521f55279a7ce2b293762e2be4
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  RKNotificationHub: 529ee3c92564738d3e489057968bfbc4ffd3e942
+  SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
+  TSMessages: 2a52642128d7ab15b46930c810b9c9403a2b58f3
+  UMengAnalytics: 24c06f0ea07295d2f1c093f0fe12d196fd801ea4
+  YLGIFImage: c0ae132fe80e5282b2762a97d14e23ba71a748ae
+
+COCOAPODS: 0.36.0

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>3A2522D9-2A97-49F5-80A3-8C1B954C0067</string>
+	<key>IDESourceControlProjectName</key>
+	<string>SuGeMarket</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>097850823A5D75A7F191902A6DA19E7AECE8FAA1</key>
+		<string>https://github.com/Josin22/SuGeMarket.git</string>
+		<key>25BE05715E87067937ABBB971755D38F2350505F</key>
+		<string>https://github.com/1860ios/-.git</string>
+		<key>27E7E273-D6EA-4E8E-A620-2DB0B708DDE6</key>
+		<string>https://github.com/Josin22/SuGeMarket.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>SuGeMarket.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>097850823A5D75A7F191902A6DA19E7AECE8FAA1</key>
+		<string>../../SuGeMarket</string>
+		<key>25BE05715E87067937ABBB971755D38F2350505F</key>
+		<string>..</string>
+		<key>27E7E273-D6EA-4E8E-A620-2DB0B708DDE6</key>
+		<string>../../SuGeMarket-newmaster-master</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/1860ios/-.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>25BE05715E87067937ABBB971755D38F2350505F</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>25BE05715E87067937ABBB971755D38F2350505F</string>
+			<key>IDESourceControlWCCName</key>
+			<string>%E8%8B%8F%E6%A0%BC%E6%97%B6%E4%BB%A3</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>097850823A5D75A7F191902A6DA19E7AECE8FAA1</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SuGeMarket</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>27E7E273-D6EA-4E8E-A620-2DB0B708DDE6</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SuGeMarket-newmaster-master</string>
+		</dict>
+	</array>
+</dict>
+</plist>
