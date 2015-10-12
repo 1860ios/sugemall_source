@@ -210,36 +210,9 @@ static NSString *cid =  @"cid";
                                orderSpec, signedString, @"RSA"];
 
                 [[AlipaySDK defaultService] payOrder:orderString fromScheme:appScheme callback:^(NSDictionary *resultDic) {
-//                    NSLog(@"reslut = %@",resultDic);
-//                    NSString *str1;
-//                    if ([resultDic[@"resultStatus"]isEqualToString:@"9000"]) {
-//                        LBOrderListViewController *payDoneVC = [[LBOrderListViewController alloc] init];
-//                        payDoneVC._orderStatus = @"0";
-//                        [self.navigationController pushViewController:payDoneVC animated:YES];
-//                    }else if([resultDic[@"resultStatus"]isEqualToString:@"8000"]){
-//                         str1 = @"正在处理中~";
-//                        [[[UIAlertView alloc] initWithTitle:@"提示" message:str1 delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil] show];
-//
-//                    }
-//                    else if([resultDic[@"resultStatus"]isEqualToString:@"4000"]){
-//                        str1 = @"订单支付失败~";
-//                        LBOrderListViewController *payDoneVC = [[LBOrderListViewController alloc] init];
-//                        payDoneVC._orderStatus = @"10";                        
-//                        [self.navigationController pushViewController:payDoneVC animated:YES];
-//                        
-//                    }
-//                    else if([resultDic[@"resultStatus"]isEqualToString:@"6001"]){
-////                        str1 = @"订单取消支付~";
-//                        LBOrderListViewController *payDoneVC = [[LBOrderListViewController alloc] init];
-//                        payDoneVC._orderStatus = @"10";
-//                        [self.navigationController pushViewController:payDoneVC animated:YES];
-//                        
-//                    }
-//                    else if([resultDic[@"resultStatus"]isEqualToString:@"6002"]){
-//                        str1 = @"网络连接出错~";
-//                        [[[UIAlertView alloc] initWithTitle:@"提示" message:str1 delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil] show];
-//                    }
-             
+                    HostViewController *order = [[HostViewController alloc] init]
+                    ;
+                    [self.navigationController pushViewController:order animated:YES];
                 }];
              
             }
@@ -336,7 +309,8 @@ static NSString *cid =  @"cid";
 }
 - (void)wxPayReslut:(id)sender
 {
-    HostViewController *orderlist = [[HostViewController alloc] init];                        [self.navigationController pushViewController:orderlist animated:YES];}
+    HostViewController *orderlist = [[HostViewController alloc] init];                        [self.navigationController pushViewController:orderlist animated:YES];
+}
 
 
 /*

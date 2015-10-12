@@ -129,12 +129,6 @@ static NSString *collectionView_cid = @"collectionViewcid";
     [super viewDidLoad];
     [self initDatas];
     
-//    UILabel *label1 = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 30, 20)];
-//    [label1 addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToMySetting)]];
-//    
-//    label1.text=@"设置";
-//    label1.font=FONT(14);
-//    label1.textColor=[UIColor blackColor];
     UIButton *button2=[UIButton buttonWithType:UIButtonTypeCustom];
     button2.frame=CGRectMake(0, 0, 35, 20);
     [button2 setTitle:@"设置" forState:0];
@@ -143,11 +137,6 @@ static NSString *collectionView_cid = @"collectionViewcid";
     [button2 addTarget:self action:@selector(goToMySetting) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *rightNavBarItem = [[UIBarButtonItem alloc] initWithCustomView:button2];
     self.navigationItem.rightBarButtonItem = rightNavBarItem;
-    //rightNavBar
-    //    UIImageView *image2 = [[UIImageView alloc] initWithImage:IMAGE(@"message")];
-    //    [image2 addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToMymessage)]];
-    //    UIBarButtonItem *rightNavBarItem = [[UIBarButtonItem alloc] initWithCustomView:image2];
-    //    self.navigationItem.rightBarButtonItem = rightNavBarItem;
     
     [self drawTableView];
     [self drawTableViewHeaderView];
@@ -423,19 +412,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
             buttonTitles = @[point,predepoit,favs];
         }
         
-        
-        for (int i = 0; i<3; i++) {
-            UIButton *button = (UIButton *)[self.view viewWithTag:88+i];
-            [button setTitle:[buttonTitles objectAtIndex:i] forState:0];
-        }
-        NSString *num1 =responObject[@"datas"][@"order_count"][@"order_unpay"];
-        NSString *num2 =responObject[@"datas"][@"order_count"][@"order_payed"];
-        NSString *num3 =responObject[@"datas"][@"order_count"][@"order_send"];
-        //        NSString *num4 =responObject[@"datas"][@"order_count"][@"order_sender"];
-        [hud1 setCount:[num1 intValue]];
-        [hud2 setCount:[num2 intValue]];
-        [hud3 setCount:[num3 intValue]];
-        //        [hud4 setCount:[num4 intValue]];
+       
     } failure:^(AFHTTPRequestOperation *op,NSError *error){
     }];
     //dimiss HUD
@@ -501,11 +478,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
     for (int i = 0; i<4; i++) {
         
         button1 = [UIButton buttonWithType:UIButtonTypeCustom];
-        button1.frame =CGRectMake(EACH_W(4 * i)+30, 5, 15, 15);
-        //        button1.titleLabel.textAlignment = NSTextAlignmentCenter;
-        //        [button1 setTitleColor:[UIColor whiteColor] forState:0];
-        //        [button1 setTitle:[buttonTitles objectAtIndex:i] forState:0];
-        //        button1.titleLabel.font = FONT(14);
+        button1.frame =CGRectMake(EACH_W(4 * i)+25, 0, 30, 30);
         [button1 setImage:IMAGE(orderTitles1[i]) forState:0];
         button1.tag = i+88;
         [button1 addTarget:self action:@selector(pushOtherView:) forControlEvents:UIControlEventTouchUpInside];
@@ -697,7 +670,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
 }
 - (void)pushOtherView:(UIButton *)btn
 {
-    LBMyPointViewController *point1 = [[LBMyPointViewController alloc] init];
+    HostViewController *point1 = [[HostViewController alloc] init];
     LBMyBlotterViewController *com = [[LBMyBlotterViewController alloc] init];
     LBFavoriteListViewController *fa = [[LBFavoriteListViewController alloc] init];
     LBPrefectureViewController *pre=[[LBPrefectureViewController alloc]init];
@@ -982,169 +955,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
     Recharge.hidesBottomBarWhenPushed=YES;
     [self.navigationController pushViewController:Recharge animated:YES];
 }
-#pragma mark  section
-/*- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
- {
- return titles.count;
- }
- 
- #pragma mark numberOfRowsInSection
- - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
- {
- //    return [[titles objectAtIndex:section] count];
- switch (section) {
- case 0:
- return 1;
- case 1:
- return 1;
- case 2:
- return 2;
- case 3:
- return 2;
- case 4:
- return 1;
- 
- }
- return 0;
- }
- - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
- {
- return 45;
- }
- 
- #pragma mark heightForHeaderInSection
- - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
- {
- switch (section) {
- case 0:
- return 10;
- case 1:
- return 10;
- case 2:
- return 25;
- case 3:
- return 0;
- 
- }
- return 0;
- }
- #pragma mark heightForFooterInSection
- - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
- {
- if (section == 0) {
- return 60;
- }
- if (section == 1) {
- return 35;
- }
- if (section == 2) {
- return 3;
- }
- 
- return 0;
- }
- #pragma mark cellForRowAtIndexPath
- - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
- {
- NSInteger section = indexPath.section;
- NSInteger row = indexPath.row;
- 
- //    NSString *text = [[titles objectAtIndex:section] objectAtIndex:indexPath.row];
- //    UIImage *image = [UIImage imageNamed:[[images objectAtIndex:indexPath.section] objectAtIndex:row]];
- //
- UITableViewCell *cell = nil;
- 
- if (!cell) {
- cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cid];
- if (section == 1) {
- if (row== 0) {
- }
- }else{
- cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
- }
- //平滑
- cell.layer.shouldRasterize = YES;
- cell.layer.rasterizationScale = [UIScreen mainScreen].scale;
- ////        cell.textLabel.text = text;
- ////        cell.imageView.image = image;
- //        UIImageView *imageView1 = [[UIImageView alloc] initWithFrame:CGRectMake(10, 7, 30, 30)];
- //        imageView1.image = image;
- //        [cell addSubview:imageView1];
- //        UILabel *textname = [[UILabel alloc] initWithFrame:CGRectMake(imageView1.frame.origin.x+imageView1.frame.size.width+10, imageView1.frame.origin.y, 100, 30)];
- //        textname.text = text;
- //        textname.font = FONT(17);
- //        [cell addSubview:textname];
- }
- return cell;
- 
- }
- 
- #pragma mark didSelectRowAtIndexPath
- - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
- {
- [tableView deselectRowAtIndexPath:indexPath animated:YES];
- 
- HostViewController *orderlist = [[HostViewController alloc] init];
- orderlist.hidesBottomBarWhenPushed = YES;
- LBFeedbackViewController *feedback = [[LBFeedbackViewController alloc] init];
- feedback.hidesBottomBarWhenPushed = YES;
- LBMyRefereeViewController *myRefereeVC = [[LBMyRefereeViewController alloc]init];
- myRefereeVC.hidesBottomBarWhenPushed = YES;
- LBMyQRCodeViewController *myQRCodeVC = [[LBMyQRCodeViewController alloc]init];
- myQRCodeVC.hidesBottomBarWhenPushed = YES;
- LBMySettingViewController *setting = [[LBMySettingViewController alloc] init];
- setting.hidesBottomBarWhenPushed = YES;
- BOOL isLognIn = [[LBUserInfo sharedUserSingleton] isLogin];
- if (isLognIn) {
- 
- NSInteger section = indexPath.section;
- NSInteger row = indexPath.row;
- 
- if (section == 0) {
- switch (row) {
- case 0:
- //                    orderlist._orderStatus = @"0";
- [self.navigationController pushViewController:orderlist animated:YES];
- break;
- 
- }
- } else  if(section == 1){
- switch (row) {
- case 0:
- 
- break;
- 
- }
- }else if (section == 2){
- switch (row) {
- case 0:
- [self.navigationController pushViewController:myQRCodeVC animated:YES];                    break;
- case 1:
- [self.navigationController pushViewController:myRefereeVC animated:YES];
- break;
- 
- }
- }
- else if (section == 3){
- switch (row) {
- case 0:
- [self.navigationController pushViewController:setting
- animated:YES];
- break;
- case 1:
- [self.navigationController pushViewController:feedback
- animated:YES];
- break;
- 
- }
- }
- 
- }else{
- [self goSigin];
- }
- 
- 
- }*/
+
 
 
 #pragma mark  进入注册界面
