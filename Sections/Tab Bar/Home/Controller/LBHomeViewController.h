@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface LBHomeViewController : UIViewController
--(void)refrshUI;
+//-(void)refrshUI;
 @end

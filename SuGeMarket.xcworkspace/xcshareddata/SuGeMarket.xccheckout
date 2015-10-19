@@ -16,6 +16,8 @@
 		<string>https://github.com/1860ios/-.git</string>
 		<key>27E7E273-D6EA-4E8E-A620-2DB0B708DDE6</key>
 		<string>https://github.com/Josin22/SuGeMarket.git</string>
+		<key>FD471B0826F27F73BF67FD40E91BC0949ED5CF76</key>
+		<string>https://github.com/1860ios/sugemall_josin.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>SuGeMarket.xcworkspace</string>
@@ -24,16 +26,18 @@
 		<key>097850823A5D75A7F191902A6DA19E7AECE8FAA1</key>
 		<string>../../SuGeMarket</string>
 		<key>25BE05715E87067937ABBB971755D38F2350505F</key>
-		<string>..</string>
+		<string>../../%E8%8B%8F%E6%A0%BC%E6%97%B6%E4%BB%A3</string>
 		<key>27E7E273-D6EA-4E8E-A620-2DB0B708DDE6</key>
 		<string>../../SuGeMarket-newmaster-master</string>
+		<key>FD471B0826F27F73BF67FD40E91BC0949ED5CF76</key>
+		<string>..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/1860ios/-.git</string>
+	<string>https://github.com/1860ios/sugemall_josin.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>25BE05715E87067937ABBB971755D38F2350505F</string>
+	<string>FD471B0826F27F73BF67FD40E91BC0949ED5CF76</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
@@ -43,6 +47,14 @@
 			<string>25BE05715E87067937ABBB971755D38F2350505F</string>
 			<key>IDESourceControlWCCName</key>
 			<string>%E8%8B%8F%E6%A0%BC%E6%97%B6%E4%BB%A3</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>FD471B0826F27F73BF67FD40E91BC0949ED5CF76</string>
+			<key>IDESourceControlWCCName</key>
+			<string>sugemall_josin</string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>

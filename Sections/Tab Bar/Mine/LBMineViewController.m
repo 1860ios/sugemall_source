@@ -127,7 +127,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self initDatas];
+
     
     UIButton *button2=[UIButton buttonWithType:UIButtonTypeCustom];
     button2.frame=CGRectMake(0, 0, 35, 20);
@@ -405,6 +405,8 @@ static NSString *collectionView_cid = @"collectionViewcid";
             levelIcon.image = IMAGE(@"bojin_top");
         }else if ([vip_consume isEqualToString:@"3000"]){
             levelIcon.image = IMAGE(@"zuanshi");
+        }else {
+            levelIcon.image = IMAGE(@"normol_icon");
         }
         if (predepoit == nil) {
             buttonTitles = @[point,@"0",@"0"];
@@ -417,14 +419,6 @@ static NSString *collectionView_cid = @"collectionViewcid";
     }];
     //dimiss HUD
     [SVProgressHUD dismiss];
-    
-}
-
-- (void)initDatas
-{
-    
-    titles = @[@[@"全部订单"],@[@"我的钱包"],@[@"我的二维码",@"我的客户",],@[@"个人设置",@"帮助与反馈"]];
-    images = @[@[@"suge_personel_waitpay_order"],@[@"my_shop"],@[@"mine_qcode",@"mine_customer"],@[@"mine_setting",@"suge_discuss"]];
     
 }
 
@@ -544,11 +538,11 @@ static NSString *collectionView_cid = @"collectionViewcid";
     [headerView addSubview:inviterLabel];
     //inviterLabel.hidden = YES;
     
-    caifuImageView=[[UIImageView alloc]initWithFrame:CGRectMake(20,View1.frame.origin.y+View1.frame.size.height+20,25, 25)];
+    caifuImageView=[[UIImageView alloc]initWithFrame:CGRectMake(20,View1.frame.origin.y+View1.frame.size.height+30,30, 30)];
     caifuImageView.image=IMAGE(@"caifu_01");
     [headerView addSubview:caifuImageView];
     
-    caifuLabel=[[UILabel alloc]initWithFrame:CGRectMake(caifuImageView.frame.origin.x+caifuImageView.frame.size.width+10,caifuImageView.frame.origin.y,40,25)];
+    caifuLabel=[[UILabel alloc]initWithFrame:CGRectMake(caifuImageView.frame.origin.x+caifuImageView.frame.size.width+10,caifuImageView.frame.origin.y,40,30)];
     caifuLabel.text=@"财富";
     caifuLabel.font=FONT(15);
     [headerView addSubview:caifuLabel];
@@ -611,7 +605,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cid];
         cell.selectionStyle=UITableViewCellSelectionStyleNone;
     }
-    centerLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, 10, 60, 20)];
+    centerLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, 18, 60, 20)];
     centerLabel.text=@"账户中心";
     centerLabel.font=FONT(12);
     centerLabel.textColor=[UIColor lightGrayColor];
@@ -662,7 +656,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return SCREEN_HEIGHT-headerView.frame.size.height;
+    return SCREEN_HEIGHT-headerView.frame.size.height-60;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -726,7 +720,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
         [(UIView *)[cell.contentView.subviews lastObject] removeFromSuperview];
     }
     NSArray *array=@[@"yinhangka_01",@"renqi_01",@"youhuiquan_01",@"xiaoxi_01",@"anquan_01",@"dizhi_01",@"erweima_01",@"yijian_01",@"suge_01"];
-    NSArray *array1=@[@"银行卡",@"我的人气",@"优惠劵",@"我的消息",@"安全设置",@"收货地址",@"我的二维码",@"意见反馈",@"关于苏格"];
+    NSArray *array1=@[@"银行卡",@"我的人气",@"优惠劵",@"我的消息",@"安全设置",@"收货地址",@"二维码",@"意见反馈",@"关于苏格"];
     
     UIImageView *cardImageView=[[UIImageView alloc]initWithFrame:CGRectMake(10, 40, SCREEN_WIDTH/4-30-30, SCREEN_WIDTH/4-30-30)];
     cardImageView.image=IMAGE([array objectAtIndex:indexPath.row]);
@@ -761,75 +755,63 @@ static NSString *collectionView_cid = @"collectionViewcid";
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     BOOL isLogin = [LBUserInfo sharedUserSingleton].isLogin;
-
+    if (isLogin) {
     switch (indexPath.row) {
         case 0:
-            if (isLogin) {
+        {
                 LBBankViewController *bank = [[LBBankViewController alloc] init];
                 bank.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:bank animated:YES];
-            }else{
-                [self goSigin];
-            }
+        }
             break;
         case 1:
-
-            if (isLogin) {
+        {
                 LBMyRefereeViewController *MyReferee = [[LBMyRefereeViewController alloc] init];
                 MyReferee.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:MyReferee animated:YES];
-            }else{
-                [self goSigin];
-            }
+        }
             break;
         case 2:
-            if (isLogin) {
+        {
                 LBVoucherHostViewController *VoucherHost = [[LBVoucherHostViewController alloc] init];
                 VoucherHost.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:VoucherHost animated:YES];
-            }else{
-                [self goSigin];
-            }
+        }
             break;
         case 3:
-            if (isLogin) {
+        {
                 LBMyMessageViewController *Message = [[LBMyMessageViewController alloc] init];
                 Message.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:Message animated:YES];
-            }else{
-                [self goSigin];
-            }
+        }
             break;
         case 4:
-            if (isLogin) {
+        {
                 LBSafeViewController *Safe = [[LBSafeViewController alloc] init];
                 Safe.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:Safe animated:YES];
-            }else{
-                [self goSigin];
-            }
+        }
             break;
         case 5:
-            if (isLogin) {
+        {
                 LBMyAddressViewController *Address = [[LBMyAddressViewController alloc] init];
                 Address.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:Address animated:YES];
-            }else{
-                [self goSigin];
-            }
+        }
             break;
         case 6:
-            if (isLogin) {
+        {
                 LBMyQRCodeViewController *QRCode = [[LBMyQRCodeViewController alloc] init];
                 QRCode.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:QRCode animated:YES];
-            }else{
-                [self goSigin];
-            }
+        }
             break;
             
         default:
             break;
+    }
+    }else{
+        [self goSigin];
     }
 
 }

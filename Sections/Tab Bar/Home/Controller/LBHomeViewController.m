@@ -34,18 +34,18 @@
 #import "LBVoucherHostViewController.h"
 #import "MJRefresh.h"
 #import "LBMyMessageViewController.h"
+#import "LBHttpTool.h"
 
 static NSString *collectionView_cid = @"collectionViewcid";
 
 @interface LBHomeViewController ()<
-                                UITableViewDelegate,
-                                UITableViewDataSource,
                                 UIScrollViewDelegate,
                                 UITextFieldDelegate,
                                 UICollectionViewDelegateFlowLayout,
                                 UICollectionViewDataSource,
                                 UICollectionViewDelegate>
 {
+
     int timeCount;
     UIView *headerView;
     MBProgressHUD *HUD;
@@ -75,9 +75,9 @@ static NSString *collectionView_cid = @"collectionViewcid";
     NSMutableArray *home2Array;
     NSMutableArray *home2TypeArray;
     NSMutableArray *home2DataArray;
+
 }
 
-@property (nonatomic, strong) UITableView *_tableView;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UIScrollView *_scrollView;
 @property (nonatomic, strong) UIPageControl *_pageControl;
@@ -91,7 +91,9 @@ static NSString *collectionView_cid = @"collectionViewcid";
     [super viewDidLoad];
     
     [NOTIFICATION_CENTER addObserver:self selector:@selector(pushView:) name:@"tuisongxiaoxi" object:nil];
-    [self initArrayDatas];
+    [self loadCollectionView];
+    [self requestHomeDatas];
+     /*
     //初始化tableView
     [self loadNavBar];
     [self initTableView];
@@ -99,15 +101,45 @@ static NSString *collectionView_cid = @"collectionViewcid";
     [self initCollectionView];
     [self setUpCollectionViewRefresh];
     [self loadHomeData];
+    */
 }
 
-- (void)initArrayDatas
+#pragma mark HTTP request
+- (void)requestHomeDatas
 {
-    ArrayHome1Datas = [NSMutableArray array];
-    ArrayHome1Type = [NSMutableArray array];
-    ArrayHome1ImageUrl = [NSMutableArray array];
+    NSDictionary *para = @{@"type":@"json"};
+    [LBHttpTool getWirhUrl:SUGE_HOME parms:para success:^(id json){
+        NSLog(@"homedatas:%@",json);
+        NSMutableArray *datas = json[@"datas"];
+        for (NSDictionary *dic in datas) {
+            NSArray *keysArray = [dic allKeys];
+            NSString *keysString = keysArray[0];
+            if ([keysString isEqualToString:@"adv_list"]) {
+                model = [LBAdvListModel objectWithKeyValues:dic[@"adv_list"]];
+            }else if([keysString isEqualToString:@"home1"]){
+                home1ImageUrl = dic[@"home1"][@"image"];
+                home1Datas = dic[@"home1"][@"data"];
+                home1Type = dic[@"home1"][@"type"];
+                [ArrayHome1ImageUrl addObject:home1ImageUrl];
+                [ArrayHome1Type addObject:home1Type];
+                [ArrayHome1Datas addObject:home1Datas];
+                //                NSLog(@"home1ImageUrl:%@ \n home1Datas:%@ \n, home1Type:%@ \n",home1ImageUrl,home1Datas,home1Type);
+            }else if([keysString isEqualToString:@"home2"]){
+                home2Array = dic[@"home2"];
+            }else if([keysString isEqualToString:@"goods"]){
+                goodsArray = dic[@"goods"][@"item"];
+            }
+            NSLog(@"keysArray:%@",keysArray[0]);
+        }
+        [self.collectionView reloadData];
+
+    }failture:^(id error){
+        
+    }];
+    
 }
 
+#pragma mark not
 - (void)pushView:(NSNotification *)not
 {
     NSString *type =  [[not userInfo] valueForKey:@"type"];
@@ -118,6 +150,76 @@ static NSString *collectionView_cid = @"collectionViewcid";
     }
     
 }
+#pragma mark collectionview
+- (void)loadCollectionView
+{
+    //初始化
+    UICollectionViewFlowLayout *flowLayout=[[UICollectionViewFlowLayout alloc] init];
+    
+    self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0,0,SCREEN_WIDTH,SCREEN_HEIGHT)collectionViewLayout:flowLayout];
+    //注册
+    [self.collectionView registerClass:[LBHomeViewCell class]forCellWithReuseIdentifier:collectionView_cid];
+    //设置代理
+    self.collectionView.delegate = self;
+    self.collectionView.dataSource = self;
+    self.collectionView.scrollEnabled  =YES;
+    self.collectionView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:self.collectionView];
+}
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return goodsArray.count;
+}
+-(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    LBHomeViewCell * cell= [collectionView dequeueReusableCellWithReuseIdentifier:collectionView_cid forIndexPath :indexPath];
+    cell.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    cell.layer.borderWidth = 0.5f;
+    
+    //    while ([cell.contentView.subviews lastObject]) {
+    //        [(UIView *)[cell.contentView.subviews lastObject] removeFromSuperview];
+    //    }
+    NSInteger  row = indexPath.row;
+    singleGood = goodsArray[row];
+    [cell.goodsImageView sd_setImageWithURL:singleGood[@"goods_image"] placeholderImage:nil];
+    cell.goodsName.text = singleGood[@"goods_name"];
+    cell.goodsPrice.text = [NSString stringWithFormat:@"促销价:￥%@",singleGood[@"goods_promotion_price"]];
+    
+    return cell;
+}
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(SCREEN_WIDTH/2-10,SCREEN_WIDTH/2+40);
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+{
+    return UIEdgeInsetsMake(0, 2, 0, 2 );
+}
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSInteger row = indexPath.row;
+    LBGoodsDetailViewController *detailVC = [[LBGoodsDetailViewController alloc] init];
+//    singleGood = goodsArray[row];
+//    detailVC.hidesBottomBarWhenPushed = YES;
+//    detailVC._goodsID = singleGood[@"goods_id"];
+    [self.navigationController pushViewController:detailVC animated:YES];
+}
+
+/*
+- (void)initArrayDatas
+{
+    ArrayHome1Datas = [NSMutableArray array];
+    ArrayHome1Type = [NSMutableArray array];
+    ArrayHome1ImageUrl = [NSMutableArray array];
+}
+
+
 
 - (void)setUpCollectionViewRefresh
 {
@@ -136,17 +238,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
 
 - (void)initCollectionView
 {
-    //初始化
-    UICollectionViewFlowLayout *flowLayout=[[UICollectionViewFlowLayout alloc] init];
-
-    self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0,0,SCREEN_WIDTH,SCREEN_HEIGHT-49-63-65)collectionViewLayout:flowLayout];
-    //注册
-    [self.collectionView registerClass:[LBHomeViewCell class]forCellWithReuseIdentifier:collectionView_cid];
-    //设置代理
-    self.collectionView.delegate = self;
-    self.collectionView.dataSource = self;
-    self.collectionView.scrollEnabled  =YES;
-    self.collectionView.backgroundColor = [UIColor whiteColor];
+ 
 }
 
 - (void)loadNavBar
@@ -286,50 +378,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
 }
 
 
--(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
-    return 1;
-}
--(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
-    return goodsArray.count;
-}
--(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
 
-    LBHomeViewCell * cell= [collectionView dequeueReusableCellWithReuseIdentifier:collectionView_cid forIndexPath :indexPath];
-    cell.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    cell.layer.borderWidth = 0.5f;
-    
-//    while ([cell.contentView.subviews lastObject]) {
-//        [(UIView *)[cell.contentView.subviews lastObject] removeFromSuperview];
-//    }
-    NSInteger  row = indexPath.row;
-    singleGood = goodsArray[row];
-    [cell.goodsImageView sd_setImageWithURL:singleGood[@"goods_image"] placeholderImage:nil];
-    cell.goodsName.text = singleGood[@"goods_name"];
-    cell.goodsPrice.text = [NSString stringWithFormat:@"促销价:￥%@",singleGood[@"goods_promotion_price"]];
-    
-    return cell;
-}
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    return CGSizeMake(SCREEN_WIDTH/2-10,SCREEN_WIDTH/2+40);
-}
-
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
-{
-    return UIEdgeInsetsMake(0, 2, 0, 2 );
-}
--(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSInteger row = indexPath.row;
-    LBGoodsDetailViewController *detailVC = [[LBGoodsDetailViewController alloc] init];
-    singleGood = goodsArray[row];
-    detailVC.hidesBottomBarWhenPushed = YES;
-    detailVC._goodsID = singleGood[@"goods_id"];
-    [self.navigationController pushViewController:detailVC animated:YES];
-}
 
 
 //---------------------------------滚动视图-------------------------------------------
@@ -362,7 +411,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
 //积分_佣金_会员_代金券
 - (void)home1
 {
-    /**/
+
     NSArray *home1Button = @[@"icon_index_commison",@"icon_index_member",@"icon_index_points",@"icon_index_voucher"];
     NSArray *home1Title = @[@"佣金",@"会员",@"积分",@"代金券"];
     for (int i = 0; i < 4; i++) {
@@ -457,7 +506,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
     modelLine3.backgroundColor = [UIColor lightGrayColor];
     modelLine3.alpha  =0.5;
     [headerView addSubview:modelLine3];
-     */
+     
     //
     home2DataArray = [[NSMutableArray alloc] initWithObjects:[home2Array valueForKey:@"square_data"],[home2Array valueForKey:@"rectangle1_data"],[home2Array valueForKey:@"rectangle2_data"], nil];
     home2TypeArray = [[NSMutableArray alloc] initWithObjects:[home2Array valueForKey:@"square_type"],[home2Array valueForKey:@"rectangle1_type"],[home2Array valueForKey:@"rectangle2_type"], nil];
@@ -648,5 +697,5 @@ static NSString *collectionView_cid = @"collectionViewcid";
     [super viewWillDisappear:animated];
     [MobClick endLogPageView:@"首页"];
 }
-
+*/
 @end

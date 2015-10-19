@@ -11,6 +11,8 @@
 #import "LBUserInfo.h"
 #import "SUGE_API.h"
 #import <AFNetworking.h>
+#import <UILabel+FlickerNumber.h>
+
 static NSString *collectionCell=@"collectionCell";
 @interface LBWeathViewController ()<UICollectionViewDataSource,UICollectionViewDelegate>
 {
@@ -55,8 +57,10 @@ static NSString *collectionCell=@"collectionCell";
         num4=weathDictionary[@"rc"][@"available"];
         num5=weathDictionary[@"predepoit"][@"p0"];
         numArray=@[num1,num2,num3,num4,num5,@"0.00"];
-        numLabel.text=weathDictionary[@"sum"];
+        NSString *numString = weathDictionary[@"sum"];
+//        numLabel.text = numString;
         numLabel1.text=weathDictionary[@"predepoit"][@"available"];
+        [numLabel dd_setNumber:[NSNumber numberWithDouble:[numString doubleValue]] duration:2];
         [weathCollectionView reloadData];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         
@@ -118,7 +122,7 @@ static NSString *collectionCell=@"collectionCell";
     [self.view addSubview:weathCollectionView];
     
     UIButton *tixianButton=[UIButton buttonWithType:UIButtonTypeCustom];
-    tixianButton.frame=CGRectMake(10, weathCollectionView.frame.origin.y+weathCollectionView.frame.size.height+10, SCREEN_WIDTH-20, 40);
+    tixianButton.frame=CGRectMake(10, weathCollectionView.frame.origin.y+weathCollectionView.frame.size.height+10, SCREEN_WIDTH-20, 50);
     [tixianButton setImage:IMAGE(@"yue") forState:0];
     [self.view addSubview:tixianButton];
 
