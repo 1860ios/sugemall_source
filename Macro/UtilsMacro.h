@@ -19,6 +19,9 @@
 //tag值
 #define TEXTFEILD_TAG    100
 
+#define QIANGGOU_TAG    1929
+
+#define ZHUANTI_TAG    298
 
 #define PICKERVIEW_TAG    2002
 

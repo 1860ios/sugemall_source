@@ -9,6 +9,9 @@
 #ifndef SuGeMarket_NotificationMacro_h
 #define SuGeMarket_NotificationMacro_h
 
+#define SUGE_GUANGGAO @"SUGE_GUANGGAO"
+#define SUGE_ZHUANTI @"SUGE_ZHUANTI"
+
 #define SUGE_GET_AVASTAR  @"SUGEGETAVASTAR" //普通登录
 #define SUGEGETAVASTAR_THREE  @"SUGEGETAVASTAR_THREE"   //第三方登录头像
 #define SUGE_EDIT_ADDRESS  @"SUGE_EDIT_ADDRESS"

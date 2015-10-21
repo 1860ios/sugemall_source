@@ -15,4 +15,5 @@
 @property (nonatomic) UILabel *goodsPrice;
 //@property (nonatomic,strong) UIButton *buyButton;
 
+- (void)addValueForCell:(NSDictionary *)value;
 @end

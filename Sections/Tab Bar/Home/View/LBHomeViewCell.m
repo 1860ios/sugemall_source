@@ -8,16 +8,8 @@
 
 #import "LBHomeViewCell.h"
 #import "UtilsMacro.h"
+#import <UIImageView+WebCache.h>
 
-
-//- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-//{
-//    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-//    if (self) {
-//        [self loadHomeViewCell];
-//    }
-//    return self;
-//}
 @implementation LBHomeViewCell
 @synthesize goodsImageView;
 @synthesize goodsName;
@@ -58,7 +50,12 @@
     [self addSubview:goodsPrice];
     
 }
-
+- (void)addValueForCell:(NSDictionary *)value
+{
+    [goodsImageView sd_setImageWithURL:value[@"goods_image"] placeholderImage:nil];
+    goodsName.text = value[@"goods_name"];
+    goodsPrice.text = [NSString stringWithFormat:@"促销价:￥%@",value[@"goods_promotion_price"]];
+}
 
 
 @end

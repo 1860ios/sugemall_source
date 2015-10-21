@@ -13,7 +13,6 @@
 #import "LBClassifyViewContrtoller.h"
 #import "LBShoppingCarViewController.h"
 #import "LBMineViewController.h"
-#import "YBButton.h"
 #import "RKNotificationHub.h"
 #import "AppMacro.h"
 #import "NotificationMacro.h"

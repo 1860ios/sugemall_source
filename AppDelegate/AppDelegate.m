@@ -84,7 +84,7 @@
     [imageV addSubview:getVcodeButton];
     skipButton = [UIButton buttonWithType:UIButtonTypeCustom];
     skipButton.frame = CGRectMake(SCREEN_WIDTH-80, SCREEN_HEIGHT-60, 80, 40);
-    [skipButton setTitleColor:[UIColor blackColor] forState:0];
+    [skipButton setTitleColor:APP_COLOR forState:0];
     [skipButton setTitle:@"跳过 >>" forState:0];
     [skipButton addTarget:self action:@selector(skipAction) forControlEvents:UIControlEventTouchUpInside];
     skipButton.userInteractionEnabled = YES;

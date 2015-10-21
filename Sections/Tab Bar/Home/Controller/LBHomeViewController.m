@@ -34,9 +34,34 @@
 #import "LBVoucherHostViewController.h"
 #import "MJRefresh.h"
 #import "LBMyMessageViewController.h"
-#import "LBHttpTool.h"
+#import "LBBaseMethod.h"
+#import "RecipeCollectionReusableView.h"
+#import "MZTimerLabel.h"
+#import "NotificationMacro.h"
 
+@implementation UIButton (FillColor)
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor forState:(UIControlState)state {
+    [self setBackgroundImage:[UIButton imageWithColor:backgroundColor] forState:state];
+}
+
++ (UIImage *)imageWithColor:(UIColor *)color {
+    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
+@end
 static NSString *collectionView_cid = @"collectionViewcid";
+static NSString *collectionView_header_cid = @"HeaderView";
 
 @interface LBHomeViewController ()<
                                 UIScrollViewDelegate,
@@ -48,7 +73,25 @@ static NSString *collectionView_cid = @"collectionViewcid";
 
     int timeCount;
     UIView *headerView;
-    MBProgressHUD *HUD;
+    UIView *qianggouView;
+    UIView *zhuantiView;
+    MZTimerLabel *qianggou_timer;
+    UILabel *qianggou_timer_label;
+    UIScrollView *_scrollView;
+    UIScrollView *qianggouScrollView;
+    UIPageControl *_pageControl;
+    UIPageControl *_pageControl_qianggou;
+    
+    UIImageView *qianggou_imageview;
+    UILabel *qianggou_name;
+    UILabel *qianggou_price;
+    UILabel *qianggou_group_price;
+    UILabel *qianggou_time;
+    
+//    NSDictionary *groupDic;
+    NSMutableArray *groupArray;
+    NSMutableArray *tagArray;
+    
     NSArray *arrayData;
     NSDictionary *dataDict;
     NSDictionary *goodsDict;
@@ -57,6 +100,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
 
     NSDictionary *advListDic;
     NSMutableArray *itemArray;
+    NSMutableArray *images;
     
     LBAdvListModel *model;
     LBAdvItemModel *modelItem;
@@ -75,24 +119,29 @@ static NSString *collectionView_cid = @"collectionViewcid";
     NSMutableArray *home2Array;
     NSMutableArray *home2TypeArray;
     NSMutableArray *home2DataArray;
-
+    //抢购
+    
 }
 
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) UIScrollView *_scrollView;
-@property (nonatomic, strong) UIPageControl *_pageControl;
 
 @end
 
 @implementation LBHomeViewController
-@synthesize _scrollView;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [NOTIFICATION_CENTER addObserver:self selector:@selector(pushView:) name:@"tuisongxiaoxi" object:nil];
-    [self loadCollectionView];
+    [self initArrayDatas];
+    [self addNotObserver];
+
+    dispatch_queue_t queue =  dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
     [self requestHomeDatas];
+    });
+    dispatch_async(queue, ^{
+        [self requestQianggouDatas:@"16,18,20"];
+    });
+    [self loadCollectionView];
      /*
     //初始化tableView
     [self loadNavBar];
@@ -103,12 +152,107 @@ static NSString *collectionView_cid = @"collectionViewcid";
     [self loadHomeData];
     */
 }
+- (void)initArrayDatas
+{
+//    groupDic= [NSDictionary dictionary];
+    tagArray = [NSMutableArray array];
+    groupArray = [NSMutableArray array];
+    images = [NSMutableArray array];
+    ArrayHome1Datas = [NSMutableArray array];
+    ArrayHome1Type = [NSMutableArray array];
+    ArrayHome1ImageUrl = [NSMutableArray array];
+}
+- (void)addNotObserver
+{
+    [NOTIFICATION_CENTER addObserver:self selector:@selector(pushView:) name:@"tuisongxiaoxi" object:nil];
+    //广告
+    [NOTIFICATION_CENTER addObserver:self selector:@selector(pushImageView:) name:SUGE_GUANGGAO object:nil];
+    //专题
+    [NOTIFICATION_CENTER addObserver:self selector:@selector(psuhZhuanti:) name:SUGE_ZHUANTI object:nil];
+    
+}
+//imageButton事件
+- (void)pushImageView:(NSNotification *)not
+{
+    NSInteger index = [[[not userInfo] valueForKey:@"index"] integerValue];
+    modelItem = model.item[index];
+    
+    NSString *adv_data = modelItem.data;
+    NSString *adv_type = modelItem.type;
+    if ([adv_type isEqualToString:@"url"]) {
+        LBAdvViewController *adv = [[LBAdvViewController alloc] init];
+        NSString *key = [LBUserInfo sharedUserSingleton].userinfo_key;
+        NSString *apingd = [NSString stringWithFormat:@"&recookie=1&key=%@",key];
+        NSString *url = [adv_data stringByAppendingString:apingd];
+        adv.advURL =url;
+        adv.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:adv animated:YES];
+        
+    }else if ([adv_type isEqualToString:@"keyword"]) {
+        LBGoodsListViewController *goodsList = [[LBGoodsListViewController alloc] init];
+        goodsList._keyWord = adv_data;
+        goodsList.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:goodsList animated:YES];
+        
+    }else if ([adv_type isEqualToString:@"goods"]) {
+        LBGoodsDetailViewController *goodsDetail = [[LBGoodsDetailViewController alloc]init];
+        goodsDetail._goodsID =adv_data;
+        goodsDetail.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:goodsDetail animated:YES];
+    }
+}
+//专题
+- (void)psuhZhuanti:(NSNotification *)not
+{
+    NSInteger index = [[[not userInfo] valueForKey:@"index"] integerValue];
+    NSString *type1 = ArrayHome1Type[index];
+    if ([type1 isEqualToString:@"url"]) {
+        LBAdvViewController *adv = [[LBAdvViewController alloc] init];
+        NSString *key = [LBUserInfo sharedUserSingleton].userinfo_key;
+        NSString *apingd = [NSString stringWithFormat:@"&recookie=1&key=%@",key];
+        NSString *url = [home1Datas stringByAppendingString:apingd];
+        adv.advURL =url;
+        adv.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:adv animated:YES];
+        
+    }else if ([type1 isEqualToString:@"keyword"]) {
+        LBGoodsListViewController *goodsList = [[LBGoodsListViewController alloc] init];
+        goodsList._keyWord = home1Datas;
+        goodsList.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:goodsList animated:YES];
+        
+        
+    }else if ([type1 isEqualToString:@"goods"]) {
+        LBGoodsDetailViewController *goodsDetail = [[LBGoodsDetailViewController alloc]init];
+        
+        goodsDetail._goodsID =home1Datas;
+        goodsDetail.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:goodsDetail animated:YES];
+    }else if ([type1 isEqualToString:@"special"]) {
+        LBAdvViewController *adv = [[LBAdvViewController alloc] init];
+        NSString *str1 = ArrayHome1Datas[index];
+        NSString *str2 = [NSString stringWithFormat:@"http://sugemall.com/wap/special.html?special_id=%@",str1];
+        NSString *key = [LBUserInfo sharedUserSingleton].userinfo_key;
+        NSString *apingd = [NSString stringWithFormat:@"&recookie=1&key=%@",key];
+        NSString *url = [str2 stringByAppendingString:apingd];
+        adv.advURL =url;
+        adv.hidesBottomBarWhenPushed = YES;
+        adv.tabBarController.tabBar.hidden=YES;
+        
+        [self.navigationController pushViewController:adv animated:YES];
+        
+        
+    }
+    
+}
+
 
 #pragma mark HTTP request
 - (void)requestHomeDatas
 {
     NSDictionary *para = @{@"type":@"json"};
-    [LBHttpTool getWirhUrl:SUGE_HOME parms:para success:^(id json){
+//    [LBHttpTool getWirhUrl:SUGE_HOME parms:para success:^(id json){
+    [LBBaseMethod get:SUGE_HOME parms:para success:^(id json){
         NSLog(@"homedatas:%@",json);
         NSMutableArray *datas = json[@"datas"];
         for (NSDictionary *dic in datas) {
@@ -116,6 +260,10 @@ static NSString *collectionView_cid = @"collectionViewcid";
             NSString *keysString = keysArray[0];
             if ([keysString isEqualToString:@"adv_list"]) {
                 model = [LBAdvListModel objectWithKeyValues:dic[@"adv_list"]];
+                for (int i = 0; i < model.item.count; i++) {
+                    modelItem = model.item[i];
+                    [images addObject:modelItem.image];
+                }
             }else if([keysString isEqualToString:@"home1"]){
                 home1ImageUrl = dic[@"home1"][@"image"];
                 home1Datas = dic[@"home1"][@"data"];
@@ -139,6 +287,39 @@ static NSString *collectionView_cid = @"collectionViewcid";
     
 }
 
+- (void)requestQianggouDatas:(NSString *)time
+{
+    NSDictionary *parms = @{@"time":time};
+    [LBBaseMethod get:SUGE_GROUP_BUY parms:parms success:^(id json){
+        NSLog(@"抢购商品:%@",json);
+        NSDictionary *groupListDic = json[@"datas"][@"groupbuy_group_list"];
+//        if (!groupListDic) {
+        NSDictionary *hoursDic  = json[@"datas"][@"groupbuy_group_list"][@"hours"];
+        NSArray *hoursArr = [hoursDic allKeys];
+        NSMutableArray *hoursMuArray = [NSMutableArray arrayWithArray:hoursArr];
+        [hoursMuArray sortUsingComparator:^NSComparisonResult(__strong id obj1,__strong id obj2){
+            return [obj1 intValue] > [obj2 intValue];
+        }];
+        for (int i = 0; i < hoursMuArray.count; i++) {
+            NSDictionary *groupDic = [hoursDic valueForKey: hoursMuArray[i]];
+            NSMutableArray *groupArr = [groupDic valueForKey:@"groupbuy_list"];
+            
+            [groupArray addObjectsFromArray:groupArr];
+//            [groupArray insertObject:groupArr atIndex:i];
+            NSInteger count = groupArr.count;
+            NSNumber *count1=  [NSNumber numberWithInteger:count];
+            [tagArray addObject:count1];
+        }
+        NSLog(@"groupArray:%@,hoursArr:%@",groupArray,hoursArr);
+        
+//        }
+        [self.collectionView reloadData];
+    }failture:^(id  error){
+        
+    }];
+    
+}
+
 #pragma mark not
 - (void)pushView:(NSNotification *)not
 {
@@ -155,16 +336,46 @@ static NSString *collectionView_cid = @"collectionViewcid";
 {
     //初始化
     UICollectionViewFlowLayout *flowLayout=[[UICollectionViewFlowLayout alloc] init];
-    
+
     self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0,0,SCREEN_WIDTH,SCREEN_HEIGHT)collectionViewLayout:flowLayout];
+//    UICollectionViewFlowLayout *collectionViewLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
+    //header  height
+//    collectionViewLayout.headerReferenceSize = CGSizeMake(SCREEN_WIDTH, 164+230+(ArrayHome1ImageUrl.count*(SCREEN_WIDTH*280/540)));
     //注册
     [self.collectionView registerClass:[LBHomeViewCell class]forCellWithReuseIdentifier:collectionView_cid];
+    [self.collectionView registerClass:[RecipeCollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:collectionView_header_cid];
     //设置代理
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
-    self.collectionView.scrollEnabled  =YES;
+//    self.collectionView.pagingEnabled = YES;
     self.collectionView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.collectionView];
+}
+//设置顶部的大小
+-(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section{
+    
+    CGSize size={SCREEN_WIDTH, 50+164+230+(ArrayHome1ImageUrl.count*(SCREEN_WIDTH*280/540))};
+    return size;
+}
+
+#pragma mark collection headerview
+- (UICollectionReusableView *) collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionReusableView *reusableview = nil;
+
+    
+    if([kind isEqual:UICollectionElementKindSectionHeader])
+    {
+        //广告图
+     RecipeCollectionReusableView *R_headView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:collectionView_header_cid forIndexPath:indexPath ];
+        
+        [R_headView addValueForReusableView:images];
+        [R_headView addValueForZhuantiView:ArrayHome1ImageUrl];
+        [R_headView addValueForQianggouView:groupArray];
+        [R_headView addTagArray:tagArray];
+        reusableview = R_headView;
+    }
+    return reusableview;
 }
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
@@ -178,6 +389,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
 {
     
     LBHomeViewCell * cell= [collectionView dequeueReusableCellWithReuseIdentifier:collectionView_cid forIndexPath :indexPath];
+    
     cell.layer.borderColor = [UIColor lightGrayColor].CGColor;
     cell.layer.borderWidth = 0.5f;
     
@@ -186,10 +398,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
     //    }
     NSInteger  row = indexPath.row;
     singleGood = goodsArray[row];
-    [cell.goodsImageView sd_setImageWithURL:singleGood[@"goods_image"] placeholderImage:nil];
-    cell.goodsName.text = singleGood[@"goods_name"];
-    cell.goodsPrice.text = [NSString stringWithFormat:@"促销价:￥%@",singleGood[@"goods_promotion_price"]];
-    
+    [cell addValueForCell:singleGood];
     return cell;
 }
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -205,11 +414,15 @@ static NSString *collectionView_cid = @"collectionViewcid";
 {
     NSInteger row = indexPath.row;
     LBGoodsDetailViewController *detailVC = [[LBGoodsDetailViewController alloc] init];
-//    singleGood = goodsArray[row];
-//    detailVC.hidesBottomBarWhenPushed = YES;
-//    detailVC._goodsID = singleGood[@"goods_id"];
+    singleGood = goodsArray[row];
+    detailVC.hidesBottomBarWhenPushed = YES;
+    detailVC._goodsID = singleGood[@"goods_id"];
     [self.navigationController pushViewController:detailVC animated:YES];
 }
+
+
+
+
 
 /*
 - (void)initArrayDatas

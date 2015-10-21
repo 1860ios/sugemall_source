@@ -9,7 +9,13 @@
 #ifndef SuGeMarket_SUGE_API_h
 #define SuGeMarket_SUGE_API_h
 
-#define SUGE_BASE_URL   @"http://sugemall.com/mobile/" //前缀
+#define SUGE_BASE_URL   @"http://test.sugemall.com/mobile/" //前缀
+
+/**
+ * 抢购
+ */
+#define SUGE_GROUP_BUY     [SUGE_BASE_URL stringByAppendingString:@"index.php?act=suge_groupbuy"]
+
 
 /**
  *  红包
