@@ -14,13 +14,12 @@
 @implementation LBGoodsListCell
 @synthesize goodsName;
 @synthesize goodsPrice;
-@synthesize goodsEVPrice;
 @synthesize goodsImageView;
-@synthesize goodsSalenum;
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+- (id)initWithFrame:(CGRect)frame
 {
-    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+    self = [super initWithFrame:frame];
+    if (self) {
         [self initGoodsListCell];
     }
     return self;
@@ -28,63 +27,38 @@
 
 - (void)initGoodsListCell
 {
-    //商品图
     goodsImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-    goodsImageView.contentMode = UIViewContentModeScaleAspectFill;
+    goodsImageView.frame = CGRectMake(10, 10, SCREEN_WIDTH/2-30-10, SCREEN_WIDTH/2-30-10);
+    goodsImageView.contentMode = UIViewContentModeScaleAspectFit;
     [self addSubview:goodsImageView];
-   
-    //商品名
-    goodsName = [[UILabel alloc] initWithFrame:CGRectZero];
+    
+    UIView *linView =[[UIView alloc]initWithFrame:CGRectMake(0,goodsImageView.frame.origin.y+goodsImageView.frame.size.height+2,SCREEN_WIDTH/2-10 , 0.5)];
+    [linView setBackgroundColor:[UIColor lightGrayColor]];
+    [self addSubview:linView];
+    
+    
+    goodsName =  [[UILabel alloc] initWithFrame:CGRectMake(goodsImageView.frame.origin.x,goodsImageView.frame.origin.y+goodsImageView.frame.size.height,goodsImageView.frame.size.width,45)];
+    //    goodsnameLabel.font = FONT(13);
     goodsName.numberOfLines = 2;
-        goodsName.font = FONT(16);
-//    goodsName.adjustsFontSizeToFitWidth = YES;
+    goodsName.textAlignment=NSTextAlignmentCenter;
     [self addSubview:goodsName];
     
-    //商品促销价
-    goodsEVPrice = [[UILabel alloc] initWithFrame:CGRectZero];
-    goodsEVPrice.textColor = APP_COLOR;
-    goodsEVPrice.font = BFONT(18);
-    //    goodsEVPrice.adjustsFontSizeToFitWidth = YES;
-    [self addSubview:goodsEVPrice];
-    
-    //商品价格
-    goodsPrice = [[UILabel alloc] initWithFrame:CGRectZero];
-    goodsPrice.textColor = [UIColor lightGrayColor];
-//    goodsPrice.isWithStrikeThrough = YES;
-    goodsPrice.font = FONT(12);
-//    goodsPrice.adjustsFontSizeToFitWidth = YES;
+    goodsPrice =  [[UILabel alloc] initWithFrame:CGRectMake(goodsName.frame.origin.x,goodsName.frame.origin.y+goodsName.frame.size.height,goodsName.frame.size.width/2,20)];
+    goodsPrice.adjustsFontSizeToFitWidth = YES;
+    goodsPrice.textColor = APP_COLOR;
     [self addSubview:goodsPrice];
-    
-    //销量
-    goodsSalenum = [[UILabel alloc] initWithFrame:CGRectZero];
-    goodsSalenum.textColor = [UIColor lightGrayColor];
-    goodsSalenum.font = BFONT(12);
-    [self addSubview:goodsSalenum];
-    
-    goodsImageView.frame = CGRectMake(5, 5, 120, 120);
-    goodsName.frame = CGRectMake(goodsImageView.frame.size.width+15, 5, SCREEN_WIDTH-140, 40);
-    goodsEVPrice.frame = CGRectMake(goodsName.frame.origin.x, 40, 120, 45);
-    goodsPrice.frame = CGRectMake(goodsName.frame.origin.x, 90, 60, 25);
-    goodsSalenum.frame = CGRectMake(goodsPrice.frame.origin.x+goodsPrice.frame.size.width+10, goodsPrice.frame.origin.y, 120, 25);
+
     
 }
 
-//- (void)layoutSubviews
-//{
-//    goodsImageView.frame = CGRectMake(5, 5, 120, 120);
-//    goodsName.frame = CGRectMake(goodsImageView.frame.size.width+15, 5, SCREEN_WIDTH-140, 40);
-//    goodsEVPrice.frame = CGRectMake(goodsName.frame.origin.x, 40, 120, 45);
-//    goodsPrice.frame = CGRectMake(goodsName.frame.origin.x, 90, 60, 25);
-//    goodsSalenum.frame = CGRectMake(goodsPrice.frame.origin.x+goodsPrice.frame.size.width+10, goodsPrice.frame.origin.y, 120, 25);
-//}
 
 -(void)addTheValue:(LBGoodsListModel *)goodsListModel
 {
     [goodsImageView sd_setImageWithURL:[NSURL URLWithString:goodsListModel.goods_image_url] placeholderImage:IMAGE(@"dd_03_@2x")];
     goodsName.text = goodsListModel.goods_name;
-    goodsEVPrice.text = [NSString stringWithFormat:@"￥%@",goodsListModel.goods_price];
-    goodsPrice.text = [NSString stringWithFormat:@"原价:%@",goodsListModel.goods_marketprice];
-    goodsSalenum.text = [NSString stringWithFormat:@"销量:%@",goodsListModel.goods_salenum];
+    goodsPrice.text = [NSString stringWithFormat:@"￥%@",goodsListModel.goods_price];
+//    goodsPrice.text = [NSString stringWithFormat:@"原价:%@",goodsListModel.goods_marketprice];
+//    goodsSalenum.text = [NSString stringWithFormat:@"销量:%@",goodsListModel.goods_salenum];
 }
 
 @end

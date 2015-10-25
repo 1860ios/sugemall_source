@@ -85,17 +85,6 @@ static NSString *collectionView_cid=@"collectionView_cid";
 
 -(void)drawFavoriteCollectionView
 {
-//    UICollectionViewFlowLayout *flowLayout=[[UICollectionViewFlowLayout alloc] init];
-//    [flowLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
-//    favoriteCollectionView= [[UICollectionView alloc]initWithFrame:CGRectMake(10,0,SCREEN_WIDTH,SCREEN_HEIGHT)collectionViewLayout:flowLayout];
-//    //注册
-//    [favoriteCollectionView registerClass:[UICollectionViewCell class]forCellWithReuseIdentifier:collectionView_cid];
-//    //设置代理
-//    favoriteCollectionView.delegate = self;
-//    favoriteCollectionView.dataSource = self;
-//    favoriteCollectionView.scrollEnabled  =YES;
-//    favoriteCollectionView.backgroundColor = [UIColor whiteColor];
-//    [self.view addSubview:favoriteCollectionView];
     UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc]init];
     goodsCollectionView=[[UICollectionView alloc]initWithFrame:CGRectMake(0, 0,SCREEN_WIDTH,SCREEN_HEIGHT)collectionViewLayout:layout];
     [layout setScrollDirection:UICollectionViewScrollDirectionVertical];
@@ -123,13 +112,6 @@ static NSString *collectionView_cid=@"collectionView_cid";
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger row=indexPath.row;
-//    UICollectionViewCell * cell= [collectionView dequeueReusableCellWithReuseIdentifier:collectionView_cid forIndexPath :indexPath];
-//    cell.layer.borderColor = [UIColor lightGrayColor].CGColor;
-//    cell.layer.borderWidth = 1.0f;
-//    
-//    while ([cell.contentView.subviews lastObject]) {
-//        [(UIView *)[cell.contentView.subviews lastObject] removeFromSuperview];
-//    }
     UICollectionViewCell * cell= [collectionView dequeueReusableCellWithReuseIdentifier:collectionView_cid forIndexPath :indexPath];
         cell.layer.borderColor = [UIColor colorWithWhite:0.90 alpha:0.93].CGColor;
         cell.layer.borderWidth = 1.0f;
@@ -170,6 +152,15 @@ static NSString *collectionView_cid=@"collectionView_cid";
 {
     return UIEdgeInsetsMake(0, 2, 0, 2 );
 }
+
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSInteger row = indexPath.row;
+    LBGoodsDetailViewController *detailVC = [[LBGoodsDetailViewController alloc] init];
+    detailVC._goodsID = _favorites[row][@"goods_id"];
+    [self.navigationController pushViewController:detailVC animated:YES];
+}
+
 #pragma mark 设置下拉刷新
 - (void)setUpRefresh
 {
@@ -228,128 +219,5 @@ static NSString *collectionView_cid=@"collectionView_cid";
     }];
     
 }
-
-//#pragma mark 收藏的tableview
-//- (void)drawFavoriteTableView
-//{
-//    __tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStylePlain];
-//    __tableView.delegate =self;
-//    __tableView.dataSource =self;
-//    //    __tableView.contentInset = UIEdgeInsetsMake(-50, 0, 0, 0);
-//    __tableView.tableFooterView = [UIView new];
-//    [__tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:cid];
-//    [self.view addSubview:__tableView];
-//    
-//}
-//#pragma mark tableview  delegate
-//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-//    NSInteger row = indexPath.row;
-//    //商品编号
-//    NSString *goodsID = _favorites[row][@"goods_id"];
-//    NSLog(@"goodsID:%@",goodsID);
-//    LBGoodsDetailViewController *goodsVC = [[LBGoodsDetailViewController alloc]init];
-//    goodsVC._goodsID = goodsID;
-//    [self.navigationController pushViewController:goodsVC animated:YES];
-//
-//}
-//
-//#pragma mark tableview  datasource
-//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
-//{
-//    return _favorites.count;
-//
-//}
-//#pragma mark
-//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-//{
-//    return 1;
-//}
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
-//{
-//    NSInteger row = indexPath.row;
-//    UITableViewCell *cell = nil;
-//    if (!cell) {
-//        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cid];
-//        //平滑
-//        cell.layer.shouldRasterize = YES;
-//        cell.layer.rasterizationScale = [UIScreen mainScreen].scale;
-//
-//    //商品图
-//    UIImageView *goodsImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 120, 120)];
-//    goodsImageView.contentMode = UIViewContentModeScaleAspectFill;
-//    [goodsImageView sd_setImageWithURL:[NSURL URLWithString:_favorites[row][@"goods_image_url"] ] placeholderImage:IMAGE(@"dd_03_@2x")];
-//    [cell.contentView addSubview:goodsImageView];
-//    //商品名
-//    UILabel *goodsName = [[UILabel alloc] initWithFrame:CGRectMake(goodsImageView.frame.size.width+15, 5, SCREEN_WIDTH-140, 40)];
-//    goodsName.numberOfLines = 2;
-////    goodsName.font = [UIFont systemFontOfSize:19];
-//    goodsName.text = _favorites[row][@"goods_name"];
-////    goodsName.adjustsFontSizeToFitWidth = YES;
-//        goodsName.font = FONT(14);
-//    [cell.contentView addSubview:goodsName];
-//    
-//    //商品价格
-//    UILabel *goodsPrice = [[UILabel alloc] initWithFrame:CGRectMake(goodsName.frame.origin.x, 90, 60, 25)];
-//    goodsPrice.textColor = [UIColor redColor];
-//    goodsPrice.text = [NSString stringWithFormat:@"￥%@",_favorites[row][@"goods_price"]];
-//    goodsPrice.adjustsFontSizeToFitWidth = YES;
-//    [cell.contentView addSubview:goodsPrice];
-//    }
-//    return cell;
-//}
-//
-//#pragma mark  heightForRowAtIndexPath
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    return 130;
-//}
-//
-//#pragma mark  滑动删除
-//- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-//    return YES;
-//}
-//
-//- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    return @"删除";
-//}
-//
-//#pragma mark
-//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-//    
-//    if (editingStyle == UITableViewCellEditingStyleDelete) {
-//        //提示
-//        [SVProgressHUD showWithStatus:@"删除中..." maskType:SVProgressHUDMaskTypeClear];
-//        NSInteger row = indexPath.row;
-//        //登陆key
-//        NSString *key = [LBUserInfo sharedUserSingleton].userinfo_key;
-//        //收藏编号
-//        NSString *fav_id = _favorites[row][@"fav_id"];
-//        NSLog(@"fav_id:%@",fav_id);
-//        
-//        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-//        manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json",@"text/json",nil];
-//        NSDictionary *parameter =@{@"fav_id":fav_id,@"key":key};
-//        
-//        [manager POST:SUGE_FAVORITE_DEL parameters:parameter success:^(AFHTTPRequestOperation *op,id responObject){
-//            
-//            [SVProgressHUD dismiss];
-//            NSLog(@"responObject:%@",responObject);
-//
-//            if ([responObject[@"datas"] isEqualToString:@"1"]) {
-//
-//                //再次请求数据
-//                [self loadDatas];
-//            }
-//            } failure:^(AFHTTPRequestOperation *op,NSError *error){
-//        }];
-//
-//    }
-//
-//}
-
-
 
 @end

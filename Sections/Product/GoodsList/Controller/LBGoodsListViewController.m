@@ -25,10 +25,11 @@
 #import "MJRefresh.h"
 #import "MXPullDownMenu.h"
 #import "LBSearchViewController.h"
+#import "LBShoppingCarViewController.h"
 
-static NSString *cid = @"cid";
+static NSString *collectionView_cid = @"collectionView_cid";
 
-@interface LBGoodsListViewController ()<MXPullDownMenuDelegate,UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate,UITextFieldDelegate>
+@interface LBGoodsListViewController ()<MXPullDownMenuDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,UITextFieldDelegate>
 {
     LBGoodsListModel *modelList1;
     LBGoodsListDatasModel *model;
@@ -46,30 +47,71 @@ static NSString *cid = @"cid";
     NSArray *newGoodsDatasArray;
 }
 @property (nonatomic, copy) NSArray *titles;
-
+@property (nonatomic,strong) UICollectionView *goodsCollectionView;
 
 @end
 
 @implementation LBGoodsListViewController
-@synthesize _tableView;
+@synthesize goodsCollectionView;
 @synthesize isSearch;
 - (void)viewDidLoad {
     [super viewDidLoad];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
+    [self initDatas];
+    [self loadNavView];
+    [self loadGoodsListTableView];
+    [self loadSegmentedControll];
+    ii = __keyWord;
+    [self loadGoodsDatasKeyWord:ii orGC_ID:__goodsID key:@"" order:@"" curpage:@"1"];
+    [self setUpFooterRefresh];
+    [self addOtherBuuton];
+}
+- (void)addOtherBuuton
+{
+    NSArray *bottonImage = @[@"shouye_car",@"shouye_top"];
+    for (int i = 0; i < 2; i++) {
+        UIButton *otherButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        if (i == 1) {
+            otherButton.frame = CGRectMake(SCREEN_WIDTH-15-50, SCREEN_HEIGHT-120, 50, 50);
+        }else{
+            otherButton.frame = CGRectMake(15, SCREEN_HEIGHT-120, 50, 50);
+        }
+        [otherButton setImage:IMAGE(bottonImage[i]) forState:UIControlStateNormal];
+        otherButton.tag = 716+i;
+        [otherButton addTarget:self action:@selector(otherBtnMethod:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:otherButton];
+    }
 
+}
+- (void)otherBtnMethod:(UIButton *)btn
+{
+    long btn_tag = btn.tag-716;
+    switch (btn_tag) {
+        case 0:{
+            LBShoppingCarViewController *car = [LBShoppingCarViewController new];
+            [self.navigationController pushViewController:car animated:YES];
+        }
+            break;
+            
+        case 1:{
+            [goodsCollectionView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+        }
+            break;
+            
+    }
+
+}
+
+- (void)initDatas
+{
     newGoodsDatasArray = [[NSArray alloc] init];
     goodsDatasArray = [[NSMutableArray alloc] init];
     self.title = @"商品列表";
     _curpage = 1;
     _titles = @[@[@"综合",@"浏览量"],@[@"销量"],@[@"价格升序",@"价格降序"]];
     
-    
-    [self loadNavView];
-    [self loadGoodsListTableView];
-    [self loadSegmentedControll];
-    ii = __keyWord;
-    NSLog(@"关键字:%@",ii);
-    [self loadGoodsDatasKeyWord:ii orGC_ID:__goodsID key:@"" order:@"" curpage:@"1"];
-    [self setUpFooterRefresh];
 }
 
 - (void)loadNavView
@@ -123,19 +165,19 @@ static NSString *cid = @"cid";
 
 - (void)setUpFooterRefresh
 {
-    [_tableView addLegendFooterWithRefreshingTarget:self refreshingAction:@selector(loadNewData)];
+    [goodsCollectionView addLegendFooterWithRefreshingTarget:self refreshingAction:@selector(loadNewData)];
     // 隐藏时间
-    self._tableView.header.updatedTimeHidden = YES;
+    goodsCollectionView.header.updatedTimeHidden = YES;
     // 设置文字
-    [self._tableView.footer setTitle:@"加载更多商品..." forState:MJRefreshFooterStateIdle];
-    [self._tableView.footer setTitle:@"加载中..." forState:MJRefreshFooterStateRefreshing];
-    [self._tableView.footer setTitle:@"万件商品更新中,敬请期待..." forState:MJRefreshFooterStateNoMoreData];
+    [goodsCollectionView.footer setTitle:@"加载更多商品..." forState:MJRefreshFooterStateIdle];
+    [goodsCollectionView.footer setTitle:@"加载中..." forState:MJRefreshFooterStateRefreshing];
+    [goodsCollectionView.footer setTitle:@"万件商品更新中,敬请期待..." forState:MJRefreshFooterStateNoMoreData];
     
     // 设置字体
-    self._tableView.header.font = APP_REFRESH_FONT_SIZE;
+    goodsCollectionView.header.font = APP_REFRESH_FONT_SIZE;
     
     // 设置颜色
-    self._tableView.header.textColor = APP_COLOR;
+    goodsCollectionView.header.textColor = APP_COLOR;
 }
 
 - (void)loadGoodsDatasKeyWord:(NSString *)keyword orGC_ID:(NSString *)gc_id  key:(NSString *)key order:(NSString *)order curpage:(NSString *)curpage
@@ -155,18 +197,18 @@ static NSString *cid = @"cid";
 
     [maneger POST:SUGE_GOODS_LIST parameters:parameters success:^(AFHTTPRequestOperation *op,id responObject){
         NSLog(@"reponObject:%@",responObject);
-        [self._tableView.footer endRefreshing];
+        [goodsCollectionView.footer endRefreshing];
 //        NSString *page_num = responObject[@"page_total"];
         NSArray *datas = responObject[@"datas"][@"goods_list"];
         if (datas.count == 0) {
             // 变为没有更多数据的状态
-            [self._tableView.footer noticeNoMoreData];
+            [goodsCollectionView.footer noticeNoMoreData];
         }else{
 
             newGoodsDatasArray = [LBGoodsListModel objectArrayWithKeyValuesArray:datas];
             [goodsDatasArray addObjectsFromArray:newGoodsDatasArray];
             
-            [_tableView reloadData];
+            [goodsCollectionView reloadData];
         }
 
     } failure:^(AFHTTPRequestOperation *op,NSError *error){
@@ -180,12 +222,17 @@ static NSString *cid = @"cid";
 
 - (void)loadGoodsListTableView
 {
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, NavigationBar_HEIGHT+35+5, SCREEN_WIDTH, SCREEN_HEIGHT-35-NavigationBar_HEIGHT-5) style:UITableViewStylePlain];
-    _tableView.delegate = self;
-    _tableView.dataSource = self;
-    _tableView.tableFooterView = [UIView new];
-    [_tableView registerClass:[LBGoodsListCell class] forCellReuseIdentifier:cid];
-    [self.view addSubview:_tableView];
+  
+    UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc]init];
+    goodsCollectionView=[[UICollectionView alloc]initWithFrame:CGRectMake(0, NavigationBar_HEIGHT+35+5, SCREEN_WIDTH, SCREEN_HEIGHT-35-NavigationBar_HEIGHT-5)collectionViewLayout:layout];
+    [layout setScrollDirection:UICollectionViewScrollDirectionVertical];
+    
+    goodsCollectionView.backgroundColor = [UIColor whiteColor];
+    goodsCollectionView.delegate = self;
+    goodsCollectionView.dataSource = self;
+    goodsCollectionView.scrollEnabled  = YES;
+    [goodsCollectionView registerClass:[LBGoodsListCell class]forCellWithReuseIdentifier:collectionView_cid];
+    [self.view addSubview:goodsCollectionView];
 }
 
 - (void)loadSegmentedControll
@@ -244,69 +291,49 @@ didSelectRowAtColumn:(NSInteger)column
     [self loadGoodsDatasKeyWord:ii orGC_ID:__goodsID key:key order:order curpage:@"1"];
 //    [_tableView reloadData];
 }
-/*
--(void)segmentAction:(UISegmentedControl *)Seg{
-    
-    NSInteger Index = Seg.selectedSegmentIndex;
-    
-    NSLog(@"Index %li", (long)Index);
-    NSString *key = nil;
-    NSString *order = nil;
-    switch (Index) {
-        case 0:
-            key = @"3";
-            order = @"1";
-            break;
-        case 1:
-            key = @"3";
-            order = @"2";
-            break;
-        case 2:
-            key = @"3";
-            order = @"3";
-            break;
-    }
-    [self loadGoodsDatasKeyWord:__keyWord orGC_ID:__goodsID key:key order:order curpage:@"1"];
-    [_tableView reloadData];
-}
+#pragma mark CollectionView delegate
+#pragma mark  --------collectionView  代理方法
 
- */
-#pragma mark- tableview - delegate
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     return goodsDatasArray.count;
 }
-
-#pragma mark  heightForRowAtIndexPath
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+-(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 130;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSInteger row = indexPath.row;
-//    modelList = model.goods_list[row];
-    modelList1 = goodsDatasArray[row];
-    LBGoodsListCell *cell = nil;
-    if (!cell) {
-        cell = [[LBGoodsListCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cid];
+    NSInteger row=indexPath.row;
+    LBGoodsListCell * cell= [collectionView dequeueReusableCellWithReuseIdentifier:collectionView_cid forIndexPath :indexPath];
+    cell.layer.borderColor = [UIColor colorWithWhite:0.90 alpha:0.93].CGColor;
+    cell.layer.borderWidth = 1.0f;
+    while ([cell.contentView.subviews lastObject]) {
+        [(UIView *)[cell.contentView.subviews lastObject] removeFromSuperview];
     }
+    modelList1 = goodsDatasArray[row];
     [cell addTheValue:modelList1];
     return cell;
 }
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(SCREEN_WIDTH/2-10,SCREEN_WIDTH/2+40);
+}
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+{
+    return UIEdgeInsetsMake(0, 2, 0, 2 );
+}
+
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger row = indexPath.row;
     modelList1 = goodsDatasArray[row];
-    [_tableView deselectRowAtIndexPath:indexPath animated:YES];
     LBGoodsDetailViewController *detailVC = [[LBGoodsDetailViewController alloc] init];
     detailVC._goodsID = modelList1.goods_id;
     [self.navigationController pushViewController:detailVC animated:YES];
 }
-
-
 #pragma mark --页面统计
 - (void)viewWillAppear:(BOOL)animated
 {

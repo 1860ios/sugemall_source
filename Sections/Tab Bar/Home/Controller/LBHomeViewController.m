@@ -179,7 +179,7 @@ static NSString *collectionView_header_cid = @"HeaderView";
         if (i == 2) {
             otherButton.frame = CGRectMake(SCREEN_WIDTH-15-50, SCREEN_HEIGHT-120, 50, 50);
         }else{
-        otherButton.frame = CGRectMake(15+i*60, SCREEN_HEIGHT-120, 50, 50);
+            otherButton.frame = CGRectMake(15+i*60, SCREEN_HEIGHT-120, 50, 50);
         }
         [otherButton setImage:IMAGE(bottonImage[i]) forState:UIControlStateNormal];
         otherButton.tag = 76+i;
@@ -188,6 +188,29 @@ static NSString *collectionView_header_cid = @"HeaderView";
     }
     
 }
+
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+//    UIColor *color = [UIColor blueColor];
+    CGFloat offsetY = scrollView.contentOffset.y;
+    if (offsetY > 0) {
+//        CGFloat alpha = 1 - ((64 - offsetY) / 64);
+//        self.navigationController.navigationBar.backgroundColor = [color colorWithAlphaComponent:alpha];
+        [UIView animateWithDuration:0.4 animations:^{
+            self.tabBarController.tabBar.frame = CGRectMake(0, SCREEN_HEIGHT, self.tabBarController.tabBar.frame.size.width, self.tabBarController.tabBar.frame.size.height);
+        }];
+        
+    } else {
+//        self.navigationController.navigationBar.backgroundColor = [color colorWithAlphaComponent:0];
+        [UIView animateWithDuration:0.4 animations:^{
+//            self.tabBarController.tabBar.hidden = NO;
+        self.tabBarController.tabBar.frame = CGRectMake(0, SCREEN_HEIGHT-self.tabBarController.tabBar.frame.size.height, self.tabBarController.tabBar.frame.size.width, self.tabBarController.tabBar.frame.size.height);
+        }];
+
+    }
+}
+
 - (void)otherButtonMethod:(UIButton *)btn
 {
     long btn_tag = btn.tag-76;
