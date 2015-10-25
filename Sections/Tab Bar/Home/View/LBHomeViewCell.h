@@ -16,4 +16,6 @@
 //@property (nonatomic,strong) UIButton *buyButton;
 
 - (void)addValueForCell:(NSDictionary *)value;
+- (void)addValueForCell1:(NSDictionary *)value;
+
 @end

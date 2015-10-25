@@ -22,9 +22,8 @@
 #define kPageViewTag 34
 
 #define kDefaultIndicatorColor APP_Grey_COLOR
-#define kDefaultTabsViewBackgroundColor APP_Grey_COLOR
+#define kDefaultTabsViewBackgroundColor         [UIColor whiteColor]
 #define kDefaultContentViewBackgroundColor APP_Grey_COLOR
-
 // TabView for tabs, that provides un/selected state indicators
 @class TabView;
 
@@ -122,7 +121,7 @@
 - (void)viewDidLoad {
     
     [super viewDidLoad];
-	
+    
     [self reloadData];
 }
 - (void)viewWillLayoutSubviews {
@@ -202,7 +201,7 @@
     self.activeTabIndex = index;
 }
 
-#pragma mark - 
+#pragma mark -
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     
     // Re-align tabs if needed
@@ -405,7 +404,7 @@
     }
     
     if ([[_tabs objectAtIndex:index] isEqual:[NSNull null]]) {
-
+        
         // Get view from dataSource
         UIView *tabViewContent = [self.dataSource viewPager:self viewForTabAtIndex:index];
         
@@ -479,7 +478,7 @@
 
 #pragma mark - UIPageViewControllerDelegate
 - (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers {
-//    NSLog(@"willTransitionToViewController: %i", [self indexForViewController:[pendingViewControllers objectAtIndex:0]]);
+    //    NSLog(@"willTransitionToViewController: %i", [self indexForViewController:[pendingViewControllers objectAtIndex:0]]);
 }
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {
     
@@ -592,5 +591,4 @@
         [self.origPageScrollViewDelegate scrollViewDidEndScrollingAnimation:scrollView];
     }
 }
-
 @end

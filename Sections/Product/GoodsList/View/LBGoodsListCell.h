@@ -7,13 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UILabelStrikeThrough.h"
 #import "LBGoodsListModel.h"
 
 @interface LBGoodsListCell : UITableViewCell
 
 @property (nonatomic, retain) UILabel *goodsName;
-@property (nonatomic, retain) UILabelStrikeThrough *goodsPrice;
+@property (nonatomic, retain) UILabel *goodsPrice;
 @property (nonatomic, retain) UILabel *goodsEVPrice;
 @property (nonatomic, retain) UILabel *goodsSalenum;
 @property (nonatomic, strong) UIImageView *goodsImageView;

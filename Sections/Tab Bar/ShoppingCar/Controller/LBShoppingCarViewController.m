@@ -55,7 +55,6 @@ static NSString *cid = @"cid";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"购物车";
     self.view.backgroundColor = [UIColor whiteColor];
     allPriceArray = [[NSMutableArray alloc] init];
     [self drawTableView];

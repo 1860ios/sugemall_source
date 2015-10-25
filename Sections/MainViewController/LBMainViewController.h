@@ -9,9 +9,11 @@
 
 #import <UIKit/UIKit.h>
 #import "ZFTabBar.h"
+#import "ICSDrawerController.h"
 
-@interface LBMainViewController : UITabBarController
+@interface LBMainViewController : UITabBarController<ICSDrawerControllerChild, ICSDrawerControllerPresenting>
 
+@property(nonatomic, weak) ICSDrawerController *drawer;
 + (id)getMainController;
 + (void)endOfGuide;
 

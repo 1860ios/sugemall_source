@@ -19,6 +19,8 @@
 #import "AppDelegate.h"
 #import "ADo_ViewController.h"
 #import "AFViewShaker.h"
+#import "LBLeftClassifyView.h"
+#import "LBNewsViewController.h"
 
 #define iOS7 ([[UIDevice currentDevice].systemVersion doubleValue] >= 7.0)
 
@@ -35,6 +37,7 @@ static BOOL FirstLaunch = NO;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [NOTIFICATION_CENTER addObserver:self selector:@selector(pushLeftView) name:@"pushleftView" object:nil];
     
     //1.
     [self setupTabbar];
@@ -48,6 +51,12 @@ static BOOL FirstLaunch = NO;
     [NOTIFICATION_CENTER addObserver:self selector:@selector(toShowCarIconValue:) name:SUGE_NOT_CARLIST_COUNT_NAME object:nil];
     [NOTIFICATION_CENTER addObserver:self selector:@selector(toClearBadgeValue) name:SUGE_NOT_LOGNOUT object:nil];
 }
+
+- (void)pushLeftView
+{
+    [self.drawer open];
+}
+
 /**
  *  初始化tabbar
  */
@@ -104,15 +113,15 @@ static BOOL FirstLaunch = NO;
     LBHomeViewController *Home = [[LBHomeViewController alloc] init];
     [self setupChildViewController:Home title:@"首页" imageName:@"shouye" selectedImageName:@"shouye_s"];
     
-    LBClassifyViewContrtoller *classify = [[LBClassifyViewContrtoller alloc] init];
-    [self setupChildViewController:classify title:@"分类" imageName:@"fenlei" selectedImageName:@"fenlei_s"];
+    LBNewsViewController *news = [[LBNewsViewController alloc] init];
+    [self setupChildViewController:news title:@"消息" imageName:@"news_normal" selectedImageName:@"news_select"];
     
     LBShoppingCarViewController *shoppingCar = [[LBShoppingCarViewController alloc] init];
     shoppingCar.tabBarItem.badgeValue = carBadgeValue;
-    [self setupChildViewController:shoppingCar title:@"购物车" imageName:@"che" selectedImageName:@"che_s"];
+    [self setupChildViewController:shoppingCar title:@"财富" imageName:@"treasure_normal" selectedImageName:@"treasure_select"];
     
     LBMineViewController *mine = [[LBMineViewController alloc] init];
-    [self setupChildViewController:mine title:@"个人中心" imageName:@"zhongxin" selectedImageName:@"zhongxin_s"];
+    [self setupChildViewController:mine title:@"我的" imageName:@"zhongxin" selectedImageName:@"zhongxin_s"];
         
 }
 /**
@@ -145,7 +154,17 @@ static BOOL FirstLaunch = NO;
     [self.customTabBar addTabBarButtonWithItem:childVc.tabBarItem];
 }
 
+#pragma mark - ICSDrawerControllerPresenting
 
+- (void)drawerControllerWillOpen:(ICSDrawerController *)drawerController
+{
+    self.view.userInteractionEnabled = NO;
+}
+
+- (void)drawerControllerDidClose:(ICSDrawerController *)drawerController
+{
+    self.view.userInteractionEnabled = YES;
+}
 
 #pragma mark 判断第一次进入
 
@@ -158,11 +177,14 @@ static BOOL FirstLaunch = NO;
 + (id)getMainController
 {
     if (FirstLaunch) {
-        ADo_ViewController *guideVC = [[ADo_ViewController alloc] init];
+        ADo_ViewController *guideVC = [ADo_ViewController new];
         return guideVC;
     }else{
         LBMainViewController *mainVC = [LBMainViewController new];
-        return mainVC;
+        LBLeftClassifyView *left = [LBLeftClassifyView new];
+        ICSDrawerController *drawer = [[ICSDrawerController alloc] initWithLeftViewController:left centerViewController:mainVC];
+
+        return drawer;
     }
     
 }

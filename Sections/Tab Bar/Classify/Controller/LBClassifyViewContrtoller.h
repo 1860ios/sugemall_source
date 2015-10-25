@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface LBClassifyViewContrtoller : UIViewController
-
+@property (nonatomic, copy) NSString *gc_id;
 @end

@@ -52,10 +52,15 @@
 }
 - (void)addValueForCell:(NSDictionary *)value
 {
-    [goodsImageView sd_setImageWithURL:value[@"goods_image"] placeholderImage:nil];
+    [goodsImageView sd_setImageWithURL:[NSURL URLWithString:value[@"goods_image"]] placeholderImage:nil];
     goodsName.text = value[@"goods_name"];
     goodsPrice.text = [NSString stringWithFormat:@"促销价:￥%@",value[@"goods_promotion_price"]];
 }
-
+- (void)addValueForCell1:(NSDictionary *)value1
+{
+    [goodsImageView sd_setImageWithURL:[NSURL URLWithString:value1[@"goods_image_url"]] placeholderImage:nil];
+    goodsName.text = value1[@"goods_name"];
+    goodsPrice.text = [NSString stringWithFormat:@"促销价:￥%@",value1[@"goods_price"]];
+}
 
 @end

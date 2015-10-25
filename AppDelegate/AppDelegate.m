@@ -27,6 +27,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import "HYBUMessageHelper.h"
 #import "CALayer+Transition.h"
+#import "LBBaseMethod.h"
 
 @interface AppDelegate ()<WXApiDelegate,UIAlertViewDelegate>
 {
@@ -52,18 +53,15 @@
     lunchView.frame = CGRectMake(0, 0,SCREEN_WIDTH,SCREEN_HEIGHT);
     imageV = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
     imageV.userInteractionEnabled = YES;
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json",@"text/json",nil];
-    [manager GET:@"http://sugemall.com/mobile/index.php?act=index&op=start_adv" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"首页:%@",responseObject);
-        NSDictionary *start1= responseObject[@"datas"][@"start_adv_list"][0];
+    [LBBaseMethod get:@"http://sugemall.com/mobile/index.php?act=index&op=start_adv" parms:nil success:^(id json){
+        NSLog(@"首页:%@",json);
+        NSDictionary *start1= json[@"datas"][@"start_adv_list"][0];
         NSString *picString=start1[@"adv_pic"];
         [imageV sd_setImageWithURL:[NSURL URLWithString:picString] placeholderImage:nil];
         [lunchView addSubview:imageV];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"homeError:%@",error);
+    }failture:^(id error){
+        
     }];
-    
 
 }
 
@@ -71,6 +69,14 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 //SUGE_VERSION
     [self.window makeKeyAndVisible];
+    
+    if (launchOptions != nil) {
+        // UIApplicationLaunchOptionsRemoteNotificationKey 这个key值就是push的信息
+        NSDictionary *dic = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        // 为了复用代码，统一到下面这个处理方法中handlePushNotify.
+        [self handlePushNotify:dic];
+    }
+    [HYBUMessageHelper startWithLaunchOptions:launchOptions];
     dispatch_queue_t queue =  dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_sync(queue, ^{
         [self loadRequest1];
@@ -94,14 +100,7 @@
     
     [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(removeLunchView) userInfo:nil repeats:NO];
     [self timeFireMethod];
-    if (launchOptions != nil) {
-        NSLog(@"LUN:%@", launchOptions);
-        // UIApplicationLaunchOptionsRemoteNotificationKey 这个key值就是push的信息
-        NSDictionary *dic = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-        // 为了复用代码，统一到下面这个处理方法中handlePushNotify.
-        [self handlePushNotify:dic];
-    }
-    [HYBUMessageHelper startWithLaunchOptions:launchOptions];
+   
 
     return YES;
 }
@@ -133,7 +132,6 @@
             NSString *strTime = [NSString stringWithFormat:@"%.2d", seconds];
             dispatch_async(dispatch_get_main_queue(), ^{
                 //设置界面的按钮显示 根据自己需求设置
-                                NSLog(@"____%@",strTime);
                 [getVcodeButton setTitle:[NSString stringWithFormat:@"%@",strTime] forState:UIControlStateNormal];
                 getVcodeButton.titleLabel.font = FONT(13);
                 getVcodeButton.userInteractionEnabled = NO;

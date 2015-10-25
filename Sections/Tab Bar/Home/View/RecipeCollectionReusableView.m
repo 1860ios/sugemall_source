@@ -97,21 +97,21 @@
         qianggou_name.text = value[i][@"groupbuy_name"];
         [goodsView addSubview:qianggou_name];
         //价格
-        qianggou_group_price = [[UILabel alloc] initWithFrame:CGRectMake(qianggou_name.frame.origin.x, qianggou_name.frame.size.height+qianggou_name.frame.origin.y+5, 80, 30)];
-        qianggou_group_price.font =  BFONT(25);
-        qianggou_group_price.text = [NSString stringWithFormat:@"%@",value[i][@"groupbuy_price"]];
+        qianggou_group_price = [[UILabel alloc] initWithFrame:CGRectMake(qianggou_name.frame.origin.x, qianggou_name.frame.size.height+qianggou_name.frame.origin.y+5, 100, 30)];
+        qianggou_group_price.font =  FONT(25);
+        qianggou_group_price.text = [NSString stringWithFormat:@"￥%@",value[i][@"groupbuy_price"]];
         qianggou_group_price.textColor = APP_COLOR;
         [goodsView addSubview:qianggou_group_price];
         //原价
-        qianggou_price = [[UILabel alloc] initWithFrame:CGRectMake(qianggou_group_price.frame.origin.x+qianggou_group_price.frame.size.width, qianggou_group_price.frame.origin.y+5, qianggou_name.frame.size.width/2, 20)];
+        qianggou_price = [[UILabel alloc] initWithFrame:CGRectMake(qianggou_group_price.frame.origin.x+qianggou_group_price.frame.size.width, qianggou_group_price.frame.origin.y+5, SCREEN_WIDTH-qianggou_group_price.frame.origin.x-qianggou_group_price.frame.size.width-15, 20)];
         qianggou_price.textColor = [UIColor lightGrayColor];
-        qianggou_price.font = FONT(15);
+        qianggou_price.font = FONT(13);
         qianggou_price.text = [NSString stringWithFormat:@"原价%@",value[i][@"goods_price"]];
         [goodsView addSubview:qianggou_price];
         //距离结束
         qianggou_time = [[UILabel alloc] initWithFrame:CGRectMake(qianggou_group_price.frame.origin.x, qianggou_group_price.frame.origin.y+qianggou_group_price.frame.size.height+5, 65, 20)];
         qianggou_time.font = FONT(15);
-        qianggou_time.text = @"距离结束:";
+        qianggou_time.text = value[i][@"count_down_text"];
         qianggou_time.textColor = [UIColor lightGrayColor];
         [goodsView addSubview:qianggou_time];
         //倒计时
@@ -127,22 +127,27 @@
         UIButton *qianggou_button = [UIButton buttonWithType:UIButtonTypeCustom];
         qianggou_button.frame = CGRectMake(qianggou_time.frame.origin.x, qianggou_time.frame.origin.y+qianggou_time.frame.size.height+10, qianggou_name.frame.size.width/2, 35);
         NSString *button_text = value[i][@"button_text"];
-        if ([button_text isEqualToString:@"即将开始"]) {
+        if ([button_text isEqualToString:@"立即抢购"]) {
+            [qianggou_button setBackgroundColor:APP_COLOR];
+            qianggou_button.enabled = YES;
+        }else{
             qianggou_button.enabled = NO;
+            [qianggou_button setBackgroundColor:[UIColor lightGrayColor]];
+
         }
         [qianggou_button setTitle:button_text forState:UIControlStateNormal];
         [qianggou_button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [qianggou_button setBackgroundColor:APP_COLOR];
         qianggou_button.layer.cornerRadius = 3;
         qianggou_button.layer.masksToBounds = YES;
         [qianggou_button addTarget:self action:@selector(postQianggou_method:) forControlEvents:UIControlEventTouchUpInside];
         [goodsView addSubview:qianggou_button];
         
 
+            }
+        }
     }
 }
-}
-}
+
 - (void)postQianggou_method:(UIButton *)btn
 {
     NSLog(@"抢购");
@@ -346,6 +351,8 @@
 #pragma mark
 - (void)timeDuanMethod:(UIButton *)btn
 {
+    if (tagArray.count != 0) {
+        
     NSInteger current_tag = btn.tag-QIANGGOU_TAG;
     NSInteger count = [[tagArray objectAtIndex:current_tag] integerValue];
     for (int i = 0; i<3; i++) {
@@ -376,8 +383,8 @@
         break;
     }
     [qianggouScrollView scrollRectToVisible:CGRectMake(currenPage * SCREEN_WIDTH, 65.0, SCREEN_WIDTH, SCREEN_HEIGHT/3) animated:YES];
+    }   
 }
-
 
 
 @end

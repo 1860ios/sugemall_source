@@ -10,6 +10,17 @@
 #define SuGeMarket_SUGE_API_h
 
 #define SUGE_BASE_URL   @"http://test.sugemall.com/mobile/" //前缀
+/**
+ * 消息
+ */
+#define SUGE_NEWS     [SUGE_BASE_URL stringByAppendingString:@"index.php?act=suge_message"]
+
+
+/**
+ * 一级分类
+ */
+#define SUGE_1_FENLEI     [SUGE_BASE_URL stringByAppendingString:@"index.php?act=suge_category"]
+
 
 /**
  * 抢购

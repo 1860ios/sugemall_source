@@ -48,9 +48,9 @@
     [self addSubview:goodsEVPrice];
     
     //商品价格
-    goodsPrice = [[UILabelStrikeThrough alloc] initWithFrame:CGRectZero];
+    goodsPrice = [[UILabel alloc] initWithFrame:CGRectZero];
     goodsPrice.textColor = [UIColor lightGrayColor];
-    goodsPrice.isWithStrikeThrough = YES;
+//    goodsPrice.isWithStrikeThrough = YES;
     goodsPrice.font = FONT(12);
 //    goodsPrice.adjustsFontSizeToFitWidth = YES;
     [self addSubview:goodsPrice];

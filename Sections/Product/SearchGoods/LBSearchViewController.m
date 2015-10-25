@@ -11,7 +11,6 @@
 #import "UtilsMacro.h"
 #import "UIView+Extension.h"
 #import "UIImageView+WebCache.h"
-#import "UILabelStrikeThrough.h"
 #import "LBGoodsListViewController.h"
 
 static NSString *cid = @"cid";

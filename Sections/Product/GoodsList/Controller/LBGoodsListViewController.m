@@ -9,7 +9,6 @@
 
 #import "LBGoodsListViewController.h"
 #import "UtilsMacro.h"
-#import "UILabelStrikeThrough.h"
 #import "UIImageView+WebCache.h"
 #import "MobClick.h"
 #import "UIView+Extension.h"

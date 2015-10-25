@@ -29,10 +29,10 @@
     __goodsName.numberOfLines = 2;
     __goodsName.adjustsFontSizeToFitWidth = YES;
 
-    __goodsPrice = [[UILabelStrikeThrough alloc] initWithFrame:CGRectZero];
+    __goodsPrice = [[UILabel alloc] initWithFrame:CGRectZero];
     __goodsPrice.textColor = [UIColor grayColor];
     __goodsPrice.font = FONT(13);
-    __goodsPrice.isWithStrikeThrough = YES;
+//    __goodsPrice.isWithStrikeThrough = YES;
     
     __goodsPromotionPrice = [[UILabel alloc] initWithFrame:CGRectZero];
     __goodsPromotionPrice.textColor = APP_COLOR;
