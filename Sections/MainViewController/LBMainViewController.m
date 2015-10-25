@@ -21,6 +21,7 @@
 #import "AFViewShaker.h"
 #import "LBLeftClassifyView.h"
 #import "LBNewsViewController.h"
+#import "LBWeathViewController.h"
 
 #define iOS7 ([[UIDevice currentDevice].systemVersion doubleValue] >= 7.0)
 
@@ -116,9 +117,9 @@ static BOOL FirstLaunch = NO;
     LBNewsViewController *news = [[LBNewsViewController alloc] init];
     [self setupChildViewController:news title:@"消息" imageName:@"news_normal" selectedImageName:@"news_select"];
     
-    LBShoppingCarViewController *shoppingCar = [[LBShoppingCarViewController alloc] init];
-    shoppingCar.tabBarItem.badgeValue = carBadgeValue;
-    [self setupChildViewController:shoppingCar title:@"财富" imageName:@"treasure_normal" selectedImageName:@"treasure_select"];
+    LBWeathViewController *weath = [[LBWeathViewController alloc] init];
+    weath.tabBarItem.badgeValue = carBadgeValue;
+    [self setupChildViewController:weath title:@"财富" imageName:@"treasure_normal" selectedImageName:@"treasure_select"];
     
     LBMineViewController *mine = [[LBMineViewController alloc] init];
     [self setupChildViewController:mine title:@"我的" imageName:@"zhongxin" selectedImageName:@"zhongxin_s"];
