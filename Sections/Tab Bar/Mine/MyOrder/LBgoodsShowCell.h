@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LBOrderDetailGoodsModel.h"
-
+#import "LBOrderDetailModel.h"
 @interface LBgoodsShowCell : UITableViewCell
 
 //@property(nonatomic,strong)UIImageView *storeImageView;
@@ -17,7 +17,15 @@
 @property(nonatomic,strong)UILabel *showLabel;
 @property(nonatomic,strong)UILabel *moneyLabel;
 @property(nonatomic,strong)UILabel *numLabel;
+@property(nonatomic,strong)UILabel *totalMoneyLabel;
+@property(nonatomic,strong)UIButton *searchDeliver;
+@property(nonatomic,strong)UIButton *orderCancel;
+@property(nonatomic,strong)UIButton *orderReciver;
+@property(nonatomic,strong)UIButton *refundButton;
+@property(nonatomic,strong)UILabel *orderLabel;
+@property(nonatomic,strong)UILabel *tradeLabel;
+@property(nonatomic,strong)UILabel *orderLabel1;
 
-- (void)addValue:(LBOrderDetailGoodsModel *)model;
+- (void)addValue:(LBOrderDetailGoodsModel *)model goodsModel:(LBOrderDetailModel *)goodsModel;
 
 @end

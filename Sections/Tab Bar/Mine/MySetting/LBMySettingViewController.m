@@ -23,7 +23,11 @@
 #import "LBMyAddressViewController.h"
 #import "LBSafeViewController.h"
 #import "SDImageCache.h"
-
+#import "LBBlingViewController.h"
+#import "LBBling1ViewController.h"
+#import "LBBlingStep1lViewController.h"
+#import "LBBlingStepViewController.h"
+#import "LBMyQRCodeViewController.h"
 static NSString *cid = @"cid";
 
 @interface LBMySettingViewController()<UITableViewDelegate,UITableViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIActionSheetDelegate,UIAlertViewDelegate>
@@ -32,7 +36,8 @@ static NSString *cid = @"cid";
     LBMemberInfo *memberInfo;
     NSString *mypoint;
     UIImageView *avator;
-
+    NSString *number;
+    NSString *email;
 }
 @property (nonatomic, strong) UITableView *_tableView;
 
@@ -47,6 +52,7 @@ static NSString *cid = @"cid";
     self.view.backgroundColor = [UIColor whiteColor];
     [self drawTableView];
     [self loadDatas];
+    [self loadIsHaveEmail];
 }
 
 
@@ -69,9 +75,8 @@ static NSString *cid = @"cid";
             
             memberInfo = [LBMemberInfo objectWithKeyValues:responObject[@"datas"][@"member_info"]];
             mypoint = memberInfo.point;
-
+            number=memberInfo.mobile;
             [self._tableView reloadData];
-
             
         } failure:^(AFHTTPRequestOperation *op,NSError *error){
             [SVProgressHUD dismiss];
@@ -80,7 +85,24 @@ static NSString *cid = @"cid";
         }];
 
  }
-
+- (void)loadIsHaveEmail
+{
+    NSString *key = [LBUserInfo sharedUserSingleton].userinfo_key;
+    AFHTTPRequestOperationManager *maneger = [AFHTTPRequestOperationManager manager];
+    NSDictionary *parameter = @{@"key":key};
+    maneger.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json",@"text/json",nil];
+    
+    [maneger POST:SUGE_IS_HAV_EMAIL parameters:parameter success:^(AFHTTPRequestOperation *op,id responObject){
+        
+        NSLog(@"是否邮箱responObject:%@",responObject);
+        email = responObject[@"datas"][@"email"];
+        [self._tableView reloadData];
+    } failure:^(AFHTTPRequestOperation *op,NSError *error){
+        
+        [TSMessage showNotificationWithTitle:@"网络不佳" subtitle:@"请检查网络" type:TSMessageNotificationTypeWarning];
+        NSLog(@"登陆失败:%@",error);
+    }];
+}
 #pragma mark  drawTableView
 - (void)drawTableView
 {
@@ -96,7 +118,7 @@ static NSString *cid = @"cid";
 #pragma mark
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 5;
+    return 7;
 }
 
 #pragma mark
@@ -114,6 +136,8 @@ static NSString *cid = @"cid";
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cid];
     }
+    LBSafeViewController *safe = [[LBSafeViewController alloc] init];
+
     if (section == 0) {
         //avator
         avator = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-80-40, 10, 80, 80)];
@@ -135,20 +159,28 @@ static NSString *cid = @"cid";
         [cell.contentView addSubview:user];
     
     }else if (section == 1){
-        cell.textLabel.text = @"用户名";
+        cell.textLabel.text = @"昵称";
         cell.detailTextLabel.text = memberInfo.user_name;
         //        cell.detailTextLabel.text = memberInfo.point;
 //        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    }
-    else if (section == 2){
-        cell.textLabel.text =@"地址管理";
+    }else if (section == 2){
+        cell.textLabel.text =@"手机号";
+        cell.detailTextLabel.text=number;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }else if (section == 3){
-        cell.textLabel.text =@"我的发票";
+        cell.textLabel.text =@"邮箱";
+        cell.detailTextLabel.text=email;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     else if (section == 4){
-        cell.textLabel.text =@"账户安全";
+        cell.textLabel.text =@"地址管理";
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }else if (section == 5){
+        cell.textLabel.text =@"我的发票";
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    else if (section == 6){
+        cell.textLabel.text =@"我的二维码";
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
 
@@ -158,20 +190,10 @@ static NSString *cid = @"cid";
 #pragma mark
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    switch (indexPath.section) {
-        case 0:
+    if(indexPath.section==0) {
             return 100;
-        case 1:
-            return 50;
-        case 2:
-            return 50;
-        case 3:
-            return 50;
-        case 4:
-            return 50;
-       
     }
-    return 0;
+    return 50;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -189,6 +211,9 @@ static NSString *cid = @"cid";
     [self._tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSInteger section = indexPath.section;
     LBSafeViewController *safe = [[LBSafeViewController alloc] init];
+    LBBlingStep1lViewController *step1=[[LBBlingStep1lViewController alloc]init];
+    LBBlingStepViewController *step=[[LBBlingStepViewController alloc]init];
+    LBMyQRCodeViewController *arCode=[[LBMyQRCodeViewController alloc]init];
 //    NSString *mob = memberInfo.mobile;
     switch (section) {
         case 0:{
@@ -198,13 +223,32 @@ static NSString *cid = @"cid";
         }
             break;
         case 2:
-            [self.navigationController pushViewController:[LBMyAddressViewController new] animated:YES];
+            if ([number isEqualToString:@"您还未绑定手机号"]) {
+                [self.navigationController pushViewController:[LBBlingViewController new] animated:YES];
+            }else{
+                step.agoNumString=number;
+                [self.navigationController pushViewController:step animated:YES];
+                
+            }
             break;
         case 3:
+            if ([email isEqualToString:@"您还未绑定邮箱"] ) {
+                [self.navigationController pushViewController:[LBBling1ViewController new] animated:YES];
+            }else{
+                step1.agoEmailString=email;
+                [self.navigationController pushViewController:step1 animated:YES];
+            }
+            break;
+   
+        case 4:
+            [self.navigationController pushViewController:[LBMyAddressViewController new] animated:YES];
+            break;
+        case 5:
             [self.navigationController pushViewController:[LBInvoiceListViewController new] animated:YES];
             break;
-        case 4:
-            [self.navigationController pushViewController:safe animated:YES];
+        case 6:
+
+            [self.navigationController pushViewController:arCode animated:YES];
             break;
         
     }

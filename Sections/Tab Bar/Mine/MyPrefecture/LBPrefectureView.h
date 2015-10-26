@@ -10,8 +10,8 @@
 
 @interface LBPrefectureView : UIView
 {
-    CAShapeLayer *_trackLayer,*_progressLayer;
-    CATextLayer *textLayer;
+    CAShapeLayer *_trackLayer,*_progressLayer,*lineLayer,*_progressLayer1;
+    CATextLayer *textLayer,*textLayer1;
 }
 
 /**
@@ -22,6 +22,8 @@
  *  填充线颜色。必设置的
  */
 @property (strong,nonatomic) UIColor *lineColor;
+
+@property (nonatomic, assign) NSString *vipNum;
 
 - (void)drawLayerAnimation;
 @end

@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface LBWeathViewController : UIViewController
+@property(nonatomic,copy)void(^block) (NSString *);
 
 @end

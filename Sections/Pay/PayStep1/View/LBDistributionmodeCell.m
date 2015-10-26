@@ -24,6 +24,7 @@
     UILabel *DistributionLabel = [[UILabel alloc]initWithFrame:CGRectMake(8, 19, 100, 21)];
     DistributionLabel.text = @"支付配送";
     DistributionLabel.font = [UIFont systemFontOfSize:15];
+    DistributionLabel.textColor=[UIColor grayColor];
     [self addSubview:DistributionLabel];
     
     //mode of payment 支付方式

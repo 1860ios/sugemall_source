@@ -13,4 +13,5 @@
 @property (nonatomic) BOOL changeAddress;
 @property (nonatomic) BOOL isDelAddress;
 @property (nonatomic, assign) NSString *freight_hash;
+@property (nonatomic, assign) NSString *isDefault;
 @end

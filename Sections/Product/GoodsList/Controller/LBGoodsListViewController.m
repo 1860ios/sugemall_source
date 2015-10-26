@@ -91,6 +91,7 @@ static NSString *collectionView_cid = @"collectionView_cid";
     switch (btn_tag) {
         case 0:{
             LBShoppingCarViewController *car = [LBShoppingCarViewController new];
+            car.isPushIn = YES;
             [self.navigationController pushViewController:car animated:YES];
         }
             break;

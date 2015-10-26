@@ -6,13 +6,17 @@
 //  Created by Apple on 15/9/30.
 //  Copyright (c) 2015年 Josin_Q. All rights reserved.
 //
-
 #import "LBWeathViewController.h"
 #import "UtilsMacro.h"
 #import "LBUserInfo.h"
 #import "SUGE_API.h"
 #import <AFNetworking.h>
 #import <UILabel+FlickerNumber.h>
+#import "LBLognInViewController.h"
+#import "LBWithdrawalViewController.h"
+#import "LBMyPointViewController.h"
+#import "LBCommissionViewController.h"
+#import "LBMyBlotterViewController.h"
 
 static NSString *collectionCell=@"collectionCell";
 @interface LBWeathViewController ()<UICollectionViewDataSource,UICollectionViewDelegate>
@@ -35,7 +39,9 @@ static NSString *collectionCell=@"collectionCell";
 @synthesize weathCollectionView;
 -(void)viewDidLoad
 {
-    self.view.backgroundColor = [UIColor colorWithWhite:0.97 alpha:0.97];
+    self.view.backgroundColor = [UIColor whiteColor];
+   
+
     self.title=@"财富";
     [self loadData];
     [self initTopView];
@@ -44,7 +50,7 @@ static NSString *collectionCell=@"collectionCell";
 #pragma mark  获取数据
 -(void)loadData
 {
-   // numArray=nil;
+    // numArray=nil;
     NSString *key = [LBUserInfo sharedUserSingleton].userinfo_key;
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json",@"text/json",nil];
@@ -55,24 +61,25 @@ static NSString *collectionCell=@"collectionCell";
         num1=weathDictionary[@"points"][@"available"];
         num2=weathDictionary[@"predepoit"][@"p1"];
         num3=weathDictionary[@"predepoit"][@"p2"];
-        num4=weathDictionary[@"rc"][@"available"];
-        num5=weathDictionary[@"predepoit"][@"p0"];
+        num4=weathDictionary[@"predepoit"][@"p0"];
+        num5=weathDictionary[@"rc"][@"available"];
+        num6 = weathDictionary[@"predepoit"][@"available"];
         numArray=@[num1,num2,num3,num4,num5,@"0.00"];
         NSString *numString = weathDictionary[@"sum"];
-//        numLabel.text = numString;
-        numLabel1.text=weathDictionary[@"predepoit"][@"available"];
+        //        numLabel.text = numString;
+        numLabel1.text= num6;
         [numLabel dd_setNumber:[NSNumber numberWithDouble:[numString doubleValue]] duration:2];
         [weathCollectionView reloadData];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         
     }];
-
+    
 }
 #pragma mark  初始化TopView
 -(void)initTopView
 {
-    UIView *incomeView=[[UIView alloc]initWithFrame:CGRectMake(0, 63, SCREEN_WIDTH, 110)];
-    incomeView.backgroundColor=[UIColor whiteColor];
+    UIView *incomeView=[[UIView alloc]initWithFrame:CGRectMake(0, 63, SCREEN_WIDTH, 120)];
+    incomeView.backgroundColor= RGBCOLOR(0, 160, 233);
     [self.view addSubview:incomeView];
     
     UILabel *incomeLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, 10, 110, 35)];
@@ -81,8 +88,8 @@ static NSString *collectionCell=@"collectionCell";
     incomeLabel.textAlignment=NSTextAlignmentLeft;
     [incomeView addSubview:incomeLabel];
     
-    numLabel=[[UILabel alloc]initWithFrame:CGRectMake(incomeLabel.frame.origin.x, incomeLabel.frame.origin.y+incomeLabel.frame.size.height+10, SCREEN_WIDTH, 40)];
-    numLabel.font=FONT(40);
+    numLabel=[[UILabel alloc]initWithFrame:CGRectMake(incomeLabel.frame.origin.x, incomeLabel.frame.origin.y+incomeLabel.frame.size.height+10, SCREEN_WIDTH, 50)];
+    numLabel.font=BFONT(40);
     numLabel.textAlignment=NSTextAlignmentLeft;
     numLabel.textColor=[UIColor redColor];
     [incomeView addSubview:numLabel];
@@ -94,19 +101,19 @@ static NSString *collectionCell=@"collectionCell";
     
     UILabel *billLabel=[[UILabel alloc]initWithFrame:CGRectMake(jiantouButton.frame.origin.x-30, jiantouButton.frame.origin.y, 40, 20)];
     billLabel.text=@"账单";
-    billLabel.font=FONT(12);
+    billLabel.font=FONT(18);
     billLabel.textColor=[UIColor grayColor];
     [incomeView addSubview:billLabel];
     
     UILabel *comLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, incomeView.frame.origin.y+incomeView.frame.size.height,110, 35)];
     comLabel.text=@"可提现佣金(元)";
     comLabel.textAlignment=NSTextAlignmentLeft;
-    comLabel.font=FONT(15);
+    comLabel.font=FONT(18);
     comLabel.textColor=[UIColor lightGrayColor];
     [self.view addSubview:comLabel];
     
     numLabel1=[[UILabel alloc]initWithFrame:CGRectMake(comLabel.frame.origin.x, comLabel.frame.origin.y+comLabel.frame.size.height-10,100, 35)];
-    numLabel1.font=FONT(20);
+    numLabel1.font=BFONT(20);
     numLabel1.textColor=RGBCOLOR(9, 234, 242);
     [self.view addSubview:numLabel1];
 }
@@ -124,10 +131,23 @@ static NSString *collectionCell=@"collectionCell";
     
     UIButton *tixianButton=[UIButton buttonWithType:UIButtonTypeCustom];
     tixianButton.frame=CGRectMake(10, weathCollectionView.frame.origin.y+weathCollectionView.frame.size.height+10, SCREEN_WIDTH-20, 50);
-    [tixianButton setImage:IMAGE(@"yue") forState:0];
+//    [tixianButton setImage:IMAGE(@"yue") forState:0];
+    [tixianButton setBackgroundColor:RGBCOLOR(0, 160, 233)];
+    [tixianButton setTitle:@"我要提现" forState:UIControlStateNormal];
+    [tixianButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [tixianButton addTarget:self action:@selector(pushYueTixian:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:tixianButton];
-
+    
 }
+
+- (void)pushYueTixian:(UIButton *)btn
+{
+    LBWithdrawalViewController *Withdrawal = [LBWithdrawalViewController new];
+    Withdrawal.hidesBottomBarWhenPushed = YES;
+    Withdrawal.moeny = num6;
+    [self.navigationController pushViewController:Withdrawal animated:YES];
+}
+
 #pragma mark  CollectionView代理方法
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
@@ -155,14 +175,14 @@ static NSString *collectionCell=@"collectionCell";
     if (indexPath.row>=3&&indexPath.row<=5) {
         nameLabel=[[UILabel alloc]initWithFrame:CGRectMake(-11, -10, 100, 35)];
     }
-    nameLabel.font=FONT(13);
+    nameLabel.font=FONT(18);
     nameLabel.textColor=[UIColor lightGrayColor];
     nameLabel.text=array[indexPath.row];
     nameLabel.textAlignment=NSTextAlignmentCenter;
     [cell.contentView addSubview:nameLabel];
     
     numLabel2=[[UILabel alloc]initWithFrame:CGRectMake(nameLabel.center.x-50, nameLabel.frame.origin.y+nameLabel.frame.size.height, nameLabel.frame.size.width, 35)];
-    numLabel2.font=FONT(15);
+    numLabel2.font=FONT(20);
     if (indexPath.row==0) {
         numLabel2.textColor=RGBCOLOR(9, 234, 242);
     }else if(indexPath.row==2)
@@ -178,7 +198,7 @@ static NSString *collectionCell=@"collectionCell";
     UIView *longLineView=[[UIView alloc]initWithFrame:CGRectMake(0,numLabel2.frame.origin.y+numLabel2.frame.size.height+10,SCREEN_WIDTH, 2)];
     longLineView.backgroundColor=[UIColor colorWithWhite:0.93 alpha:0.97];
     [cell.contentView addSubview:longLineView];
-
+    
     return cell;
 }
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -192,5 +212,66 @@ static NSString *collectionCell=@"collectionCell";
 -(CGSize)collectionView:(UICollectionView *)collectionView layout:(nonnull UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
     return CGSizeMake(SCREEN_WIDTH/3-35,100);
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    [self.navigationController.navigationBar setTitleTextAttributes:
+     
+     @{NSFontAttributeName:[UIFont systemFontOfSize:19],
+       
+       NSForegroundColorAttributeName:[UIColor whiteColor]}];
+    self.navigationController.navigationBar.barTintColor=RGBCOLOR(0, 160, 233);
+    BOOL islogin = [LBUserInfo sharedUserSingleton].isLogin;
+    if (islogin) {
+           [self loadData];
+    }else{
+        [self.navigationController pushViewController:[LBLognInViewController new] animated:YES];
+    }
+    
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.navigationController.navigationBar setTitleTextAttributes:
+     
+     @{NSFontAttributeName:[UIFont systemFontOfSize:15],
+       
+       NSForegroundColorAttributeName:[UIColor blackColor]}];
+    self.navigationController.navigationBar.barTintColor=[UIColor whiteColor];
+
+}
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    LBMyPointViewController *point=[[LBMyPointViewController alloc]init];
+    LBMyBlotterViewController *blotter=[[LBMyBlotterViewController alloc]init];
+    switch (indexPath.row) {
+        case 0:
+            [self.navigationController pushViewController:point animated:YES];
+            break;
+        case 1:{
+            blotter._title = @"提现中";
+            blotter._type = @"cash_apply";
+            blotter.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:blotter animated:YES];
+        }
+            break;
+        case 2:{
+            blotter._title = @"已提现";
+            blotter.hidesBottomBarWhenPushed = YES;
+            blotter._type = @"cash_pay";
+            [self.navigationController pushViewController:blotter animated:YES];
+        }
+            break;
+        case 3:{
+            blotter._title = @"储值佣金";
+            blotter._type = @"recharge_commis";
+            blotter.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:blotter animated:YES];
+        }
+            break;
+        default:
+            break;
+    }
 }
 @end

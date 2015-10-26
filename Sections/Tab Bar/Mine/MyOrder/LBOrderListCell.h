@@ -23,6 +23,7 @@
 @property (retain, nonatomic)  UILabel *_goods_name_label;
 @property (retain, nonatomic)  UIImageView *_goods_image_view;
 @property (retain, nonatomic)  UILabel *_state_desc_label;
+@property (retain, nonatomic)  UILabel *_goods_number_label;
 @property (retain, nonatomic)  UILabel *_store_name_label;
 
 @end

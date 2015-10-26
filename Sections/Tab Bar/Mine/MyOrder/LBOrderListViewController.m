@@ -253,7 +253,6 @@
         parameter = @{@"key":key,@"order_id":orderid,@"page":@"20",@"curpage":@"1",@"recycle":@"0"};
     }else{
         parameter = @{@"key":key,@"order_status":_orderStatus,@"page":@"20",@"curpage":@"1",@"recycle":@"0"};
-
     }
     }
     [manager POST:url parameters:parameter success:^(AFHTTPRequestOperation *op,id responObject){
@@ -310,56 +309,21 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 155;
+    return 233;
 }
 
-//订单支付/价格 高度
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 50;
+    if (section==0) {
+        return 10;
+    }
+    return 5;
 }
 
-//订单支付
--(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-
-    _modelGroupList = orderDatasArray[section];
-//     _modelList =  _modelGroupList.order_list[section];
-    
-    UIView *orderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 40)];
-    orderView.backgroundColor = [UIColor whiteColor];
-    //订单总价
-    UILabel *pay_amount = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 120, 30)];
-    pay_amount.text = [NSString stringWithFormat:@"总价:%@",_modelGroupList.pay_amount];
-    pay_amount.font = BFONT(20);
-    pay_amount.textColor = APP_COLOR;
-    [orderView addSubview:pay_amount];
-    
-    //订单按钮
-    __orderPay = [UIButton buttonWithType:UIButtonTypeCustom];
-    __orderPay.frame = CGRectMake(SCREEN_WIDTH/2, 5, SCREEN_WIDTH/2-10, 30);
-    [__orderPay setTitle:@"马上支付" forState:0];
-    [__orderPay setTitleColor:[UIColor redColor] forState:0];
-    __orderPay.layer.borderColor = [APP_COLOR CGColor];
-    __orderPay.layer.borderWidth = 1;
-    __orderPay.layer.masksToBounds = YES;
-    __orderPay.layer.cornerRadius = 4;
-    __orderPay.tag = section;
-    [__orderPay addTarget:self action:@selector(orderMethod1:) forControlEvents:UIControlEventTouchUpInside];
-    [orderView addSubview:__orderPay];
-    if ([_recycle isEqualToString:@"1"]) {
-                __orderPay.hidden =YES;
-    }else{
-    if (_modelGroupList.pay_amount.length!=0) {
-        __orderPay.hidden =NO;
-    }else{
-        __orderPay.hidden =YES;
-        pay_amount.text = @"";
-    }
-    }
-    return orderView;
+    return 5;
 }
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
@@ -375,25 +339,29 @@
     _modelExtendOrder = _modelList.extend_order_goods[0];
     
     //赋值
-    cell._store_name_label.text = [NSString stringWithFormat:@"%@ >",_modelList.store_name];
+    cell._store_name_label.text = [NSString stringWithFormat:@"%@",_modelList.store_name];
     cell._state_desc_label.text = _modelList.state_desc;
     [cell._goods_image_view sd_setImageWithURL:[NSURL URLWithString:_modelExtendOrder.goods_image_url] placeholderImage:IMAGE(@"dd_03_@2x")];
     cell._goods_name_label.text = _modelExtendOrder.goods_name;
     cell._goods_price_label.text =[NSString stringWithFormat:@"单价:%@",_modelExtendOrder.goods_price];
-    cell._shipping_fee_label.text = [NSString stringWithFormat:@"运费:%@",_modelList.shipping_fee];
-    NSString *ki =_modelList.order_amount;
-    cell._order_amount_label.text = [NSString stringWithFormat:@"订单价:%@",ki];
+    NSMutableAttributedString *str1 = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"运费:%@",_modelList.shipping_fee]];
+    [str1 addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(0,3)];
+    cell._shipping_fee_label.attributedText = str1;
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"合计:%@",_modelList.order_amount]];
+    [str addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(0,3)];
+//    [str addAttribute:NSForegroundColorAttributeName value:FONT(12) range:NSMakeRange(0,3)];
+    cell._order_amount_label.attributedText =str;
     cell._goods_num_label.text = [NSString stringWithFormat:@"×%@",_modelExtendOrder.goods_num];
-
+    _modelGroupList = orderDatasArray[section];
+    NSString *pay_sn = [NSString stringWithFormat:@"订单编号:%@",_modelGroupList.pay_sn];
+    cell._goods_number_label.text=pay_sn;
     //退款
     refundButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    refundButton.frame = CGRectMake(SCREEN_WIDTH*3/4, cell._order_amount_label.frame.origin.y, SCREEN_WIDTH/4-10, 30);
-    [refundButton setTitleColor:[UIColor redColor] forState:0];
-    refundButton.layer.borderColor = [APP_COLOR CGColor];
-    refundButton.layer.borderWidth = 1;
-    refundButton.layer.masksToBounds = YES;
-    refundButton.layer.cornerRadius = 4;
+    refundButton.frame = CGRectMake(cell._searchDeliver.frame.origin.x, cell._searchDeliver.frame.origin.y,cell._searchDeliver.frame.size.width,cell._searchDeliver.frame.size.height);
+    [refundButton setTitleColor:[UIColor whiteColor] forState:0];
+    refundButton.backgroundColor = APP_COLOR;
     refundButton.tag = row+5000;
+    refundButton.titleLabel.font=FONT(13);
     [refundButton setTitle:@"退 款" forState:0];
     [refundButton addTarget:self action:@selector(refundMethod1:) forControlEvents:UIControlEventTouchUpInside];
     [cell addSubview:refundButton];
@@ -402,6 +370,25 @@
 
             refundButton.hidden = NO;
 
+    }
+    __orderPay = [UIButton buttonWithType:UIButtonTypeCustom];
+    __orderPay.frame = CGRectMake(cell._orderCancel.frame.origin.x+cell._orderCancel.frame.size.width+10,cell._orderCancel.frame.origin.y,cell._orderCancel.frame.size.width, cell._orderCancel.frame.size.height);
+    [__orderPay setTitle:@"马上支付" forState:0];
+    [__orderPay setTitleColor:[UIColor whiteColor] forState:0];
+    __orderPay.backgroundColor =APP_COLOR;
+    __orderPay.titleLabel.font=FONT(13);
+    __orderPay.tag = section;
+    [__orderPay addTarget:self action:@selector(orderMethod1:) forControlEvents:UIControlEventTouchUpInside];
+    [cell addSubview:__orderPay];
+    if ([_recycle isEqualToString:@"1"]) {
+        __orderPay.hidden =YES;
+    }else{
+        if (_modelGroupList.pay_amount.length!=0) {
+            __orderPay.hidden =NO;
+        }else{
+            __orderPay.hidden =YES;
+            //        pay_amount.text = @"";
+        }
     }
         //    }else if ([_orderStatus isEqualToString:@"30"]){
 //        [refundButton setTitle:@"退 货" forState:0];
@@ -446,15 +433,6 @@
     
     return cell;
 }
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    _modelGroupList = orderDatasArray[section];
-    NSString *pay_sn = [NSString stringWithFormat:@"订单编号:%@",_modelGroupList.pay_sn];
-    return pay_sn;
-}
-
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -565,7 +543,6 @@
     _modelGroupList = orderDatasArray[section];
     _modelList =  _modelGroupList.order_list[row];
     _modelExtendOrder = _modelList.extend_order_goods[0];
-
     if (isAllOrder) {
         NSDictionary *dic1 = @{@"pay_sn":_modelGroupList.pay_sn,@"goods_name":_modelExtendOrder.goods_name,@"pay_amount":_modelGroupList.pay_amount};
         [NOTIFICATION_CENTER postNotificationName:@"payorder" object:nil userInfo:dic1];

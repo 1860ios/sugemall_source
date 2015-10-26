@@ -10,4 +10,6 @@
 
 @interface LBMyBlotterViewController : UIViewController
 @property (nonatomic,assign) NSString *_yue;
+@property (nonatomic,assign) NSString *_type;
+@property (nonatomic,assign) NSString *_title;
 @end

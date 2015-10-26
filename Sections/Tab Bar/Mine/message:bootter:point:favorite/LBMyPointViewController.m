@@ -35,7 +35,10 @@ static NSString *cid = @"cid";
     [super viewDidLoad];
     self.title = @"我的积分明细";
     self.view.backgroundColor  =[UIColor whiteColor];
-    //
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
+
     [self loadPointSegmentedControll];
     [self initMyPointView];
     [self loadMyPointDatas:@"1"];
@@ -219,8 +222,8 @@ static NSString *cid = @"cid";
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    self.navigationController.navigationBar.translucent = NO;
-    self.tabBarController.tabBar.translucent = NO;
+//    self.navigationController.navigationBar.translucent = NO;
+//    self.tabBarController.tabBar.translucent = NO;
     [MobClick beginLogPageView:@"我的积分"];
 }
 

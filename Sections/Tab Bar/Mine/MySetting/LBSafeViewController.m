@@ -114,8 +114,6 @@ static NSString *cid=  @"cid";
         [TSMessage showNotificationWithTitle:@"网络不佳" subtitle:@"请检查网络" type:TSMessageNotificationTypeWarning];
         NSLog(@"登陆失败:%@",error);
     }];
-
-    
 }
 
 //支付密码
@@ -178,6 +176,7 @@ static NSString *cid=  @"cid";
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
     }
+    
     cell.textLabel.text = [safeTitles objectAtIndex:section];
     if (email == nil) {
         email = @"您还未绑定邮箱";
@@ -190,6 +189,7 @@ static NSString *cid=  @"cid";
     }else{
         payMM = @"修改支付密码";
     }
+    
     safeRightTitles = @[@"修改密码",mobile,email,@"查看我的银行卡",payMM];
     //
     rightLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-200, 5, 170, 35)];

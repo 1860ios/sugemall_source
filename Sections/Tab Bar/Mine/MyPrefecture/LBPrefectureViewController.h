@@ -12,4 +12,5 @@
 @property (nonatomic, assign) NSString *iconString;
 @property (nonatomic, assign) NSString *nameString;
 @property (nonatomic, assign) NSString *integrationString;
+@property (nonatomic, assign) NSString *vipNum;
 @end

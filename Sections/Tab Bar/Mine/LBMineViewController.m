@@ -50,6 +50,11 @@
 #import "LBSafeViewController.h"
 #import "LBRechargeViewController.h"
 #import "LBPrefectureViewController.h"
+#import "LBShoppingCarViewController.h"
+#import "LBNewHandViewController.h"
+#import "LBStartAuthenticationViewController.h"
+#import "LBAddressListViewController.h"
+#import "LBRedBagViewController.h"
 static NSString *cid = @"cid";
 static SystemSoundID shake_sound_male_id = 0;
 static SystemSoundID shake_sound_male_id1 = 1;
@@ -73,6 +78,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
     
     NSString *sender_name;
     NSString *sender_IconURL;
+    NSString *vip_consume;
     
     UIImageView *userIcon;//用户头像
     UILabel *userName;//用户名
@@ -116,6 +122,10 @@ static NSString *collectionView_cid = @"collectionViewcid";
     UIImageView *jiantouImageView1;
     UIImageView *caifuImageView;
     UILabel *numLabel;
+    UIView *lineView;
+    NSString *title;
+    NSString *title1;
+    NSString *money;
 }
 
 @property (nonatomic, strong) UITableView *_tableView;
@@ -127,8 +137,14 @@ static NSString *collectionView_cid = @"collectionViewcid";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    
+    [self initDatas];
+    [self loadDatas:@"faq,video"];
+//    UILabel *label1 = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 30, 20)];
+//    [label1 addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToMySetting)]];
+//    
+//    label1.text=@"设置";
+//    label1.font=FONT(14);
+//    label1.textColor=[UIColor blackColor];
     UIButton *button2=[UIButton buttonWithType:UIButtonTypeCustom];
     button2.frame=CGRectMake(0, 0, 35, 20);
     [button2 setTitle:@"设置" forState:0];
@@ -137,6 +153,11 @@ static NSString *collectionView_cid = @"collectionViewcid";
     [button2 addTarget:self action:@selector(goToMySetting) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *rightNavBarItem = [[UIBarButtonItem alloc] initWithCustomView:button2];
     self.navigationItem.rightBarButtonItem = rightNavBarItem;
+    //rightNavBar
+    //    UIImageView *image2 = [[UIImageView alloc] initWithImage:IMAGE(@"message")];
+    //    [image2 addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToMymessage)]];
+    //    UIBarButtonItem *rightNavBarItem = [[UIBarButtonItem alloc] initWithCustomView:image2];
+    //    self.navigationItem.rightBarButtonItem = rightNavBarItem;
     
     [self drawTableView];
     [self drawTableViewHeaderView];
@@ -145,7 +166,18 @@ static NSString *collectionView_cid = @"collectionViewcid";
     [NOTIFICATION_CENTER addObserver:self selector:@selector(lognOut:) name:SUGE_NOT_LOGNOUT1 object:nil];
     
 }
-#pragma   注销密码
++(UIImage*) createImageWithColor:(UIColor*) color
+{
+    CGRect rect=CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return theImage;
+}
+#pragma  mark 注销密码
 - (void)lognOut:(NSNotification *)not
 {
     //注销密码
@@ -167,6 +199,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
     caifuImageView.hidden=YES;
     numLabel.hidden=YES;
     jiantouImageView1.hidden=YES;
+    lineView.hidden=YES;
     [hud1 setCount:0];
     [hud2 setCount:0];
     [hud3 setCount:0];
@@ -231,6 +264,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
         //获奖信息
         redbagLabel = [[UILabel alloc] initWithFrame:CGRectMake(gifImageView.center.x-(SCREEN_WIDTH/3)/2, (gifImageView.frame.size.height)/6, SCREEN_WIDTH/3, 100)];
         redbagLabel.text = [NSString stringWithFormat:@"恭喜你摇到%@￥,赶紧去使用红包吧~",responObject[@"datas"][@"amount"]];
+        money=responObject[@"datas"][@"amount"];
         redbagLabel.numberOfLines = 2;
         redbagLabel.textColor = APP_COLOR;
         redbagLabel.adjustsFontSizeToFitWidth = YES;
@@ -376,7 +410,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
         point = [NSString stringWithFormat:@"%0.2f",[po floatValue]];
         NSString *predepoit = responObject[@"datas"][@"member_info"][@"predepoit"];
         NSString *favs=responObject[@"datas"][@"member_info"][@"favorites"];
-        NSString *vip_consume = responObject[@"datas"][@"member_info"][@"vip_consume"];
+        vip_consume = responObject[@"datas"][@"member_info"][@"vip_consume"];
         namee = [LBUserInfo sharedUserSingleton].userinfo_username;
         NSString *menid =responObject[@"datas"][@"member_info"][@"member_id"];
         //推荐人
@@ -397,6 +431,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
         userName.text = [NSString stringWithFormat:@"%@",namee];
         luckName.text = [NSString stringWithFormat:@"%@",menid];
         //        int vip = [vip_consume intValue];
+        levelIcon.userInteractionEnabled=YES;
         if ([vip_consume isEqualToString:@"168"]) {
             levelIcon.image = IMAGE(@"vip_top");
         }if ([vip_consume isEqualToString:@"1000"]) {
@@ -404,9 +439,11 @@ static NSString *collectionView_cid = @"collectionViewcid";
         }else if ([vip_consume isEqualToString:@"2000"]){
             levelIcon.image = IMAGE(@"bojin_top");
         }else if ([vip_consume isEqualToString:@"3000"]){
-            levelIcon.image = IMAGE(@"zuanshi");
-        }else {
-            levelIcon.image = IMAGE(@"normol_icon");
+            levelIcon.image = IMAGE(@"zuanshi_02");
+        }else{
+//            levelIcon.image=IMAGE(@"123");
+            levelIcon.userInteractionEnabled=NO;
+            levelIcon.image=IMAGE(@"kongbai");
         }
         if (predepoit == nil) {
             buttonTitles = @[point,@"0",@"0"];
@@ -414,11 +451,31 @@ static NSString *collectionView_cid = @"collectionViewcid";
             buttonTitles = @[point,predepoit,favs];
         }
         
-       
+        
+        for (int i = 0; i<3; i++) {
+            UIButton *button = (UIButton *)[self.view viewWithTag:88+i];
+            [button setTitle:[buttonTitles objectAtIndex:i] forState:0];
+        }
+        NSString *num1 =responObject[@"datas"][@"order_count"][@"order_unpay"];
+        NSString *num2 =responObject[@"datas"][@"order_count"][@"order_payed"];
+        NSString *num3 =responObject[@"datas"][@"order_count"][@"order_send"];
+        //        NSString *num4 =responObject[@"datas"][@"order_count"][@"order_sender"];
+        [hud1 setCount:[num1 intValue]];
+        [hud2 setCount:[num2 intValue]];
+        [hud3 setCount:[num3 intValue]];
+        //        [hud4 setCount:[num4 intValue]];
     } failure:^(AFHTTPRequestOperation *op,NSError *error){
     }];
     //dimiss HUD
     [SVProgressHUD dismiss];
+    
+}
+
+- (void)initDatas
+{
+    
+    titles = @[@[@"全部订单"],@[@"我的钱包"],@[@"我的二维码",@"我的客户",],@[@"个人设置",@"帮助与反馈"]];
+    images = @[@[@"suge_personel_waitpay_order"],@[@"my_shop"],@[@"mine_qcode",@"mine_customer"],@[@"mine_setting",@"suge_discuss"]];
     
 }
 
@@ -434,6 +491,8 @@ static NSString *collectionView_cid = @"collectionViewcid";
     [self.view addSubview:__tableView];
     
 }
+#pragma mark 进入设置
+
 - (void)pushSettingView
 {
     LBMySettingViewController *setting = [[LBMySettingViewController alloc] init];
@@ -459,12 +518,17 @@ static NSString *collectionView_cid = @"collectionViewcid";
     userIcon.layer.masksToBounds  = YES;
     [userIcon addGestureRecognizer:tap1];
     [headerView addSubview:userIcon];
+    
+    lineView=[[UIView alloc]initWithFrame:CGRectMake(10, userIcon.frame.origin.y+userIcon.frame.size.height+10, SCREEN_WIDTH-20, 1)];
+    lineView.backgroundColor=[UIColor colorWithWhite:0.95 alpha:0.93];
+    [headerView addSubview:lineView];
+    
     //"订单","储值金额","我的喜欢","会员专区
-    View1 = [[UIView alloc] initWithFrame:CGRectMake(0, userIcon.frame.origin.y+userIcon.frame.size.height+20, SCREEN_WIDTH, 30)];
+    View1 = [[UIView alloc] initWithFrame:CGRectMake(0, userIcon.frame.origin.y+userIcon.frame.size.height+25, SCREEN_WIDTH, 30)];
     View1.alpha = 0.5;
     //    [View1 setBlurRadius:20];
     NSArray *orderTitles = @[@"订单",@"购物车",@"会员专区",@"我的收藏"];
-    NSArray *orderTitles1 = @[@"订单",@"购物车",@"会员专区",@"我的喜欢"];
+    NSArray *orderTitles1 = @[@"订单",@"个人中心修改_05",@"会员专区",@"我的喜欢"];
     //    buttonTitles = @[@"90",@"20",@"10"];
     if (buttonTitles.count == 0) {
         buttonTitles = @[@"0",@"0",@"0",@"0"];
@@ -473,11 +537,15 @@ static NSString *collectionView_cid = @"collectionViewcid";
         
         button1 = [UIButton buttonWithType:UIButtonTypeCustom];
         button1.frame =CGRectMake(EACH_W(4 * i)+25, 0, 30, 30);
+        //        button1.titleLabel.textAlignment = NSTextAlignmentCenter;
+        //        [button1 setTitleColor:[UIColor whiteColor] forState:0];
+        //        [button1 setTitle:[buttonTitles objectAtIndex:i] forState:0];
+        //        button1.titleLabel.font = FONT(14);
         [button1 setImage:IMAGE(orderTitles1[i]) forState:0];
         button1.tag = i+88;
         [button1 addTarget:self action:@selector(pushOtherView:) forControlEvents:UIControlEventTouchUpInside];
         [View1 addSubview:button1];
-        
+
         
         UILabel *orderTitlesLabel = [[UILabel alloc] init];
         orderTitlesLabel.frame = CGRectMake(button1.center.x-33, button1.frame.origin.y+button1.frame.size.height, 70, 15);
@@ -485,6 +553,14 @@ static NSString *collectionView_cid = @"collectionViewcid";
         orderTitlesLabel.font = FONT(12);
         orderTitlesLabel.text = [orderTitles objectAtIndex:i];
         [View1 addSubview:orderTitlesLabel];
+        
+        UIView *lineView1=[[UIView alloc]initWithFrame:CGRectMake(orderTitlesLabel.frame.origin.x+orderTitlesLabel.frame.size.width+15, orderTitlesLabel.frame.origin.y-15, 1, 30)];
+        lineView1.backgroundColor=[UIColor colorWithWhite:0.85 alpha:0.93];
+        [View1 addSubview:lineView1];
+        if (i==3) {
+            lineView1.backgroundColor=[UIColor whiteColor];
+        }
+        
     }
     
     [headerView addSubview:View1];
@@ -512,7 +588,6 @@ static NSString *collectionView_cid = @"collectionViewcid";
     //用户vip图标
     levelIcon = [[UIImageView alloc] initWithFrame:CGRectMake(luckName.frame.origin.x+luckName.frame.size.width, luckName.frame.origin.y, 80, 20)];
     levelIcon.contentMode = UIViewContentModeScaleAspectFit;
-//    levelIcon.backgroundColor=[UIColor redColor];
     UITapGestureRecognizer *tap3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pushRecharge)];
     levelIcon.userInteractionEnabled=YES;
     [levelIcon addGestureRecognizer:tap3];
@@ -553,7 +628,6 @@ static NSString *collectionView_cid = @"collectionViewcid";
     
     numLabel=[[UILabel alloc]initWithFrame:CGRectMake(jiantouImageView.frame.origin.x-210, jiantouImageView.frame.origin.y,200, 25)];
     numLabel.font=FONT(15);
-    numLabel.text=@"0.00";
     numLabel.textAlignment=NSTextAlignmentRight;
     [headerView addSubview:numLabel];
     
@@ -590,7 +664,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
     
 }
 
-
+#pragma mark  tableView 代理方法
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -610,7 +684,6 @@ static NSString *collectionView_cid = @"collectionViewcid";
     centerLabel.font=FONT(12);
     centerLabel.textColor=[UIColor lightGrayColor];
     [cell addSubview:centerLabel];
-    
     [cell.contentView addSubview:__collectionView];
     
     UILabel *serviceLabel=[[UILabel alloc]initWithFrame:CGRectMake(10,__collectionView.frame.origin.y+__collectionView.frame.size.height+20, 60, 20)];
@@ -618,12 +691,12 @@ static NSString *collectionView_cid = @"collectionViewcid";
     serviceLabel.text=@"客户服务";
     serviceLabel.font=FONT(12);
     [cell.contentView addSubview:serviceLabel];
-    NSArray *serviceArray=@[@"yijian_01",@"suge_01"];
+    NSArray *serviceArray=@[@"个人中心修改_25-44",@"个人中心修改_43",@"个人中心修改_41"];
     UIButton *serviceButton1=[UIButton buttonWithType:UIButtonTypeCustom];
     serviceButton1 = [[UIButton alloc] initWithFrame:CGRectZero];
     serviceButton1.frame = CGRectMake(30,serviceLabel.frame.origin.y+serviceLabel.frame.size.height+10, SCREEN_WIDTH/4-30-30, SCREEN_WIDTH/4-30-30);
     [serviceButton1 setImage:IMAGE(serviceArray[0]) forState:0];
-    [serviceButton1 addTarget:self action:@selector(pushToFeedback) forControlEvents:UIControlEventTouchUpInside];
+    [serviceButton1 addTarget:self action:@selector(pushToAbout) forControlEvents:UIControlEventTouchUpInside];
     serviceButton1.contentMode = UIViewContentModeScaleAspectFit;
     [cell.contentView addSubview:serviceButton1];
     
@@ -632,31 +705,45 @@ static NSString *collectionView_cid = @"collectionViewcid";
     serviceButton2.frame = CGRectMake(serviceButton1.frame.origin.x+serviceButton1.frame.size.width+60,serviceButton1.frame.origin.y,serviceButton1.frame.size.width,serviceButton1.frame.size.height);
     [serviceButton2 setImage:IMAGE(serviceArray[1]) forState:0];
     serviceButton2.contentMode = UIViewContentModeScaleAspectFit;
-    [serviceButton2 addTarget:self action:@selector(pushToAbout) forControlEvents:UIControlEventTouchUpInside];
+    [serviceButton2 addTarget:self action:@selector(pushToQuestions) forControlEvents:UIControlEventTouchUpInside];
     [cell.contentView addSubview:serviceButton2];
     
-    UILabel *serviceLabel1=[[UILabel alloc]initWithFrame:CGRectMake(serviceButton1.center.x-20,serviceButton1.frame.origin.y+serviceButton1.frame.size.height,60, 20)];
-    serviceLabel1.text=@"意见反馈";
+    UIButton *serviceButton3=[UIButton buttonWithType:UIButtonTypeCustom];
+    serviceButton3 = [[UIButton alloc] initWithFrame:CGRectZero];
+    serviceButton3.frame = CGRectMake(serviceButton2.frame.origin.x+serviceButton2.frame.size.width+60,serviceButton2.frame.origin.y,serviceButton2.frame.size.width,serviceButton2.frame.size.height);
+    [serviceButton3 setImage:IMAGE(serviceArray[2]) forState:0];
+    serviceButton3.contentMode = UIViewContentModeScaleAspectFit;
+    [serviceButton3 addTarget:self action:@selector(pushToFeedback) forControlEvents:UIControlEventTouchUpInside];
+    [cell.contentView addSubview:serviceButton3];
+    
+    UILabel *serviceLabel1=[[UILabel alloc]initWithFrame:CGRectMake(serviceButton1.center.x-22,serviceButton1.frame.origin.y+serviceButton1.frame.size.height,60, 20)];
+    serviceLabel1.text=@"关于苏格";
     serviceLabel1.textColor=[UIColor lightGrayColor];
     serviceLabel1.font=FONT(12);
     [cell.contentView addSubview:serviceLabel1];
     
-    UILabel *serviceLabel2=[[UILabel alloc]initWithFrame:CGRectMake(serviceButton2.center.x-20,serviceButton2.frame.origin.y+serviceButton2.frame.size.height,60, 20)];
-    serviceLabel2.text=@"关于苏格";
+    UILabel *serviceLabel2=[[UILabel alloc]initWithFrame:CGRectMake(serviceButton2.center.x-22,serviceButton2.frame.origin.y+serviceButton2.frame.size.height,60, 20)];
+    serviceLabel2.text=@"新手指南";
     serviceLabel2.textColor=[UIColor lightGrayColor];
     serviceLabel2.font=FONT(12);
     [cell.contentView addSubview:serviceLabel2];
     
-    UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(serviceButton1.frame.origin.x+serviceButton1.frame.size.width+30,serviceButton1.frame.origin.y+10, 1, 30)];
-    lineView.backgroundColor=[UIColor colorWithWhite:0.93 alpha:0.97];
-    [cell.contentView addSubview:lineView];
+    UILabel *serviceLabel3=[[UILabel alloc]initWithFrame:CGRectMake(serviceButton3.center.x-27,serviceButton3.frame.origin.y+serviceButton3.frame.size.height,60, 20)];
+    serviceLabel3.text=@"苏格商学院";
+    serviceLabel3.textColor=[UIColor lightGrayColor];
+    serviceLabel3.font=FONT(12);
+    [cell.contentView addSubview:serviceLabel3];
+    
+    UIView *lineView4=[[UIView alloc]initWithFrame:CGRectMake(serviceButton1.frame.origin.x+serviceButton1.frame.size.width+30,serviceButton1.frame.origin.y+10, 1, 30)];
+    lineView4.backgroundColor=[UIColor colorWithWhite:0.93 alpha:0.97];
+    [cell.contentView addSubview:lineView4];
     
     return cell;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return SCREEN_HEIGHT-headerView.frame.size.height-60;
+    return SCREEN_HEIGHT-headerView.frame.size.height;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -664,27 +751,37 @@ static NSString *collectionView_cid = @"collectionViewcid";
 }
 - (void)pushOtherView:(UIButton *)btn
 {
-    HostViewController *point1 = [[HostViewController alloc] init];
-    LBMyBlotterViewController *com = [[LBMyBlotterViewController alloc] init];
+    HostViewController *OrderList = [[HostViewController alloc] init];
     LBFavoriteListViewController *fa = [[LBFavoriteListViewController alloc] init];
     LBPrefectureViewController *pre=[[LBPrefectureViewController alloc]init];
-    NSString *yue = buttonTitles[1];
+    LBShoppingCarViewController *shopping=[[LBShoppingCarViewController alloc]init];
+//    NSString *yue = buttonTitles[1];
     switch (btn.tag) {
         case 88:
-            point1.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:point1 animated:YES];
+            OrderList.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:OrderList animated:YES];
             break;
             
         case 89:
-            com._yue = yue;
-            com.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:com animated:YES];
+            //com._yue = yue;
+            shopping.hidesBottomBarWhenPushed = YES;
+            shopping.isPushIn = YES;
+            [self.navigationController pushViewController:shopping animated:YES];
             break;
         case 90:
             pre.hidesBottomBarWhenPushed = YES;
             pre.iconString=iconUrl;
             pre.nameString=namee;
             pre.integrationString=point;
+            if ([vip_consume isEqualToString:@"168"]) {
+                pre.vipNum=vip_consume;
+            }if ([vip_consume isEqualToString:@"1000"]) {
+                pre.vipNum=vip_consume;
+            }else if ([vip_consume isEqualToString:@"2000"]){
+                pre.vipNum=vip_consume;
+            }else if ([vip_consume isEqualToString:@"3000"]){
+                pre.vipNum=vip_consume;
+            }
             [self.navigationController pushViewController:pre animated:YES];
             break;
         case 91:
@@ -692,9 +789,8 @@ static NSString *collectionView_cid = @"collectionViewcid";
             [self.navigationController pushViewController:fa animated:YES];
             break;
     }
-    
 }
-//初始化collectionView
+#pragma mark 初始化collectionView
 -(void)drawCollectionView
 {
     UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc]init];
@@ -705,6 +801,8 @@ static NSString *collectionView_cid = @"collectionViewcid";
     __collectionView.scrollEnabled  = YES;
     [__collectionView registerClass:[UICollectionViewCell class]forCellWithReuseIdentifier:collectionView_cid];
 }
+#pragma mark  __collectionView 代理方法
+
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
     return 1;
@@ -719,8 +817,8 @@ static NSString *collectionView_cid = @"collectionViewcid";
     while ([cell.contentView.subviews lastObject]) {
         [(UIView *)[cell.contentView.subviews lastObject] removeFromSuperview];
     }
-    NSArray *array=@[@"yinhangka_01",@"renqi_01",@"youhuiquan_01",@"xiaoxi_01",@"anquan_01",@"dizhi_01",@"erweima_01",@"yijian_01",@"suge_01"];
-    NSArray *array1=@[@"银行卡",@"我的人气",@"优惠劵",@"我的消息",@"安全设置",@"收货地址",@"二维码",@"意见反馈",@"关于苏格"];
+    NSArray *array=@[@"个人中心修改_19",@"个人中心修改_21",@"个人中心修改_21-21",@"个人中心修改_27",@"个人中心修改_22-35",@"个人中心修改_32-36",@"个人中心修改_34"];
+    NSArray *array1=@[@"通讯录",@"我的名片",@"实名认证",@"红包",@"安全设置",@"收货地址",@"银行卡"];
     
     UIImageView *cardImageView=[[UIImageView alloc]initWithFrame:CGRectMake(10, 40, SCREEN_WIDTH/4-30-30, SCREEN_WIDTH/4-30-30)];
     cardImageView.image=IMAGE([array objectAtIndex:indexPath.row]);
@@ -733,13 +831,29 @@ static NSString *collectionView_cid = @"collectionViewcid";
     cardLabel.text=[array1 objectAtIndex:indexPath.row];
     cardLabel.textColor=[UIColor lightGrayColor];
     cardLabel.font=FONT(12);
-    [cell.contentView addSubview:cardLabel];
-    UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(cardImageView.frame.origin.x+cardImageView.frame.size.width+30,cardImageView.frame.origin.y+10, 1, 30)];
-    lineView.backgroundColor=[UIColor colorWithWhite:0.93 alpha:0.97];
-    if (indexPath.row==6||indexPath.row==3) {
-        lineView.backgroundColor=[UIColor whiteColor];
+    if (indexPath.row==6) {
+        cardLabel.frame=CGRectMake(cardImageView.center.x-17,cardImageView.frame.origin.y+cardImageView.frame.size.height,60, 20);
+    }else if (indexPath.row==4||indexPath.row==5)
+    {
+        cardLabel.frame=CGRectMake(cardImageView.center.x-23,cardImageView.frame.origin.y+cardImageView.frame.size.height,60, 20);
     }
-    [cell.contentView addSubview:lineView];
+    else if (indexPath.row==3)
+    {
+        cardLabel.frame=CGRectMake(cardImageView.center.x-12,cardImageView.frame.origin.y+cardImageView.frame.size.height,60, 20);
+    }
+//    else if (indexPath.row==6)
+//    {
+//        cardLabel.frame=CGRectMake(cardImageView.center.x,cardImageView.frame.origin.y+cardImageView.frame.size.height,60, 20);
+//    }
+    [cell.contentView addSubview:cardLabel];
+    
+    UIView *lineView3=[[UIView alloc]initWithFrame:CGRectMake(cardImageView.frame.origin.x+cardImageView.frame.size.width+30,cardImageView.frame.origin.y+10, 1, 30)];
+    lineView3.backgroundColor=[UIColor colorWithWhite:0.93 alpha:0.97];
+
+    if (indexPath.row==6||indexPath.row==3) {
+        lineView3.backgroundColor=[UIColor whiteColor];
+    }
+    [cell.contentView addSubview:lineView3];
     
     return cell;
 }
@@ -755,63 +869,79 @@ static NSString *collectionView_cid = @"collectionViewcid";
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     BOOL isLogin = [LBUserInfo sharedUserSingleton].isLogin;
-    if (isLogin) {
+
     switch (indexPath.row) {
         case 0:
-        {
-                LBBankViewController *bank = [[LBBankViewController alloc] init];
-                bank.hidesBottomBarWhenPushed = YES;
-                [self.navigationController pushViewController:bank animated:YES];
-        }
+            if (isLogin) {
+                LBAddressListViewController *List = [[LBAddressListViewController alloc] init];
+                List.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:List animated:YES];
+            }else{
+                [self goSigin];
+            }
             break;
         case 1:
-        {
-                LBMyRefereeViewController *MyReferee = [[LBMyRefereeViewController alloc] init];
-                MyReferee.hidesBottomBarWhenPushed = YES;
-                [self.navigationController pushViewController:MyReferee animated:YES];
-        }
-            break;
-        case 2:
-        {
-                LBVoucherHostViewController *VoucherHost = [[LBVoucherHostViewController alloc] init];
-                VoucherHost.hidesBottomBarWhenPushed = YES;
-                [self.navigationController pushViewController:VoucherHost animated:YES];
-        }
-            break;
-        case 3:
-        {
-                LBMyMessageViewController *Message = [[LBMyMessageViewController alloc] init];
-                Message.hidesBottomBarWhenPushed = YES;
-                [self.navigationController pushViewController:Message animated:YES];
-        }
-            break;
-        case 4:
-        {
-                LBSafeViewController *Safe = [[LBSafeViewController alloc] init];
-                Safe.hidesBottomBarWhenPushed = YES;
-                [self.navigationController pushViewController:Safe animated:YES];
-        }
-            break;
-        case 5:
-        {
-                LBMyAddressViewController *Address = [[LBMyAddressViewController alloc] init];
-                Address.hidesBottomBarWhenPushed = YES;
-                [self.navigationController pushViewController:Address animated:YES];
-        }
-            break;
-        case 6:
-        {
+            if (isLogin) {
                 LBMyQRCodeViewController *QRCode = [[LBMyQRCodeViewController alloc] init];
                 QRCode.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:QRCode animated:YES];
-        }
+            }else{
+                [self goSigin];
+            }
+            break;
+        case 2:
+
+            if (isLogin) {
+                LBStartAuthenticationViewController *StartAuthentication = [[LBStartAuthenticationViewController alloc] init];
+                StartAuthentication.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:StartAuthentication animated:YES];
+            }else{
+                [self goSigin];
+            }
+            break;
+        case 3:
+            if (isLogin) {
+                LBRedBagViewController *RedBag = [[LBRedBagViewController alloc] init];
+                RedBag.hidesBottomBarWhenPushed = YES;
+                RedBag.iconString=iconUrl;
+                RedBag.name=namee;
+                RedBag.money=money;
+                [self.navigationController pushViewController:RedBag animated:YES];
+            }else{
+                [self goSigin];
+            }
+            break;
+        case 4:
+            if (isLogin) {
+                LBSafeViewController *Safe = [[LBSafeViewController alloc] init];
+                Safe.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:Safe animated:YES];
+            }else{
+                [self goSigin];
+            }
+            break;
+        case 5:
+            if (isLogin) {
+                LBMyAddressViewController *Address = [[LBMyAddressViewController alloc] init];
+                Address.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:Address animated:YES];
+            }else{
+                [self goSigin];
+            }
+            break;
+        case 6:
+            if (isLogin) {
+                LBBankViewController *bank = [[LBBankViewController alloc] init];
+                bank.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:bank animated:YES];
+            }else{
+                [self goSigin];
+            }
+
             break;
             
         default:
             break;
-    }
-    }else{
-        [self goSigin];
     }
 
 }
@@ -893,6 +1023,14 @@ static NSString *collectionView_cid = @"collectionViewcid";
     }
     
 }
+-(void)pushToQuestions
+{
+        LBNewHandViewController *NewHand = [[LBNewHandViewController alloc] init];
+        NewHand.hidesBottomBarWhenPushed = YES;
+        NewHand.title1=title;
+        NewHand.title2=title1;
+        [self.navigationController pushViewController:NewHand animated:YES];
+}
 -(void)pushToFeedback
 {
     BOOL isLogin = [LBUserInfo sharedUserSingleton].isLogin;
@@ -919,6 +1057,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
     }
 
 }
+#pragma mark  进入财富页面
 -(void)clickWeath
 {
     BOOL isLogin = [LBUserInfo sharedUserSingleton].isLogin;
@@ -926,6 +1065,9 @@ static NSString *collectionView_cid = @"collectionViewcid";
     if (isLogin) {
         LBWeathViewController *weath=[[LBWeathViewController alloc]init];
         weath.hidesBottomBarWhenPushed=YES;
+        weath.block = ^(NSString *num){
+            numLabel.text=num;
+        };
         [self.navigationController pushViewController:weath animated:YES];
     }else{
         [self goSigin];
@@ -937,8 +1079,186 @@ static NSString *collectionView_cid = @"collectionViewcid";
     Recharge.hidesBottomBarWhenPushed=YES;
     [self.navigationController pushViewController:Recharge animated:YES];
 }
+#pragma mark  section
+/*- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+ {
+ return titles.count;
+ }
+ 
+ #pragma mark numberOfRowsInSection
+ - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+ {
+ //    return [[titles objectAtIndex:section] count];
+ switch (section) {
+ case 0:
+ return 1;
+ case 1:
+ return 1;
+ case 2:
+ return 2;
+ case 3:
+ return 2;
+ case 4:
+ return 1;
+ 
+ }
+ return 0;
+ }
+ - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ return 45;
+ }
+ 
+ #pragma mark heightForHeaderInSection
+ - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+ {
+ switch (section) {
+ case 0:
+ return 10;
+ case 1:
+ return 10;
+ case 2:
+ return 25;
+ case 3:
+ return 0;
+ 
+ }
+ return 0;
+ }
+ #pragma mark heightForFooterInSection
+ - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+ {
+ if (section == 0) {
+ return 60;
+ }
+ if (section == 1) {
+ return 35;
+ }
+ if (section == 2) {
+ return 3;
+ }
+ 
+ return 0;
+ }
+ #pragma mark cellForRowAtIndexPath
+ - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ NSInteger section = indexPath.section;
+ NSInteger row = indexPath.row;
+ 
+ //    NSString *text = [[titles objectAtIndex:section] objectAtIndex:indexPath.row];
+ //    UIImage *image = [UIImage imageNamed:[[images objectAtIndex:indexPath.section] objectAtIndex:row]];
+ //
+ UITableViewCell *cell = nil;
+ 
+ if (!cell) {
+ cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cid];
+ if (section == 1) {
+ if (row== 0) {
+ }
+ }else{
+ cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+ }
+ //平滑
+ cell.layer.shouldRasterize = YES;
+ cell.layer.rasterizationScale = [UIScreen mainScreen].scale;
+ ////        cell.textLabel.text = text;
+ ////        cell.imageView.image = image;
+ //        UIImageView *imageView1 = [[UIImageView alloc] initWithFrame:CGRectMake(10, 7, 30, 30)];
+ //        imageView1.image = image;
+ //        [cell addSubview:imageView1];
+ //        UILabel *textname = [[UILabel alloc] initWithFrame:CGRectMake(imageView1.frame.origin.x+imageView1.frame.size.width+10, imageView1.frame.origin.y, 100, 30)];
+ //        textname.text = text;
+ //        textname.font = FONT(17);
+ //        [cell addSubview:textname];
+ }
+ return cell;
+ 
+ }
+ 
+ #pragma mark didSelectRowAtIndexPath
+ - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ [tableView deselectRowAtIndexPath:indexPath animated:YES];
+ 
+ HostViewController *orderlist = [[HostViewController alloc] init];
+ orderlist.hidesBottomBarWhenPushed = YES;
+ LBFeedbackViewController *feedback = [[LBFeedbackViewController alloc] init];
+ feedback.hidesBottomBarWhenPushed = YES;
+ LBMyRefereeViewController *myRefereeVC = [[LBMyRefereeViewController alloc]init];
+ myRefereeVC.hidesBottomBarWhenPushed = YES;
+ LBMyQRCodeViewController *myQRCodeVC = [[LBMyQRCodeViewController alloc]init];
+ myQRCodeVC.hidesBottomBarWhenPushed = YES;
+ LBMySettingViewController *setting = [[LBMySettingViewController alloc] init];
+ setting.hidesBottomBarWhenPushed = YES;
+ BOOL isLognIn = [[LBUserInfo sharedUserSingleton] isLogin];
+ if (isLognIn) {
+ 
+ NSInteger section = indexPath.section;
+ NSInteger row = indexPath.row;
+ 
+ if (section == 0) {
+ switch (row) {
+ case 0:
+ //                    orderlist._orderStatus = @"0";
+ [self.navigationController pushViewController:orderlist animated:YES];
+ break;
+ 
+ }
+ } else  if(section == 1){
+ switch (row) {
+ case 0:
+ 
+ break;
+ 
+ }
+ }else if (section == 2){
+ switch (row) {
+ case 0:
+ [self.navigationController pushViewController:myQRCodeVC animated:YES];                    break;
+ case 1:
+ [self.navigationController pushViewController:myRefereeVC animated:YES];
+ break;
+ 
+ }
+ }
+ else if (section == 3){
+ switch (row) {
+ case 0:
+ [self.navigationController pushViewController:setting
+ animated:YES];
+ break;
+ case 1:
+ [self.navigationController pushViewController:feedback
+ animated:YES];
+ break;
+ 
+ }
+ }
+ 
+ }else{
+ [self goSigin];
+ }
+ 
+ 
+ }*/
 
-
+- (void)loadDatas:(NSString *)ac_code
+{
+    //提示
+    [SVProgressHUD showWithStatus:@"加载中..." maskType:SVProgressHUDMaskTypeClear];
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json",@"text/json",nil];
+    NSDictionary *parameter =@{@"ac_code":ac_code};
+    [manager POST:SUGE_NEWHAND parameters:parameter success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"新手指引%@",responseObject);
+        title=responseObject[@"datas"][@"article_class_list"][@"faq"][@"ac_name"];
+        title1=responseObject[@"datas"][@"article_class_list"][@"video"][@"ac_name"];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+    [SVProgressHUD dismiss];
+}
 
 #pragma mark  进入注册界面
 - (void)pushLognInView
@@ -975,6 +1295,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
         caifuImageView.hidden=NO;
         numLabel.hidden=NO;
         jiantouImageView1.hidden=NO;
+        lineView.hidden=NO;
         [self loadIconsDatas];
         
     }else{
@@ -996,6 +1317,8 @@ static NSString *collectionView_cid = @"collectionViewcid";
         caifuImageView.hidden=YES;
         numLabel.hidden=YES;
         jiantouImageView1.hidden=YES;
+        lineView.hidden=YES;
+
     }
     self.navigationController.navigationBar.translucent = YES;
     self.tabBarController.tabBar.translucent = YES;

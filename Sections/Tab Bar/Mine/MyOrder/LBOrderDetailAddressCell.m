@@ -35,13 +35,13 @@
     
     //收货人
     consigneeLabel=[[UILabel alloc]initWithFrame:CGRectMake(imageView.frame.origin.x+imageView.frame.size.width+10, 10, 150, 30)];
-//    consigneeLabel.font = [UIFont systemFontOfSize:12];
+    consigneeLabel.font = [UIFont systemFontOfSize:15];
     consigneeLabel.textColor = [UIColor blackColor];
     consigneeLabel.textAlignment = NSTextAlignmentLeft;
     [self addSubview:consigneeLabel];
     //地址
     dressLabel=[[UILabel alloc]initWithFrame:CGRectMake(consigneeLabel.frame.origin.x,consigneeLabel.frame.origin.y+consigneeLabel.frame.size.height-5, SCREEN_WIDTH-10-consigneeLabel.frame.origin.x, 45)];
-//    dressLabel.font = [UIFont systemFontOfSize:12];
+    dressLabel.font = [UIFont systemFontOfSize:15];
     dressLabel.numberOfLines = 2;
     dressLabel.textColor = [UIColor blackColor];
     dressLabel.textAlignment = NSTextAlignmentLeft;

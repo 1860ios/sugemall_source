@@ -11,5 +11,5 @@
 
 @interface LBMineViewController : UIViewController
 
-
 @end
+ 

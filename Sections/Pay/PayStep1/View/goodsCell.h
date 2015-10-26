@@ -14,6 +14,9 @@
 @property (retain, nonatomic)  UILabel *goodsName;
 @property (retain, nonatomic)  UILabel *goodsNum;
 @property (retain, nonatomic)  UILabel *goodsPrice;
+@property (retain, nonatomic)  UILabel *storeName;
+@property (retain, nonatomic)  UILabel *totalPrice;
+@property (retain, nonatomic)  UILabel *freightPrice;
 
 - (void)addValue:(LBStep1GoodsListModel *)model;
 

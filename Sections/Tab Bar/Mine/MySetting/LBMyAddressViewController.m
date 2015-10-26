@@ -33,6 +33,8 @@ static NSString *cid = @"cid";
     UIButton *deletButton;
     UIButton * add_button;
     NSInteger a;
+    NSInteger tag;
+
 }
 @property (nonatomic, strong) UITableView *_tableView;
 
@@ -44,11 +46,14 @@ static NSString *cid = @"cid";
 #pragma mark viewDidLoad
 - (void)viewDidLoad
 {
+
     [super viewDidLoad];
+
     self.title = @"收货地址";
     //1.加载tableview
     [self drawAddressTableView];
     [self setupRefresh];
+    
 
 }//SUGE_SETDEFAULT_ADDRESS
 
@@ -89,6 +94,10 @@ static NSString *cid = @"cid";
 - (void)addAddress
 {
     LBNewAddressView *newAddress = [[LBNewAddressView alloc] init];
+    newAddress.setTag=[NSString stringWithFormat:@"%ld",(long)tag];
+    newAddress.block = ^(NSString*isanble){
+        _isDefault=isanble;
+    };
     [self.navigationController pushViewController:newAddress animated:YES];
 }
 #pragma mark 设置下拉刷新
@@ -120,13 +129,16 @@ static NSString *cid = @"cid";
 #pragma mark viewWillAppear
 -(void)viewWillAppear:(BOOL)animated
 {
-      //  [add_button removeFromSuperview];
+    NSLog(@"%ld",(long)tag);
+    
+    if (tag&&[_isDefault isEqual:@"1"]) {
+    [self LoadAddressURL:SUGE_SET_MOREN address_id:[NSString stringWithFormat:@"%ld",(long)tag] type:@"default"];
+    }
     [self loadDatas];
     [self setupRefresh];
 
     [super viewWillAppear:animated];
     [MobClick beginLogPageView:@"我的收货地址"];
-//    [self drawBottomView];
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
@@ -175,6 +187,7 @@ static NSString *cid = @"cid";
 #pragma mark TableView delegate
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    
     return model.address_list.count;
 }
 
@@ -208,7 +221,8 @@ static NSString *cid = @"cid";
         cell.layer.rasterizationScale = [UIScreen mainScreen].scale;
 
     }
-//    cell.userInteractionEnabled = NO;
+    
+    //cell.userInteractionEnabled = NO;
     //
     NSInteger section = indexPath.section;
     addressListModel = model.address_list[section];
@@ -245,11 +259,14 @@ static NSString *cid = @"cid";
     [setDefaultButton addTarget:self action:@selector(setDefaultAddress:) forControlEvents:UIControlEventTouchUpInside];
     [cell addSubview:setDefaultButton];
     //判断是否默认地址
+
     if ([addressListModel.is_default isEqualToString:@"1"]) {
         address.text = [NSString stringWithFormat:@"[默认]%@",add];
         setDefaultButton.selected  =YES;
     }
-
+    if (section==0) {
+        tag=[addressListModel.address_id integerValue]+1;
+    }
     
     UILabel *setDefaultLabel = [[UILabel alloc] initWithFrame:CGRectMake(setDefaultButton.frame.origin.x+setDefaultButton.frame.size.width, setDefaultButton.frame.origin.y, 80, 25)];
     setDefaultLabel.font = FONT(13);
@@ -320,7 +337,7 @@ static NSString *cid = @"cid";
     NSLog(@"address_row:%@",row1);
     
     
-    [self LoadAddressURL:@"http://sugemall.com/mobile/index.php?act=member_address&op=address_set_default" address_id:row1 type:@"default"];
+    [self LoadAddressURL:SUGE_SET_MOREN address_id:row1 type:@"default"];
 }
 
 - (void)LoadAddressURL:(NSString *)url address_id:(NSString *)add_id type:(NSString *)type
@@ -358,6 +375,7 @@ static NSString *cid = @"cid";
     NSString *k3 = addressListModel.address_id;
 //#warning 收货地址更换传值
     //传值
+
     if (_changeAddress) {
         
         NSString *key  =[LBUserInfo sharedUserSingleton].userinfo_key;
@@ -392,7 +410,6 @@ static NSString *cid = @"cid";
     }else{
         LBNewAddressView *newAddress = [[LBNewAddressView alloc] init];
         newAddress._trueName = addressListModel.true_name;
-        newAddress._mobPhone = addressListModel.mob_phone;
         newAddress._telPhone = addressListModel.tel_phone;
         newAddress._areaInfo = addressListModel.area_info;
         newAddress._address = addressListModel.address;
@@ -414,8 +431,7 @@ static NSString *cid = @"cid";
         //提示
         [SVProgressHUD showWithStatus:@"删除中..." maskType:SVProgressHUDMaskTypeClear];
         
-        NSInteger row = indexPath.row;
-        addressListModel = model.address_list[row];
+        addressListModel = model.address_list[indexPath.section];
         //登陆key
         NSString *key = [LBUserInfo sharedUserSingleton].userinfo_key;
         //地址编号

@@ -16,6 +16,7 @@
 @property (retain, nonatomic)  UILabel *receiverPhone;//收货人手机号
 @property (retain, nonatomic)  UILabel *receiverAddress;//收货人收货地址
 @property (retain, nonatomic)  UILabel *defaultAddress;//判断默认地址，是则显示
+@property (retain, nonatomic)  UILabel *storeName;//判断默认地址，是则显示
 
 - (void)addValue: (LBBuyStep1Model *)model;
 @end

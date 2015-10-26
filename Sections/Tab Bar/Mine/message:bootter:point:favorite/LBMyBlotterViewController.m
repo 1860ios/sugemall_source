@@ -35,10 +35,12 @@ static NSString *cid = @"cid";
 @implementation LBMyBlotterViewController
 @synthesize _tableView;
 @synthesize _yue;
+@synthesize _type;
+@synthesize _title;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"流水账";
+    self.title = _title;
     money1 = [_yue doubleValue];
     self.view.backgroundColor = [UIColor whiteColor];
     typeDic = @{@"order_pay":@"下单支付预存款",@"order_freeze":@"下单冻结预存款",@"order_cancel":@"取消订单解冻预存款",@"order_comb_pay":@"下单支付被冻结的预存款",@"recharge":@"充值",@"cash_apply":@"申请提现冻结预存款",@"cash_pay":@"提现成功",@"cash_del":@"取消提现申请，解冻预存款",@"refund":@"退款"};
@@ -92,7 +94,7 @@ static NSString *cid = @"cid";
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json",@"text/json",nil];
-    NSDictionary *dict = @{@"key":key};
+    NSDictionary *dict = @{@"key":key,@"type":_type};
     
     [manager POST:SUGE_PD_LOG_LSIT parameters:dict success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"流水账:%@",responseObject);

@@ -10,6 +10,14 @@
 #define SuGeMarket_SUGE_API_h
 
 #define SUGE_BASE_URL   @"http://test.sugemall.com/mobile/" //前缀
+
+/**
+ *  设为默认
+ */
+#define SUGE_SET_MOREN [SUGE_BASE_URL stringByAppendingString:@"index.php?act=member_address&op=address_set_default"]
+
+
+
 /**
  * 消息
  */
@@ -1266,6 +1274,123 @@ store_id= 店铺ID
  pdr_amount 充值金额
  */
 #define SUGE_RECHARGE              [SUGE_BASE_URL stringByAppendingString:@"index.php?act=predeposit&op=recharge_add"]
+
+//#define SUGE_TEST_URL   @"http://test.sugemall.com/mobile/"
+/*
+ 传参：POST
+ key :  用户key
+ truename :  真实姓名
+ idcard :  身份证号
+ 返回值：
+ 成功返回
+ 1
+ 失败返回
+ error 错误信息
+ */
+#define SUGE_AUTHENTICATION              [SUGE_BASE_URL stringByAppendingString:@"index.php?act=member_security&op=modify_authinfo"]
+/**
+ 请求参数
+ ac_code 分类识别码；多个用逗号隔开例如:faq,video；faq代表常见问题，video代表视频，buiness代表商学院
+ has_child 是否调用子分类 1是调用，0和空是不调用
+ 
+ 返回数据
+ article_class_list 分类列表
+ 
+ ac_id 分类id
+ ac_code 分类识别码
+ ac_name 分类名称
+ ac_parent_id 分类父id
+ ac_pic 分类图标
+ child 该分类下子分类列表(当has_child参数设置1时)
+ ac_id
+ ac_code
+ ac_name
+ ac_parent_id
+ ac_pic
+ */
+#define SUGE_NEWHAND             [SUGE_BASE_URL stringByAppendingString:@"index.php?act=suge_article_class&op=article_class_bycode"]
+/**
+ 普通文章列表
+ 
+ 请求参数
+ ac_id 分类id
+ page 页码数
+ 
+ 返回数据
+ article_list 文章列表
+ article_id 文章id
+ article_title 文章标题
+ */
+#define SUGE_CONTENT             [SUGE_BASE_URL stringByAppendingString:@"index.php?act=suge_article"]
+
+/**
+ 视频列表
+ 
+ 请求参数
+ ac_id 视频分类id
+ page 页码数
+ 
+ 返回数据
+ video_list 视频列表
+ article_id 视频id
+ article_title 视频标题
+ article_cover 视频封面图
+ article_views 视频浏览量
+ */
+#define SUGE_VIDEO             [SUGE_BASE_URL stringByAppendingString:@"index.php?act=suge_article&op=video_list"]
+/**
+ 请求参数
+ article_id 文章id
+ 
+ 返回数据
+ 
+ article_detail 文章详情
+ article_id 文章id
+ article_title 文章标题
+ article_content 文章内容
+ article_time 发布时间 Unix 时间戳，请自行处理需要的格式
+ article_author 文章作者
+ article_cover 文章封面
+ article_views 文章浏览量
+ */
+#define SUGE_TEXT             [SUGE_BASE_URL stringByAppendingString:@"index.php?act=suge_article&op=article_detail"]
+/*
+ 请求参数
+ 
+ goods_id 商品id
+ key
+ 返回数据
+ 
+ 1 正确
+ error 错误信息
+ */
+#define SUGE_ANOTHER             [SUGE_BASE_URL stringByAppendingString:@"index.php?act=member_buy&op=in_active"]
+/*
+ 请求参数
+ 
+ pay_sn 订单支付单号
+ key 用户秘钥
+ 返回数据
+ 
+ order_list 订单商品列表
+ pay_amount 订单总额
+ 发起代付前获取随机留言(post)
+ 
+ 请求参数
+ 
+ key 用户秘钥
+ type 1发起代付时留言/2朋友代付时留言
+ 返回数据
+ 
+ datas 留言语句字符串
+ */
+#define SUGE_PAYANOTHER1             [SUGE_BASE_URL stringByAppendingString:@"index.php?act=member_buy&op=pay_sn_detail"]
+
+#define SUGE_ADDRESSLIST             [SUGE_BASE_URL stringByAppendingString:@"index.php?act=member_teams&op=team_book"]
+
+#define SUGE_CUSTOMLIST             [SUGE_BASE_URL stringByAppendingString:@"index.php?act=member_teams&op=team_custom"]
+
+#define SUGE_PARTNER             [SUGE_BASE_URL stringByAppendingString:@"index.php?act=member_teams&op=team_partner"]
 
 
 

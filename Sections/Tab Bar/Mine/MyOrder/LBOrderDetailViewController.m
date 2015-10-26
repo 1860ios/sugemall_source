@@ -33,7 +33,7 @@ static NSString *way = @"wayCell";
     NSMutableArray *detailOrderDatas;
     LBOrderDetailModel *modelOrderDetail;
     LBOrderDetailGoodsModel *modelOrderDetailGoods;
-    
+    UILabel *orderMoney;
 }
 @property (nonatomic, strong) UITableView *_tableView;
 @property (nonatomic, strong) UILabel *ordernumLabel;
@@ -43,6 +43,7 @@ static NSString *way = @"wayCell";
 @property (nonatomic, strong) UILabel *orderLabel;
 @property (nonatomic, strong) UILabel *tradeLabel;
 @property (nonatomic, strong) UILabel *timeLabel;
+@property (nonatomic, strong) UILabel *orderLabel1;
 
 @end
 
@@ -54,6 +55,7 @@ static NSString *way = @"wayCell";
 @synthesize ordertimeLabel;
 @synthesize allLabel;
 @synthesize orderLabel;
+@synthesize orderLabel1;
 @synthesize tradeLabel;
 @synthesize timeLabel;
 
@@ -66,92 +68,6 @@ static NSString *way = @"wayCell";
     [self loadGoodsDetailDatas:order_id];
 
 }
-
-- (void)loadBottomView
-{
-
-    UIView *bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-49, SCREEN_WIDTH, 49)];
-    bottomView.backgroundColor = [UIColor whiteColor];
-    /*
-     _orderPay = [UIButton buttonWithType:UIButtonTypeCustom];
-     [__orderPay setTitle:@"去支付" forState:0];
-     [__orderPay setTitleColor:[UIColor redColor] forState:0];
-     __orderPay.layer.borderColor = [APP_COLOR CGColor];
-     __orderPay.layer.borderWidth = 1;
-     __orderPay.layer.masksToBounds = YES;
-     __orderPay.layer.cornerRadius = 4;
-     __orderPay.tag = ORDER_BTN_TAG;
-     __orderPay.hidden = YES;
-     [self addSubview:__orderPay];
-     __orderCancel = [UIButton buttonWithType:UIButtonTypeCustom];
-     [__orderCancel setTitle:@"取消订单" forState:0];
-     [__orderCancel setTitleColor:[UIColor darkGrayColor] forState:0];
-     __orderCancel.layer.borderColor = [[UIColor lightGrayColor] CGColor];
-     __orderCancel.layer.borderWidth = 1;
-     __orderCancel.layer.masksToBounds = YES;
-     __orderCancel.layer.cornerRadius = 4;
-     __orderCancel.hidden = YES;
-     __orderCancel.tag = ORDER_BTN_TAG+1;
-     [self addSubview:__orderCancel];
-     
-*/
-    //退货
-    UIButton *refundButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    refundButton.frame = CGRectMake(20, 0, 64, 49);
-    [refundButton setTitle:@"退款退货" forState:0];
-    [refundButton setImage:IMAGE(@"order_refund") forState:0];
-    [bottomView addSubview:refundButton];
-    [refundButton addTarget:self action:@selector(refundOrder:) forControlEvents:UIControlEventTouchUpInside];
-    refundButton.hidden = YES;
-    //查看物流
-    UIButton *_searchDeliver = [UIButton buttonWithType:UIButtonTypeCustom];
-    _searchDeliver.frame = CGRectMake(refundButton.frame.origin.x+refundButton.frame.size.width+40,0 , 64, 49);
-    _searchDeliver.layer.masksToBounds = YES;
-    [_searchDeliver addTarget:self action:@selector(deleverOrder:) forControlEvents:UIControlEventTouchUpInside];
-    [_searchDeliver setImage:IMAGE(@"order_deliver") forState:0];
-    [bottomView addSubview:_searchDeliver];
-    _searchDeliver.hidden = YES;
-    //取消订单
-    UIButton *_orderCancel = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_orderCancel setTitle:@"取消订单" forState:0];
-    _orderCancel.frame = CGRectMake(0, 0, SCREEN_WIDTH, 49);
-    [_orderCancel setTitleColor:[UIColor darkGrayColor] forState:0];
-    _orderCancel.layer.borderColor = [[UIColor lightGrayColor] CGColor];
-    _orderCancel.layer.borderWidth = 1;
-    _orderCancel.layer.masksToBounds = YES;
-    _orderCancel.layer.cornerRadius = 4;
-    [_orderCancel addTarget:self action:@selector(cancelOrder:) forControlEvents:UIControlEventTouchUpInside];
-    [bottomView addSubview:_orderCancel];
-    _orderCancel.hidden = YES;
-    //确认收货
-    UIButton *_orderReciver = [UIButton buttonWithType:UIButtonTypeCustom];
-    _orderReciver.frame = CGRectMake(_searchDeliver.frame.origin.x+_searchDeliver.frame.size.width, 0, SCREEN_WIDTH-(_searchDeliver.frame.origin.x+_searchDeliver.frame.size.width), 49);
-    [_orderReciver setTitle:@"确认收货" forState:0];
-    [_orderReciver setTitleColor:APP_COLOR forState:0];
-    [_orderReciver addTarget:self action:@selector(querenOrder:) forControlEvents:UIControlEventTouchUpInside];
-//    __orderReciver.layer.masksToBounds = YES;
-    // __orderReciver.tag = ORDER_BTN_TAG+3;
-    [bottomView addSubview:_orderReciver];
-    _orderReciver.hidden = YES;
-
-    if ([modelOrderDetail.state_desc isEqualToString:@"待付款"]) {
-        _orderCancel.hidden = NO;
-    }else if ([modelOrderDetail.state_desc isEqualToString:@"已支付"]){
-        refundButton.hidden = NO;
-        refundButton.frame = CGRectMake(bottomView.center.x-32, 0, 64, 49);
-    }else if ([modelOrderDetail.state_desc isEqualToString:@"待收货"]){
-        refundButton.hidden = NO;
-        _searchDeliver.hidden = NO;
-        _orderReciver.hidden = NO;
-    }else if ([modelOrderDetail.state_desc isEqualToString:@"交易完成"]){
-        refundButton.hidden = NO;
-    }
-    
-    
-    [self.view addSubview:bottomView];
-
-}
-
 /**
  *  method
  */
@@ -185,7 +101,6 @@ static NSString *way = @"wayCell";
 {
     NSString *orderID2 = modelOrderDetail.order_id;
     [self requestWithURL:SUGE_ORDER_RECEIVE andOrderID:orderID2 type:@"queren"];
-
 }
 
 - (void)requestWithURL:(NSString *)URL andOrderID:(NSString *)orderid type:(NSString *)type
@@ -241,7 +156,6 @@ static NSString *way = @"wayCell";
     [maneger GET:SUGE_DETAIL_ORDER parameters:parameter success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"订单详情%@",responseObject);
         modelOrderDetail = [LBOrderDetailModel objectWithKeyValues:responseObject[@"datas"]];
-        [self loadBottomView];
         [_tableView reloadData];
 
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -293,8 +207,17 @@ static NSString *way = @"wayCell";
             break;
         case 1:{
             LBgoodsShowCell *goodsCell = [tableView dequeueReusableCellWithIdentifier:goodsShow];
-                goodsCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            [goodsCell addValue:modelOrderDetailGoods];
+           goodsCell.totalMoneyLabel.text=[NSString stringWithFormat:@"￥%@",modelOrderDetail.order_amount];
+
+            [goodsCell.refundButton addTarget:self action:@selector(refundOrder:) forControlEvents:UIControlEventTouchUpInside];
+            [goodsCell.searchDeliver addTarget:self action:@selector(deleverOrder:) forControlEvents:UIControlEventTouchUpInside];
+            [goodsCell.orderCancel addTarget:self action:@selector(cancelOrder:) forControlEvents:UIControlEventTouchUpInside];
+            [goodsCell.orderReciver addTarget:self action:@selector(querenOrder:) forControlEvents:UIControlEventTouchUpInside];
+            goodsCell.orderLabel.text=[NSString stringWithFormat:@"订单号:%@",modelOrderDetail.order_sn];
+            goodsCell.tradeLabel.text=[NSString stringWithFormat:@"交易号:%@",modelOrderDetail.pay_sn];
+            goodsCell.orderLabel1.text=[NSString stringWithFormat:@"订单日期:%@",modelOrderDetail.order_add_date];
+            [goodsCell addValue:modelOrderDetailGoods goodsModel:modelOrderDetail];
+            [self initOrderBottom];
             return goodsCell;
         }
             break;
@@ -317,7 +240,7 @@ static NSString *way = @"wayCell";
             break;
             
         case 1:
-            return 30;
+            return 50;
             break;
         case 2:
             return 10;
@@ -338,97 +261,113 @@ static NSString *way = @"wayCell";
 {
     if (section == 1) {
         
-        UIView*view2 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 25)];
+        UIView*view2 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
         view2.backgroundColor = [UIColor whiteColor];
         ////商店图标
-        UIImageView *storeImageView=[[UIImageView alloc]initWithFrame:CGRectMake(10,5, 15, 15)];
+        UIImageView *storeImageView=[[UIImageView alloc]initWithFrame:CGRectMake(10,10, 30, 30)];
         [storeImageView setImage:IMAGE(@"store_image.png")];
         [view2 addSubview:storeImageView];
         //商店名
-        UILabel *storenameLabel=[[UILabel alloc]initWithFrame:CGRectMake(storeImageView.frame.origin.x+storeImageView.frame.size.width,3,200,20)];
+        UILabel *storenameLabel=[[UILabel alloc]initWithFrame:CGRectMake(storeImageView.frame.origin.x+storeImageView.frame.size.width,10,200,30)];
         storenameLabel.textColor = [UIColor blackColor];
         storenameLabel.textAlignment = NSTextAlignmentLeft;
+        storenameLabel.font=FONT(15);
         storenameLabel.text=modelOrderDetail.store_name;
         [view2 addSubview:storenameLabel];
         //状态
-        UILabel *stateLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-10-80, 3, 80, 20)];
-        stateLabel.textColor = APP_COLOR;
-        stateLabel.textAlignment = NSTextAlignmentRight;
-        stateLabel.text=modelOrderDetail.state_desc;
-        [view2 addSubview:stateLabel];
+//        UILabel *stateLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-10-80, 3, 80, 20)];
+//        stateLabel.textColor = APP_COLOR;
+//        stateLabel.textAlignment = NSTextAlignmentRight;
+//        stateLabel.text=modelOrderDetail.state_desc;
+//        [view2 addSubview:stateLabel];
+        
+        UILabel *zixunLabel=[[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH-10-35, 10, 30,30)];
+        zixunLabel.text=@"咨询";
+        zixunLabel.font=FONT(13);
+        zixunLabel.textColor=[UIColor grayColor];
+        [view2 addSubview:zixunLabel];
+        
+        UIButton *button=[UIButton buttonWithType:UIButtonTypeCustom];
+        button.frame=CGRectMake(zixunLabel.frame.origin.x-20, zixunLabel.frame.origin.y+5, 20, 20);
+        [button setImage:IMAGE(@"确认订单无地址_07") forState:0];
+        [view2 addSubview:button];
+        
+        UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(10, storenameLabel.frame.origin.y+storenameLabel.frame.size.height+10, SCREEN_WIDTH-20, 1)];
+        lineView.backgroundColor=[UIColor colorWithWhite:0.93 alpha:0.93];
+        [view2 addSubview:lineView];
         
     return view2;
     }
     return 0;
 }
 
-
--(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
-{
-    UIView *view1;
-    if (section==2) {
-    view1 =[[UIView alloc]initWithFrame:CGRectMake(0,10, SCREEN_WIDTH, 100)];
-    view1.backgroundColor=[UIColor whiteColor];
-    [self.view addSubview:view1];
-    
-    ordernumLabel=[[UILabel alloc]initWithFrame:CGRectMake(10,10, 80, 30)];
-    ordernumLabel.font = [UIFont systemFontOfSize:15];
-    ordernumLabel.textColor = [UIColor blackColor];
-    ordernumLabel.textAlignment = NSTextAlignmentLeft;
-    ordernumLabel.text=@"订单号";
-    [view1 addSubview:ordernumLabel];
-    
-    orderLabel=[[UILabel alloc]initWithFrame:CGRectMake(ordernumLabel.frame.origin.x+ordernumLabel.frame.size.width,ordernumLabel.frame.origin.y, SCREEN_WIDTH-100, 30)];
-    orderLabel.font = [UIFont systemFontOfSize:15];
-    orderLabel.textColor = [UIColor blackColor];
-    orderLabel.textAlignment = NSTextAlignmentLeft;
-    orderLabel.text=modelOrderDetail.order_sn;
-    [view1 addSubview:orderLabel];
-        
-    tradenumLabel=[[UILabel alloc]initWithFrame:CGRectMake(ordernumLabel.frame.origin.x,ordernumLabel.frame.origin.y+ordernumLabel.frame.size.height, 80, 30)];
-    tradenumLabel.font = [UIFont systemFontOfSize:15];
-    tradenumLabel.textColor = [UIColor blackColor];
-    tradenumLabel.textAlignment = NSTextAlignmentLeft;
-    tradenumLabel.text=@"交易号";
-    [view1 addSubview:tradenumLabel];
-        
-    tradeLabel=[[UILabel alloc]initWithFrame:CGRectMake(tradenumLabel.frame.origin.x+tradenumLabel.frame.size.width,tradenumLabel.frame.origin.y, SCREEN_WIDTH-100, 30)];
-    tradeLabel.font = [UIFont systemFontOfSize:15];
-    tradeLabel.textColor = [UIColor blackColor];
-    tradeLabel.textAlignment = NSTextAlignmentLeft;
-    tradeLabel.text=modelOrderDetail.pay_sn;
-    [view1 addSubview:tradeLabel];
-
-    ordertimeLabel=[[UILabel alloc]initWithFrame:CGRectMake(tradenumLabel.frame.origin.x,tradenumLabel.frame.origin.y+tradenumLabel.frame.size.height, 80, 30)];
-    ordertimeLabel.font = [UIFont systemFontOfSize:15];
-    ordertimeLabel.textColor = [UIColor blackColor];
-    ordertimeLabel.textAlignment = NSTextAlignmentLeft;
-    ordertimeLabel.text=@"订单日期";
-    [view1 addSubview:ordertimeLabel];
-        
-    orderLabel=[[UILabel alloc]initWithFrame:CGRectMake(ordertimeLabel.frame.origin.x+ordertimeLabel.frame.size.width,ordertimeLabel.frame.origin.y, SCREEN_WIDTH-100, 30)];
-    orderLabel.font = [UIFont systemFontOfSize:15];
-    orderLabel.textColor = [UIColor blackColor];
-    orderLabel.textAlignment = NSTextAlignmentLeft;
-    orderLabel.text=modelOrderDetail.order_add_date;
-    [view1 addSubview:orderLabel];
-    
-
-    allLabel=[[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH-10-200,orderLabel.frame.origin.y+orderLabel.frame.size.height,200, 35)];
-    allLabel.font = BFONT(20);
-    allLabel.textColor = APP_COLOR;
-    allLabel.textAlignment = NSTextAlignmentRight;
-    allLabel.text=[NSString stringWithFormat:@"总计:%@",modelOrderDetail.order_amount];
-    [view1 addSubview:allLabel];
-
-    }
-    return view1;
-
-}
+//
+//-(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+//{
+//    UIView *view1;
+//    if (section==2) {
+//    view1 =[[UIView alloc]initWithFrame:CGRectMake(0,10, SCREEN_WIDTH, 100)];
+//    view1.backgroundColor=[UIColor whiteColor];
+//    [self.view addSubview:view1];
+//    
+//    ordernumLabel=[[UILabel alloc]initWithFrame:CGRectMake(10,10, 80, 30)];
+//    ordernumLabel.font = [UIFont systemFontOfSize:15];
+//    ordernumLabel.textColor = [UIColor blackColor];
+//    ordernumLabel.textAlignment = NSTextAlignmentLeft;
+//    ordernumLabel.text=@"订单号";
+//    [view1 addSubview:ordernumLabel];
+//    
+//    orderLabel=[[UILabel alloc]initWithFrame:CGRectMake(ordernumLabel.frame.origin.x+ordernumLabel.frame.size.width,ordernumLabel.frame.origin.y, SCREEN_WIDTH-100, 30)];
+//    orderLabel.font = [UIFont systemFontOfSize:15];
+//    orderLabel.textColor = [UIColor blackColor];
+//    orderLabel.textAlignment = NSTextAlignmentLeft;
+//    orderLabel.text=modelOrderDetail.order_sn;
+//    [view1 addSubview:orderLabel];
+//        
+//    tradenumLabel=[[UILabel alloc]initWithFrame:CGRectMake(ordernumLabel.frame.origin.x,ordernumLabel.frame.origin.y+ordernumLabel.frame.size.height, 80, 30)];
+//    tradenumLabel.font = [UIFont systemFontOfSize:15];
+//    tradenumLabel.textColor = [UIColor blackColor];
+//    tradenumLabel.textAlignment = NSTextAlignmentLeft;
+//    tradenumLabel.text=@"交易号";
+//    [view1 addSubview:tradenumLabel];
+//        
+//    tradeLabel=[[UILabel alloc]initWithFrame:CGRectMake(tradenumLabel.frame.origin.x+tradenumLabel.frame.size.width,tradenumLabel.frame.origin.y, SCREEN_WIDTH-100, 30)];
+//    tradeLabel.font = [UIFont systemFontOfSize:15];
+//    tradeLabel.textColor = [UIColor blackColor];
+//    tradeLabel.textAlignment = NSTextAlignmentLeft;
+//    tradeLabel.text=modelOrderDetail.pay_sn;
+//    [view1 addSubview:tradeLabel];
+//
+//    ordertimeLabel=[[UILabel alloc]initWithFrame:CGRectMake(tradenumLabel.frame.origin.x,tradenumLabel.frame.origin.y+tradenumLabel.frame.size.height, 80, 30)];
+//    ordertimeLabel.font = [UIFont systemFontOfSize:15];
+//    ordertimeLabel.textColor = [UIColor blackColor];
+//    ordertimeLabel.textAlignment = NSTextAlignmentLeft;
+//    ordertimeLabel.text=@"订单日期";
+//    [view1 addSubview:ordertimeLabel];
+//        
+//    orderLabel1=[[UILabel alloc]initWithFrame:CGRectMake(ordertimeLabel.frame.origin.x+ordertimeLabel.frame.size.width,ordertimeLabel.frame.origin.y, SCREEN_WIDTH-100, 30)];
+//    orderLabel1.font = [UIFont systemFontOfSize:15];
+//    orderLabel1.textColor = [UIColor blackColor];
+//    orderLabel1.textAlignment = NSTextAlignmentLeft;
+//    orderLabel1.text=modelOrderDetail.order_add_date;
+//    [view1 addSubview:orderLabel1];
+//    
+//
+//    allLabel=[[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH-10-200,orderLabel.frame.origin.y+orderLabel.frame.size.height,200, 35)];
+//    allLabel.font = BFONT(20);
+//    allLabel.textColor = APP_COLOR;
+//    allLabel.textAlignment = NSTextAlignmentRight;
+//    allLabel.text=[NSString stringWithFormat:@"总计:%@",modelOrderDetail.order_amount];
+//    [view1 addSubview:allLabel];
+//
+//    }
+//    return view1;
+//
+//}
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section==1) {
-        return 100;
+        return 240;
     }else if (indexPath.section==0)
     {
         return 80;
@@ -448,5 +387,40 @@ static NSString *way = @"wayCell";
         [self.navigationController pushViewController:detailVC animated:YES];
     }
 }
+-(void)initOrderBottom
+{
+    UIView *orderView = [[UIView alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT - 49, SCREEN_WIDTH - SCREEN_WIDTH/3 - 30, 49)];
+    orderView.backgroundColor = [UIColor blackColor];
+    orderView.alpha = 0.7;
+    orderView.hidden=YES;
+    [self.view addSubview:orderView];
+    
+    UILabel *totalLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 60, 40)];
+    totalLabel.text  = @"合计:";
+    totalLabel.font = FONT(15);
+    totalLabel.textColor = [UIColor whiteColor];
+    [orderView addSubview:totalLabel];
+ 
+    orderMoney = [[UILabel alloc]initWithFrame:CGRectMake(80, 5, 100, 30)];
+    orderMoney.textColor = APP_COLOR;
+    orderMoney.font = BFONT(21);
+    orderMoney.text=[NSString stringWithFormat:@"￥%@",modelOrderDetail.order_amount];
+    [orderView addSubview:orderMoney];
 
+    //提交订单
+    UIButton *commitButton=[UIButton buttonWithType:0];
+    commitButton = [[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH - SCREEN_WIDTH/3 - 30,0, SCREEN_WIDTH/3 + 30, 49)];
+    [commitButton setTitle:@"确认收货" forState:0];
+    [commitButton setTitleColor:[UIColor whiteColor] forState:0];
+    [commitButton setBackgroundColor:APP_COLOR];
+    [commitButton addTarget:self action:@selector(querenOrder:) forControlEvents:UIControlEventTouchUpInside];
+    [orderView addSubview:commitButton];
+
+    
+    
+    if ([modelOrderDetail.state_desc isEqualToString:@"待收货"]){
+        orderView.hidden=NO;
+        commitButton.hidden=NO;
+    }
+}
 @end

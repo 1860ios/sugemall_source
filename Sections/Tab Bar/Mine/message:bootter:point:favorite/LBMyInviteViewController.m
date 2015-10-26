@@ -36,13 +36,13 @@
 
 - (void)loadMyInviteView
 {
-    inviteField = [[UITextField alloc] initWithFrame:CGRectMake(20, 63+20, SCREEN_WIDTH-40, 40)];
+    inviteField = [[UITextField alloc] initWithFrame:CGRectMake(20, 20, SCREEN_WIDTH-40, 40)];
     inviteField.delegate = self;
     inviteField.borderStyle = UITextBorderStyleNone;
     inviteField.placeholder = @"请输入上级幸运号";
     inviteField.clearButtonMode = UITextFieldViewModeWhileEditing;
     [self.view addSubview:inviteField];
-    lin1 = [[UIView alloc] initWithFrame:CGRectMake(20, inviteField.frame.origin.y+inviteField.frame.size.height-1, SCREEN_WIDTH-40, 1)];
+    lin1 = [[UIView alloc] initWithFrame:CGRectMake(20, 60-1, SCREEN_WIDTH-40, 1)];
     lin1.backgroundColor = [UIColor lightGrayColor];
     [self.view addSubview:lin1];
     

@@ -217,6 +217,7 @@ static NSString *collectionView_header_cid = @"HeaderView";
     switch (btn_tag) {
         case 0:{
             LBShoppingCarViewController *car = [LBShoppingCarViewController new];
+            car.isPushIn = YES;
             car.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:car animated:YES];
         }

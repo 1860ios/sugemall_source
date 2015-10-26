@@ -16,7 +16,7 @@
 #import "LBUserInfo.h"
 #import "SUGE_API.h"
 #import <UIImageView+WebCache.h>
-
+//#import "LBAddBankViewController.h"
 static NSString *cid=  @"cid";
 @interface LBBankViewController ()<UIAlertViewDelegate,UITableViewDataSource,UITableViewDelegate>
 {
@@ -36,6 +36,10 @@ static NSString *cid=  @"cid";
     self.title = @"银行卡列表";
 //    isChangeBank = NO;
     self.view.backgroundColor = [UIColor whiteColor];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
+
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithImage:IMAGE(@"add_bank") style:UIBarButtonItemStylePlain target:self action:@selector(addBank)];
     self.navigationItem.rightBarButtonItem = rightButton;
     _tableView = ({

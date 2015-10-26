@@ -1,7 +1,7 @@
 //
 //  LBWithdrawalViewController.m
 //  SuGeMarket
-//  佣金提现
+//  余额提现
 //  Created by Apple on 15/7/7.
 //  Copyright (c) 2015年 Josin_Q. All rights reserved.
 //
@@ -83,13 +83,13 @@ static NSString *cid = @"cid";
     
     
     withdrawalButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    withdrawalButton.frame = CGRectMake(WithdrawalTableView.frame.origin.x+5,WithdrawalTableView.frame.origin.y+280, SCREEN_WIDTH-10, 45);
+    withdrawalButton.frame = CGRectMake(WithdrawalTableView.frame.origin.x+5,WithdrawalTableView.frame.origin.y+280, SCREEN_WIDTH-10, 50);
     [withdrawalButton setImage:IMAGE(@"tixianjj") forState:0];
     [withdrawalButton addTarget:self action:@selector(tixianMoney:) forControlEvents:UIControlEventTouchUpInside];
     [WithdrawalTableView addSubview:withdrawalButton];
     
     recordButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    recordButton.frame = CGRectMake(WithdrawalTableView.frame.origin.x+5, withdrawalButton.frame.origin.y+withdrawalButton.frame.size.height+10, SCREEN_WIDTH-10, 40);
+    recordButton.frame = CGRectMake(WithdrawalTableView.frame.origin.x+5, withdrawalButton.frame.origin.y+withdrawalButton.frame.size.height+10, SCREEN_WIDTH-10, 50);
     [recordButton addTarget:self action:@selector(pushrecordView:)forControlEvents:UIControlEventTouchUpInside];
     [recordButton setTitle:@"佣金提现记录" forState:0];
     [recordButton setTitleColor:[UIColor blackColor] forState:0];
@@ -111,7 +111,7 @@ static NSString *cid = @"cid";
 {
     float useMM = [moeny floatValue];
     float tixianMM = [tixianText.text floatValue];
-    if (tixianMM >useMM||tixianText.text.length == 0||[tixianText.text intValue]==0) {
+    if (tixianMM >useMM||tixianText.text.length == 0||[tixianText.text floatValue]==0) {
         [[[UIAlertView alloc] initWithTitle:@"提示" message:@"您输入的金额有误,请重新输入!" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil] show];
     }else if ([bankLabel.text isEqualToString:@"请选择银行卡"]){
         [[[UIAlertView alloc] initWithTitle:@"提示" message:@"您还没有选择选择银行卡呢!" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil] show];

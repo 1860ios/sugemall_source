@@ -21,8 +21,9 @@
 -(void)initInvoiceCell
 {
     //发票信息
-    UILabel *invoiceLabel = [[UILabel alloc]initWithFrame:CGRectMake(8, 10, 100, 21)];
+    UILabel *invoiceLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, 100, 21)];
     invoiceLabel.text = @"发票信息";
+    invoiceLabel.textColor=[UIColor grayColor];
     invoiceLabel.font = [UIFont systemFontOfSize:15];
     [self addSubview:invoiceLabel];
     

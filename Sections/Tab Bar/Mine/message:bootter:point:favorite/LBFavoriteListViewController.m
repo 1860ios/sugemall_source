@@ -1,10 +1,3 @@
-//
-//  LBFavoriteListViewController.m
-//  SuGeMarket
-//
-//  Created by Josin on 15-4-24.
-//  Copyright (c) 2015年 Josin_Q. All rights reserved.
-//
 #import <TSMessage.h>
 #import "LBFavoriteListViewController.h"
 #import "AFNetworking.h"
@@ -22,7 +15,7 @@ static NSString *collectionView_cid=@"collectionView_cid";
 {
     //网络数据
     NSMutableArray *_favorites;
-
+    
     
     UIView *view1;
     NSMutableDictionary *StoreDetailDictionary;
@@ -72,8 +65,8 @@ static NSString *collectionView_cid=@"collectionView_cid";
 {
     
     [self loadDatas];
-   
-     [MobClick beginLogPageView:@"我的收藏"];
+    
+    [MobClick beginLogPageView:@"我的收藏"];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -88,14 +81,14 @@ static NSString *collectionView_cid=@"collectionView_cid";
     UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc]init];
     goodsCollectionView=[[UICollectionView alloc]initWithFrame:CGRectMake(0, 0,SCREEN_WIDTH,SCREEN_HEIGHT)collectionViewLayout:layout];
     [layout setScrollDirection:UICollectionViewScrollDirectionVertical];
-
+    
     goodsCollectionView.backgroundColor = [UIColor whiteColor];
     goodsCollectionView.delegate = self;
     goodsCollectionView.dataSource = self;
     goodsCollectionView.scrollEnabled  = YES;
     [goodsCollectionView registerClass:[UICollectionViewCell class]forCellWithReuseIdentifier:collectionView_cid];
     [self.view addSubview:goodsCollectionView];
-
+    
 }
 #pragma mark CollectionView delegate
 #pragma mark  --------collectionView  代理方法
@@ -113,8 +106,8 @@ static NSString *collectionView_cid=@"collectionView_cid";
 {
     NSInteger row=indexPath.row;
     UICollectionViewCell * cell= [collectionView dequeueReusableCellWithReuseIdentifier:collectionView_cid forIndexPath :indexPath];
-        cell.layer.borderColor = [UIColor colorWithWhite:0.90 alpha:0.93].CGColor;
-        cell.layer.borderWidth = 1.0f;
+    cell.layer.borderColor = [UIColor colorWithWhite:0.90 alpha:0.93].CGColor;
+    cell.layer.borderWidth = 1.0f;
     while ([cell.contentView.subviews lastObject]) {
         [(UIView *)[cell.contentView.subviews lastObject] removeFromSuperview];
     }
@@ -174,10 +167,10 @@ static NSString *collectionView_cid=@"collectionView_cid";
     [goodsCollectionView.header setTitle:APP_REFRESH_TEXT_STATID forState:MJRefreshHeaderStateIdle];
     [goodsCollectionView.header setTitle:APP_REFRESH_TEXT_PULLING forState:MJRefreshHeaderStatePulling];
     [goodsCollectionView.header setTitle:APP_REFRESH_TEXT_REFRESHING forState:MJRefreshHeaderStateRefreshing];
-
+    
     // 设置字体
     goodsCollectionView.header.font = APP_REFRESH_FONT_SIZE;
-
+    
     // 设置颜色
     goodsCollectionView.header.textColor = APP_COLOR;
 }
@@ -212,12 +205,11 @@ static NSString *collectionView_cid=@"collectionView_cid";
         //结束刷新
         [goodsCollectionView.header endRefreshing];
         
-           } failure:^(AFHTTPRequestOperation *op,NSError *error){
-               [SVProgressHUD dismiss];
-               [TSMessage showNotificationWithTitle:@"网络不佳" subtitle:@"请检查网络" type:TSMessageNotificationTypeWarning];
-               NSLog(@"error:%@",error);
+    } failure:^(AFHTTPRequestOperation *op,NSError *error){
+        [SVProgressHUD dismiss];
+        [TSMessage showNotificationWithTitle:@"网络不佳" subtitle:@"请检查网络" type:TSMessageNotificationTypeWarning];
+        NSLog(@"error:%@",error);
     }];
     
 }
-
 @end
