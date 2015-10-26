@@ -12,5 +12,7 @@
 @interface LBStroeInforCell : UITableViewCell
 @property (nonatomic, strong) UIImageView *_storeImage;
 @property (nonatomic, retain) UILabel *_storeName;
+@property (nonatomic, strong) UIButton *lianxikefu;
+@property (nonatomic, strong) UIButton *jinrudianpu;
 -(void)addTheValue:(LBGoodsDetailModel *)model;
 @end

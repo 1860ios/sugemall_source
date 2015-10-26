@@ -501,7 +501,9 @@ static NSString *collectionView_cid = @"collectionViewcid";
     }else if (3 ==section){
         if (!cell3) {
             cell3 = [[LBStroeInforCell alloc] init];
-            cell3.selectionStyle = UITableViewCellAccessoryDisclosureIndicator;
+            cell3.selectionStyle = UITableViewCellSelectionStyleNone;
+            [cell3.lianxikefu addTarget:self action:@selector(lianxikefu) forControlEvents:UIControlEventTouchUpInside];
+            [cell3.jinrudianpu addTarget:self action:@selector(jinrudianpu) forControlEvents:UIControlEventTouchUpInside];
             [cell3 addTheValue:model];
         }
         return cell3;
@@ -517,6 +519,19 @@ static NSString *collectionView_cid = @"collectionViewcid";
         return cell;
     }
 }
+- (void)lianxikefu
+{
+    NSMutableString * str=[[NSMutableString alloc] initWithFormat:@"telprompt://%@",@"037763533999"];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
+}
+
+- (void)jinrudianpu
+{
+    LBStoreDetailViewController *store = [[LBStoreDetailViewController alloc] init];
+    store.store_id = model.goods_info.store_id;
+    [self.navigationController pushViewController:store animated:YES];
+}
+
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -528,7 +543,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
     }else if (section == 2){
         return 45;
     }else if (section == 3){
-        return 80;
+        return 120;
     }else{
         return 170;
     }

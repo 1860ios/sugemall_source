@@ -52,7 +52,7 @@
 }
 - (void)addValueForCell:(NSDictionary *)value
 {
-    [goodsImageView sd_setImageWithURL:[NSURL URLWithString:value[@"goods_image"]] placeholderImage:nil];
+    [goodsImageView sd_setImageWithURL:[NSURL URLWithString:value[@"goods_image"]] placeholderImage:IMAGE(@"dd_03_@2x")];
     goodsName.text = value[@"goods_name"];
     goodsPrice.text = [NSString stringWithFormat:@"促销价:￥%@",value[@"goods_promotion_price"]];
 }
