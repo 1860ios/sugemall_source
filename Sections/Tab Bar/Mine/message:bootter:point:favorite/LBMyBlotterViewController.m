@@ -94,8 +94,13 @@ static NSString *cid = @"cid";
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json",@"text/json",nil];
-    NSDictionary *dict = @{@"key":key,@"type":_type};
     
+    NSDictionary *dict;
+    if ([_title isEqualToString:@"账单"]) {
+        dict = @{@"key":key};
+    }else{
+        dict = @{@"key":key,@"type":_type};
+    }
     [manager POST:SUGE_PD_LOG_LSIT parameters:dict success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"流水账:%@",responseObject);
         BlotterDatas = responseObject[@"datas"][@"list"];

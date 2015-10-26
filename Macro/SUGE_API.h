@@ -357,7 +357,27 @@
 // 推荐用户下载APP二维码生成
 #define SUGE_QRCODEURL  [SUGE_BASE_URL stringByAppendingString:@"index.php?act=member_offline&op=qrcode_rec&key="]
 
-
+/*
+ 获取分类列表
+ 
+ 接口调用（POST/GET）
+ index.php?act=suge_article_class&op=article_class
+ 
+ 请求参数
+ ac_id 分类id  空-返回一级分类
+ 
+ 返回数据
+ 
+ article_class_list 分类列表
+ 
+ ac_id 分类id
+ ac_code 分类识别码
+ ac_name 分类名称
+ ac_parent_id 分类父id
+ ac_pic 分类图标
+ 
+ **/
+#define SUGE_NEWHANDSTEP1             [SUGE_BASE_URL stringByAppendingString:@"index.php?act=suge_article_class&op=article_class"]
 
 //设置密码
 #define SUGE_SET_PWD  [SUGE_BASE_URL stringByAppendingString:@"index.php?act=login&op=setup_password"]

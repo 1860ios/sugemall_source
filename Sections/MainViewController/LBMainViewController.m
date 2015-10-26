@@ -149,6 +149,9 @@ static BOOL FirstLaunch = NO;
     
     // 2.包装一个导航控制器
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:childVc];
+    [[UIBarButtonItem appearance] setBackButtonTitlePositionAdjustment:UIOffsetMake(0, -60)
+                                                         forBarMetrics:UIBarMetricsDefault];
+    nav.navigationBar.tintColor = [UIColor lightGrayColor];
 //    nav.navigationBar.translucent = YES;
     [self addChildViewController:nav];
     // 3.添加tabbar内部的按钮

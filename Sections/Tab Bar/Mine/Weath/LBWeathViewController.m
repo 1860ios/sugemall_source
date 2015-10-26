@@ -32,6 +32,7 @@ static NSString *collectionCell=@"collectionCell";
     NSString *num4;
     NSString *num5;
     NSString *num6;
+    NSString *num7;
 }
 @property (nonatomic, strong) UICollectionView *weathCollectionView;
 @end
@@ -65,7 +66,8 @@ static NSString *collectionCell=@"collectionCell";
         num5=weathDictionary[@"rc"][@"available"];
         num6 = weathDictionary[@"predepoit"][@"available"];
         numArray=@[num1,num2,num3,num4,num5,@"0.00"];
-        NSString *numString = weathDictionary[@"sum"];
+        num7 = weathDictionary[@"sum"];
+        NSString *numString = num7;
         //        numLabel.text = numString;
         numLabel1.text= num6;
         [numLabel dd_setNumber:[NSNumber numberWithDouble:[numString doubleValue]] duration:2];
@@ -78,7 +80,7 @@ static NSString *collectionCell=@"collectionCell";
 #pragma mark  初始化TopView
 -(void)initTopView
 {
-    UIView *incomeView=[[UIView alloc]initWithFrame:CGRectMake(0, 63, SCREEN_WIDTH, 120)];
+    UIView *incomeView=[[UIView alloc]initWithFrame:CGRectMake(0, 63, SCREEN_WIDTH, 150)];
     incomeView.backgroundColor= RGBCOLOR(0, 160, 233);
     [self.view addSubview:incomeView];
     
@@ -88,10 +90,10 @@ static NSString *collectionCell=@"collectionCell";
     incomeLabel.textAlignment=NSTextAlignmentLeft;
     [incomeView addSubview:incomeLabel];
     
-    numLabel=[[UILabel alloc]initWithFrame:CGRectMake(incomeLabel.frame.origin.x, incomeLabel.frame.origin.y+incomeLabel.frame.size.height+10, SCREEN_WIDTH, 50)];
-    numLabel.font=BFONT(40);
+    numLabel=[[UILabel alloc]initWithFrame:CGRectMake(incomeLabel.frame.origin.x, incomeLabel.frame.origin.y+incomeLabel.frame.size.height, SCREEN_WIDTH, 110)];
+    numLabel.font=BFONT(70);
     numLabel.textAlignment=NSTextAlignmentLeft;
-    numLabel.textColor=[UIColor redColor];
+    numLabel.textColor=[UIColor whiteColor];
     [incomeView addSubview:numLabel];
     
     UIButton *jiantouButton=[UIButton buttonWithType:UIButtonTypeCustom];
@@ -99,23 +101,35 @@ static NSString *collectionCell=@"collectionCell";
     [jiantouButton setImage:IMAGE(@"财富_07") forState:0];
     [incomeView addSubview:jiantouButton];
     
-    UILabel *billLabel=[[UILabel alloc]initWithFrame:CGRectMake(jiantouButton.frame.origin.x-30, jiantouButton.frame.origin.y, 40, 20)];
-    billLabel.text=@"账单";
-    billLabel.font=FONT(18);
-    billLabel.textColor=[UIColor grayColor];
-    [incomeView addSubview:billLabel];
+    UIButton *billButton=[UIButton buttonWithType:UIButtonTypeCustom];
+    billButton.frame=CGRectMake(jiantouButton.frame.origin.x-30, jiantouButton.frame.origin.y, 40, 20);
+    [billButton setTitle:@"账单" forState:UIControlStateNormal];
+    [billButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    [billButton addTarget:self action:@selector(pushLiushuzhang) forControlEvents:UIControlEventTouchUpInside];
+    [incomeView addSubview:billButton];
     
-    UILabel *comLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, incomeView.frame.origin.y+incomeView.frame.size.height,110, 35)];
+    
+    UILabel *comLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, incomeView.frame.origin.y+incomeView.frame.size.height,140, 35)];
     comLabel.text=@"可提现佣金(元)";
     comLabel.textAlignment=NSTextAlignmentLeft;
     comLabel.font=FONT(18);
     comLabel.textColor=[UIColor lightGrayColor];
     [self.view addSubview:comLabel];
     
-    numLabel1=[[UILabel alloc]initWithFrame:CGRectMake(comLabel.frame.origin.x, comLabel.frame.origin.y+comLabel.frame.size.height-10,100, 35)];
+    numLabel1=[[UILabel alloc]initWithFrame:CGRectMake(comLabel.frame.origin.x, comLabel.frame.origin.y+comLabel.frame.size.height-10,100, 40)];
     numLabel1.font=BFONT(20);
     numLabel1.textColor=RGBCOLOR(9, 234, 242);
     [self.view addSubview:numLabel1];
+}
+- (void)pushLiushuzhang
+{
+    LBMyBlotterViewController *blotter=[[LBMyBlotterViewController alloc]init];
+    blotter._title = @"账单";
+//    blotter._type = @"cash_apply";
+    blotter._yue = num7;
+    blotter.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:blotter animated:YES];
+    
 }
 #pragma mark  初始化CollectionView
 -(void)initCollectionView
@@ -173,9 +187,9 @@ static NSString *collectionCell=@"collectionCell";
     [cell.contentView addSubview:lineView];
     
     if (indexPath.row>=3&&indexPath.row<=5) {
-        nameLabel=[[UILabel alloc]initWithFrame:CGRectMake(-11, -10, 100, 35)];
+        nameLabel=[[UILabel alloc]initWithFrame:CGRectMake(-5, -10, 100, 35)];
     }
-    nameLabel.font=FONT(18);
+    nameLabel.font=FONT(16);
     nameLabel.textColor=[UIColor lightGrayColor];
     nameLabel.text=array[indexPath.row];
     nameLabel.textAlignment=NSTextAlignmentCenter;
@@ -245,6 +259,7 @@ static NSString *collectionCell=@"collectionCell";
 {
     LBMyPointViewController *point=[[LBMyPointViewController alloc]init];
     LBMyBlotterViewController *blotter=[[LBMyBlotterViewController alloc]init];
+
     switch (indexPath.row) {
         case 0:
             [self.navigationController pushViewController:point animated:YES];
@@ -252,12 +267,14 @@ static NSString *collectionCell=@"collectionCell";
         case 1:{
             blotter._title = @"提现中";
             blotter._type = @"cash_apply";
+            blotter._yue = num2;
             blotter.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:blotter animated:YES];
         }
             break;
         case 2:{
             blotter._title = @"已提现";
+            blotter._yue = num3;
             blotter.hidesBottomBarWhenPushed = YES;
             blotter._type = @"cash_pay";
             [self.navigationController pushViewController:blotter animated:YES];
@@ -266,6 +283,7 @@ static NSString *collectionCell=@"collectionCell";
         case 3:{
             blotter._title = @"储值佣金";
             blotter._type = @"recharge_commis";
+            blotter._yue = num4;
             blotter.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:blotter animated:YES];
         }

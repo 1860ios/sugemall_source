@@ -55,6 +55,9 @@
 #import "LBStartAuthenticationViewController.h"
 #import "LBAddressListViewController.h"
 #import "LBRedBagViewController.h"
+#import "LBAdvViewController.h"
+
+
 static NSString *cid = @"cid";
 static SystemSoundID shake_sound_male_id = 0;
 static SystemSoundID shake_sound_male_id1 = 1;
@@ -126,6 +129,8 @@ static NSString *collectionView_cid = @"collectionViewcid";
     NSString *title;
     NSString *title1;
     NSString *money;
+    
+    NSString *ac_id;
 }
 
 @property (nonatomic, strong) UITableView *_tableView;
@@ -139,12 +144,17 @@ static NSString *collectionView_cid = @"collectionViewcid";
     [super viewDidLoad];
     [self initDatas];
     [self loadDatas:@"faq,video"];
-//    UILabel *label1 = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 30, 20)];
-//    [label1 addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToMySetting)]];
-//    
-//    label1.text=@"设置";
-//    label1.font=FONT(14);
-//    label1.textColor=[UIColor blackColor];
+    [self loadDatas];
+    [self loadLeftNav];
+    [self drawTableView];
+    [self drawTableViewHeaderView];
+    [self drawCollectionView];
+    [NOTIFICATION_CENTER addObserver:self selector:@selector(isRedBag:) name:@"isRedBag" object:nil];
+    [NOTIFICATION_CENTER addObserver:self selector:@selector(lognOut:) name:SUGE_NOT_LOGNOUT1 object:nil];
+    
+}
+- (void)loadLeftNav
+{
     UIButton *button2=[UIButton buttonWithType:UIButtonTypeCustom];
     button2.frame=CGRectMake(0, 0, 35, 20);
     [button2 setTitle:@"设置" forState:0];
@@ -153,18 +163,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
     [button2 addTarget:self action:@selector(goToMySetting) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *rightNavBarItem = [[UIBarButtonItem alloc] initWithCustomView:button2];
     self.navigationItem.rightBarButtonItem = rightNavBarItem;
-    //rightNavBar
-    //    UIImageView *image2 = [[UIImageView alloc] initWithImage:IMAGE(@"message")];
-    //    [image2 addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToMymessage)]];
-    //    UIBarButtonItem *rightNavBarItem = [[UIBarButtonItem alloc] initWithCustomView:image2];
-    //    self.navigationItem.rightBarButtonItem = rightNavBarItem;
-    
-    [self drawTableView];
-    [self drawTableViewHeaderView];
-    [self drawCollectionView];
-    [NOTIFICATION_CENTER addObserver:self selector:@selector(isRedBag:) name:@"isRedBag" object:nil];
-    [NOTIFICATION_CENTER addObserver:self selector:@selector(lognOut:) name:SUGE_NOT_LOGNOUT1 object:nil];
-    
+
 }
 +(UIImage*) createImageWithColor:(UIColor*) color
 {
@@ -817,14 +816,12 @@ static NSString *collectionView_cid = @"collectionViewcid";
     while ([cell.contentView.subviews lastObject]) {
         [(UIView *)[cell.contentView.subviews lastObject] removeFromSuperview];
     }
-    NSArray *array=@[@"个人中心修改_19",@"个人中心修改_21",@"个人中心修改_21-21",@"个人中心修改_27",@"个人中心修改_22-35",@"个人中心修改_32-36",@"个人中心修改_34"];
+    NSArray *array=@[@"个人中心修改_19",@"个人中心修改_21",@"个人中心修改_21-21",@"个人中心修改_27",@"个人中心修改_22-35",@"个人中心修改_32-36",@"suge_bank_1"];
     NSArray *array1=@[@"通讯录",@"我的名片",@"实名认证",@"红包",@"安全设置",@"收货地址",@"银行卡"];
     
     UIImageView *cardImageView=[[UIImageView alloc]initWithFrame:CGRectMake(10, 40, SCREEN_WIDTH/4-30-30, SCREEN_WIDTH/4-30-30)];
     cardImageView.image=IMAGE([array objectAtIndex:indexPath.row]);
-   // [cardButton setImage:IMAGE([array objectAtIndex:indexPath.row]) forState:0];
-    // cardImageView.image=IMAGE([array objectAtIndex:indexPath.row]);
-   // cardButton.contentMode = UIViewContentModeScaleAspectFit;
+
     [cell.contentView addSubview:cardImageView];
     
     UILabel *cardLabel=[[UILabel alloc]initWithFrame:CGRectMake(cardImageView.center.x-20,cardImageView.frame.origin.y+cardImageView.frame.size.height,60, 20)];
@@ -1034,15 +1031,34 @@ static NSString *collectionView_cid = @"collectionViewcid";
 -(void)pushToFeedback
 {
     BOOL isLogin = [LBUserInfo sharedUserSingleton].isLogin;
-
+    
     if (isLogin) {
-        LBFeedbackViewController *Feedback = [[LBFeedbackViewController alloc] init];
-        Feedback.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:Feedback animated:YES];
+        LBAdvViewController *adv = [[LBAdvViewController alloc] init];
+        NSString *url = [NSString stringWithFormat:@"http://test.sugemall.com/wap/tmpl/member/question_list.html?ac_id=%@",ac_id];
+        adv.advURL =url;
+        adv.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:adv animated:YES];
     }else{
         [self goSigin];
     }
+}
+#pragma mark 商学院
 
+- (void)loadDatas
+{
+    //提示
+    [SVProgressHUD showWithStatus:@"加载中..." maskType:SVProgressHUDMaskTypeClear];
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json",@"text/json",nil];
+    NSDictionary *parameter =@{@"ac_id":@""};
+    [manager POST:SUGE_NEWHANDSTEP1 parameters:parameter success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"商学院%@",responseObject);
+        ac_id=responseObject[@"datas"][@"article_class_list"][2][@"ac_id"];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+    [SVProgressHUD dismiss];
 }
 -(void)pushToAbout
 {
@@ -1079,169 +1095,6 @@ static NSString *collectionView_cid = @"collectionViewcid";
     Recharge.hidesBottomBarWhenPushed=YES;
     [self.navigationController pushViewController:Recharge animated:YES];
 }
-#pragma mark  section
-/*- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
- {
- return titles.count;
- }
- 
- #pragma mark numberOfRowsInSection
- - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
- {
- //    return [[titles objectAtIndex:section] count];
- switch (section) {
- case 0:
- return 1;
- case 1:
- return 1;
- case 2:
- return 2;
- case 3:
- return 2;
- case 4:
- return 1;
- 
- }
- return 0;
- }
- - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
- {
- return 45;
- }
- 
- #pragma mark heightForHeaderInSection
- - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
- {
- switch (section) {
- case 0:
- return 10;
- case 1:
- return 10;
- case 2:
- return 25;
- case 3:
- return 0;
- 
- }
- return 0;
- }
- #pragma mark heightForFooterInSection
- - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
- {
- if (section == 0) {
- return 60;
- }
- if (section == 1) {
- return 35;
- }
- if (section == 2) {
- return 3;
- }
- 
- return 0;
- }
- #pragma mark cellForRowAtIndexPath
- - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
- {
- NSInteger section = indexPath.section;
- NSInteger row = indexPath.row;
- 
- //    NSString *text = [[titles objectAtIndex:section] objectAtIndex:indexPath.row];
- //    UIImage *image = [UIImage imageNamed:[[images objectAtIndex:indexPath.section] objectAtIndex:row]];
- //
- UITableViewCell *cell = nil;
- 
- if (!cell) {
- cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cid];
- if (section == 1) {
- if (row== 0) {
- }
- }else{
- cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
- }
- //平滑
- cell.layer.shouldRasterize = YES;
- cell.layer.rasterizationScale = [UIScreen mainScreen].scale;
- ////        cell.textLabel.text = text;
- ////        cell.imageView.image = image;
- //        UIImageView *imageView1 = [[UIImageView alloc] initWithFrame:CGRectMake(10, 7, 30, 30)];
- //        imageView1.image = image;
- //        [cell addSubview:imageView1];
- //        UILabel *textname = [[UILabel alloc] initWithFrame:CGRectMake(imageView1.frame.origin.x+imageView1.frame.size.width+10, imageView1.frame.origin.y, 100, 30)];
- //        textname.text = text;
- //        textname.font = FONT(17);
- //        [cell addSubview:textname];
- }
- return cell;
- 
- }
- 
- #pragma mark didSelectRowAtIndexPath
- - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
- {
- [tableView deselectRowAtIndexPath:indexPath animated:YES];
- 
- HostViewController *orderlist = [[HostViewController alloc] init];
- orderlist.hidesBottomBarWhenPushed = YES;
- LBFeedbackViewController *feedback = [[LBFeedbackViewController alloc] init];
- feedback.hidesBottomBarWhenPushed = YES;
- LBMyRefereeViewController *myRefereeVC = [[LBMyRefereeViewController alloc]init];
- myRefereeVC.hidesBottomBarWhenPushed = YES;
- LBMyQRCodeViewController *myQRCodeVC = [[LBMyQRCodeViewController alloc]init];
- myQRCodeVC.hidesBottomBarWhenPushed = YES;
- LBMySettingViewController *setting = [[LBMySettingViewController alloc] init];
- setting.hidesBottomBarWhenPushed = YES;
- BOOL isLognIn = [[LBUserInfo sharedUserSingleton] isLogin];
- if (isLognIn) {
- 
- NSInteger section = indexPath.section;
- NSInteger row = indexPath.row;
- 
- if (section == 0) {
- switch (row) {
- case 0:
- //                    orderlist._orderStatus = @"0";
- [self.navigationController pushViewController:orderlist animated:YES];
- break;
- 
- }
- } else  if(section == 1){
- switch (row) {
- case 0:
- 
- break;
- 
- }
- }else if (section == 2){
- switch (row) {
- case 0:
- [self.navigationController pushViewController:myQRCodeVC animated:YES];                    break;
- case 1:
- [self.navigationController pushViewController:myRefereeVC animated:YES];
- break;
- 
- }
- }
- else if (section == 3){
- switch (row) {
- case 0:
- [self.navigationController pushViewController:setting
- animated:YES];
- break;
- case 1:
- [self.navigationController pushViewController:feedback
- animated:YES];
- break;
- 
- }
- }
- 
- }else{
- [self goSigin];
- }
- 
- 
- }*/
 
 - (void)loadDatas:(NSString *)ac_code
 {

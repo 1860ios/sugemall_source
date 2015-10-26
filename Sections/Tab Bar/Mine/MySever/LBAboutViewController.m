@@ -35,8 +35,12 @@ static NSString *cid=@"cid";
     [headerView addSubview:sugeImageView];
     
     UILabel *banbenLabel=[[UILabel alloc]initWithFrame:CGRectMake(sugeImageView.frame.origin.x, sugeImageView.frame.origin.y+sugeImageView.frame.size.height, sugeImageView.frame.size.width+5, 30)];
-    banbenLabel.text=@"苏格v1.2.3";
+    NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
+    NSString *appVersion = [infoDic objectForKey:@"CFBundleVersion"];
+    CFShow((__bridge CFTypeRef)(infoDic));
+    banbenLabel.text=appVersion;
     banbenLabel.font=FONT(14);
+    banbenLabel.textAlignment = NSTextAlignmentCenter;
     banbenLabel.textColor=[UIColor blackColor];
     [headerView addSubview:banbenLabel];
 

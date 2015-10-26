@@ -15,6 +15,7 @@
 #import "SUGE_API.h"
 #import "LBUserInfo.h"
 #import "LBLognInViewController.h"
+#import "LBAddressListViewController.h"
 
 @interface LBNewsViewController ()
 {
@@ -110,12 +111,21 @@
     UIView *line1 = [[UIView alloc] initWithFrame:CGRectMake(name.frame.origin.x-5, 70, SCREEN_WIDTH-name.frame.origin.x-5, 0.5)];
     line1.backgroundColor = [UIColor lightGrayColor];
     [cell.contentView addSubview:line1];
-    
-
 
     return cell;
     
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (indexPath.row == 0) {
+        LBAddressListViewController *address = [LBAddressListViewController new];
+        address.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:address animated:YES];
+    }
+}
+
 
 - (void)viewWillAppear:(BOOL)animated
 {

@@ -18,6 +18,8 @@
 #import <MJRefresh.h>
 #import "LBPartnerViewController.h"
 #import "LBCustomViewController.h"
+#import "LBAdvViewController.h"
+
 static NSString *cid=@"cid";
 @interface LBAddressListViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 {
@@ -27,6 +29,9 @@ static NSString *cid=@"cid";
     NSMutableArray *customArray;
     NSMutableArray *DatasArray;
     int _curpage;
+    NSArray *imageArray;
+    NSArray *nameArray;
+    NSArray *counyArray;
 }
 @property(nonatomic,strong)UITableView *addTableView;
 @end
@@ -36,15 +41,41 @@ static NSString *cid=@"cid";
 {
     [super viewDidLoad];
     self.title=@"通讯录";
+    imageArray = @[@"通讯录_03",@"通讯录_06"];
+    nameArray = @[@"我的合伙人",@"我的客户"];
+    counyArray = @[@"partner",@"custom"];
+    _curpage=1;
     DatasArray= [NSMutableArray array];
     self.view.backgroundColor=[UIColor colorWithWhite:0.93 alpha:0.93];
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithImage:IMAGE(@"add_bank") style:UIBarButtonItemStylePlain target:self action:@selector(addAddress)];
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithImage:IMAGE(@"invite_partner") style:UIBarButtonItemStylePlain target:self action:@selector(invitePartner)];
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"排行榜" style:UIBarButtonItemStyleDone target:self action:@selector(pushRankingList)];
     self.navigationItem.rightBarButtonItem = rightButton;
+    self.navigationItem.leftBarButtonItems = @[leftButton];
     [self loadAddressDatas];
     [self initTableView];
-    _curpage=1;
+    [self addBottomButton];
+}
 
-    
+- (void)addBottomButton
+{
+    UIButton *bottomButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    bottomButton.frame = CGRectMake(15,SCREEN_HEIGHT-10-50, SCREEN_WIDTH-30, 50);
+    [bottomButton setTitle:@"邀请合伙人" forState:UIControlStateNormal];
+    [bottomButton setBackgroundColor:APP_COLOR];
+    bottomButton.layer.cornerRadius = 3;
+    bottomButton.layer.masksToBounds = YES;
+    [bottomButton addTarget:self action:@selector(invitePartner) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:bottomButton];
+}
+#pragma mark 排行榜
+-(void)pushRankingList
+{
+    LBAdvViewController *adv = [[LBAdvViewController alloc] init];
+    NSString *key = [LBUserInfo sharedUserSingleton].userinfo_key;
+    NSString *url = [NSString stringWithFormat:@"http://test.sugemall.com/wap/tmpl/member/team_rank.html?key=%@",key];
+    adv.advURL =url;
+    adv.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:adv animated:YES];
 }
 #pragma mark initTableView
 -(void)initTableView
@@ -79,85 +110,42 @@ static NSString *cid=@"cid";
 #pragma mark tableview  delegate
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return 2;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 10;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 
-    return 44;
+    return 60;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2;
+    return 1;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger section=indexPath.section;
-    NSInteger row=indexPath.row;
+//    NSInteger row=indexPath.row;
     UITableViewCell *cell=nil;
     if (!cell) {
         cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cid];
     }
-    if (indexPath.section==1) {
-        cell.selectionStyle=UITableViewCellSelectionStyleNone;
-    }else{
-        cell.selectionStyle=UITableViewCellSelectionStyleGray;
-    }
     
-    UILabel *numLabel=[[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH-10-200,0, 200, 44)];
+    UILabel *numLabel=[[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH-10-200,10, 200, 40)];
     numLabel.textAlignment=NSTextAlignmentRight;
     numLabel.textColor=[UIColor lightGrayColor];
-    numLabel.font=FONT(13);
+    numLabel.font=FONT(18);
     
-    
-    if (section==0&&row==0) {
-        cell.imageView.image=IMAGE(@"通讯录_03");
-        cell.textLabel.text=@"我的合伙人";
-        numLabel.text=[NSString stringWithFormat:@"%@人",dictionary[@"count"][@"partner"]];
-        [cell.contentView addSubview:numLabel];
-    }else if (section==0&&row==1)
-    {
-        cell.imageView.image=IMAGE(@"通讯录_06");
-        cell.textLabel.text=@"我的客户";
+    cell.imageView.image=IMAGE(imageArray[section]);
+    cell.textLabel.text=nameArray[section];
+    numLabel.text=[NSString stringWithFormat:@"%@人",dictionary[@"count"][counyArray[section]]];
+    [cell.contentView addSubview:numLabel];
 
-        numLabel.text=[NSString stringWithFormat:@"%@人",dictionary[@"count"][@"custom"]];
-        [cell.contentView addSubview:numLabel];}
-//        //用户头像
-//       UIImageView *userIcon = [[UIImageView alloc] initWithFrame:CGRectMake(20, 20, 50, 50)];
-//        userIcon.userInteractionEnabled = YES;
-//        userIcon.contentMode = UIViewContentModeScaleAspectFit;
-//        userIcon.layer.cornerRadius = 25;
-//        userIcon.layer.masksToBounds  = YES;
-//        [cell.contentView addSubview:userIcon];
-//        
-//        UILabel *cardLabel=[[UILabel alloc]initWithFrame:CGRectMake(userIcon.frame.origin.x+userIcon.frame.size.width+10, userIcon.frame.origin.y, 200, 20)];
-//        cardLabel.textAlignment=NSTextAlignmentLeft;
-//        cardLabel.textColor=[UIColor blackColor];
-//        cardLabel.font=FONT(15);
-//        [cell.contentView addSubview:cardLabel];
-//
-//        UILabel *contributeLabel=[[UILabel alloc]initWithFrame:CGRectMake(cardLabel.frame.origin.x, cardLabel.frame.origin.y+cardLabel.frame.size.height, 200, 20)];
-//        contributeLabel.textAlignment=NSTextAlignmentLeft;
-//        contributeLabel.textColor=[UIColor lightGrayColor];
-//        contributeLabel.font=FONT(13);
-//        [cell.contentView addSubview:contributeLabel];
-//
-//        UILabel *teamLabel=[[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH-100-200, contributeLabel.frame.origin.y, 200, 20)];
-//        teamLabel.textAlignment=NSTextAlignmentRight;
-//        teamLabel.textColor=[UIColor lightGrayColor];
-//        teamLabel.font=FONT(13);
-//        [cell.contentView addSubview:teamLabel];
-//
-//        UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(contributeLabel.frame.origin.x, contributeLabel.frame.origin.y+contributeLabel.frame.size.height+10, SCREEN_WIDTH-userIcon.frame.size.width, 1)];
-//        lineView.backgroundColor=[UIColor colorWithWhite:0.93 alpha:0.93];
-//        [cell.contentView addSubview:lineView];
-//        
-//            [userIcon sd_setImageWithURL:[NSURL URLWithString:DatasArray[indexPath.row][@"member_avatar"]] placeholderImage:IMAGE(@"myrefrere_Icon")];
-//            cardLabel.text=DatasArray[indexPath.row][@"member_name"];
-//            contributeLabel.text=[NSString stringWithFormat:@"贡献值:%@元",DatasArray[indexPath.row][@"contribution"]];
-//            teamLabel.text=[NSString stringWithFormat:@"团队值:%@人",DatasArray[indexPath.row][@"count_teams"]];
     return cell;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath
@@ -171,7 +159,7 @@ static NSString *cid=@"cid";
     }
 }
 #pragma mark 邀请合伙人
--(void)addAddress
+-(void)invitePartner
 {
     LBInviteViewController *Invite=[[LBInviteViewController alloc]init];
     [self.navigationController pushViewController:Invite animated:YES];
