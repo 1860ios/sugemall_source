@@ -40,7 +40,6 @@
 #import "NotificationMacro.h"
 #import "LBShoppingCarViewController.h"
 #import "LBClassifyPageView.h"
-
 @implementation UIButton (FillColor)
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor forState:(UIControlState)state {
@@ -555,7 +554,8 @@ static NSString *collectionView_header_cid = @"HeaderView";
     singleGood = goodsArray[row];
     detailVC.hidesBottomBarWhenPushed = YES;
     detailVC._goodsID = singleGood[@"goods_id"];
-    [self.navigationController pushViewController:detailVC animated:YES];
+
+   [self.navigationController pushViewController:detailVC animated:YES];
 }
 
 

@@ -11,7 +11,6 @@
 #import "AppMacro.h"
 #import <UIImageView+WebCache.h>
 #import "NotificationMacro.h"
-
 @implementation UIButton (FillColor)
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor forState:(UIControlState)state {
@@ -150,7 +149,8 @@
 
 - (void)postQianggou_method:(UIButton *)btn
 {
-    NSLog(@"抢购");
+//    LBPurchaseViewController *purchase=[[LBPurchaseViewController alloc]init];
+    
 }
 
 - (void)addValueForZhuantiView:(NSMutableArray *)value

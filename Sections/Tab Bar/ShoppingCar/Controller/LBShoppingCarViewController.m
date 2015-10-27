@@ -149,6 +149,7 @@ static NSString *cid = @"cid";
                     __tableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-self.tabBarController.tabBar.frame.size.height);
                 self._tableView.backgroundView = [UIView new];
                 model = [LBCarModel objectWithKeyValues:responObject[@"datas"]];
+                
             }
 
             //刷新tableview
