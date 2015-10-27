@@ -122,7 +122,7 @@ static BOOL FirstLaunch = NO;
     [self setupChildViewController:weath title:@"财富" imageName:@"treasure_normal" selectedImageName:@"treasure_select"];
     
     LBMineViewController *mine = [[LBMineViewController alloc] init];
-    [self setupChildViewController:mine title:@"我的" imageName:@"zhongxin" selectedImageName:@"zhongxin_s"];
+    [self setupChildViewController:mine title:@"个人中心" imageName:@"zhongxin" selectedImageName:@"zhongxin_s"];
         
 }
 /**

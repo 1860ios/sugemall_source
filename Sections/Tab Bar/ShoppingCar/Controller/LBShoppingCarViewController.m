@@ -39,7 +39,7 @@ static NSString *cid = @"cid";
     
     UIButton *_allSelectBtn;
     UIButton *_oneSelectBtn;
-    
+    UIButton *_towSelectBtn;
     NSMutableArray *allPriceArray;
 
     float allPrice;
@@ -175,8 +175,6 @@ static NSString *cid = @"cid";
         self._tableView.backgroundView = [[UIImageView alloc]initWithImage:IMAGE(@"none_carlist")];
 
     }
-    
-
 }
 #pragma mark drawBottomView
 - (void)loadBottom
@@ -261,6 +259,14 @@ static NSString *cid = @"cid";
     [_oneSelectBtn addTarget:self action:@selector(oneSelectBtnMethod:) forControlEvents:UIControlEventTouchUpInside];
 //    _oneSelectBtn.selected = NO;
     [cell addSubview:_oneSelectBtn];
+    //每个商品前的按钮
+    _towSelectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    _towSelectBtn.frame = CGRectMake(5, cell._goods_image_view.frame.origin.y, 30, 30);
+    _towSelectBtn.tag = 999+row;
+    [_towSelectBtn setImage:IMAGE(@"syncart_round_check1@2x") forState:UIControlStateNormal];
+    [_towSelectBtn setImage:IMAGE(@"syncart_round_check2@2x") forState:UIControlStateSelected];
+    [_towSelectBtn addTarget:self action:@selector(oneSelectBtnMethod:) forControlEvents:UIControlEventTouchUpInside];
+    [cell addSubview:_towSelectBtn];
     
     [cell._deleteBtn addTarget:self action:@selector(edictNum1:) forControlEvents:UIControlEventTouchUpInside];
     cell._addBtn.tag = row;
@@ -274,7 +280,6 @@ static NSString *cid = @"cid";
 #pragma mark 单选多选----Method
 /**
  *
-
  *
  */
 //#warning 购物车单选多选

@@ -67,6 +67,7 @@ static NSString *cid=@"cid";
     if (!cell) {
         cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cid];
     }
+    cell.selectionStyle=UITableViewCellSelectionStyleNone;
     UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(10, 0, 80, 80)];
     
     UILabel *inviteLabel=[[UILabel alloc]initWithFrame:CGRectMake(imageView.frame.origin.x+imageView.frame.size.width,imageView.frame.origin.y+20, 200, 20)];
@@ -120,16 +121,20 @@ static NSString *cid=@"cid";
     NSString *QRCodeStr = [NSString stringWithFormat:@"%@%@",SUGE_QRCODEURL,key];
     [UMSocialData defaultData].extConfig.wechatSessionData.url = QRCodeStr;
     [UMSocialData defaultData].extConfig.wechatTimelineData.url = QRCodeStr;
-
     LBMyQRCodeViewController *myQRCode=[[LBMyQRCodeViewController alloc]init];
     if (indexPath.row==0) {
-        
-    }else{
-        [UMSocialSnsService presentSnsController:self appKey:nil shareText:@"分享的内容" shareImage:nil shareToSnsNames:[NSArray arrayWithObjects:UMShareToTencent,UMShareToRenren,UMShareToDouban,UMShareToWechatTimeline,UMShareToWechatSession,UMShareToQzone,UMShareToQQ,nil] delegate:nil];
-
         [self.navigationController pushViewController:myQRCode animated:YES];
+    }else{
+        //调用快速分享接口
+        [UMSocialSnsService presentSnsIconSheetView:self
+                                             appKey:@"5541f4cf67e58e03a9002933"
+                                          shareText:@"苏格时代商城"
+                                         shareImage:nil
+                                    shareToSnsNames:[NSArray arrayWithObjects:UMShareToTencent,UMShareToRenren,UMShareToDouban,UMShareToWechatTimeline,UMShareToWechatSession,UMShareToQzone,UMShareToQQ,nil]
+                                           delegate:nil];
     }
 }
+
 -(void)initButton
 {
     UIButton *mineButton=[UIButton buttonWithType:UIButtonTypeCustom];

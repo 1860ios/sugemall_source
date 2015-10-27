@@ -26,9 +26,6 @@
     _storeImage.image = IMAGE(@"store_image");
     [self.contentView addSubview:_storeImage];
     
-    _storeImageJ = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-30, 10, 20, 20)];
-    _storeImageJ.image = IMAGE(@"jiantou");
-    [self.contentView addSubview:_storeImageJ];
     //商品名
     __goods_name_label = [[UILabel alloc] initWithFrame:CGRectZero];
     __goods_name_label.numberOfLines = 3;
@@ -42,7 +39,7 @@
     __goods_sum.textAlignment = NSTextAlignmentCenter;
     __goods_sum.adjustsFontSizeToFitWidth = YES;
     __goods_sum.textColor = APP_COLOR;
-    [self addSubview:__goods_sum];
+    //[self addSubview:__goods_sum];
 
     //店铺名
     __store_name_label = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -52,12 +49,14 @@
     //商品单价
     __goods_price_label =[[UILabel alloc] initWithFrame:CGRectZero];
     __goods_price_label.adjustsFontSizeToFitWidth = YES;
+    __goods_price_label.textAlignment=NSTextAlignmentRight;
 //    __goods_price_label.font = [UIFont boldSystemFontOfSize:13];;
     [self.contentView addSubview:__goods_price_label];
     //图
     __goods_image_view = [[UIImageView alloc] initWithFrame:CGRectZero];
     __goods_image_view.contentMode = UIViewContentModeScaleAspectFit;
     [self.contentView addSubview:__goods_image_view];
+    
     //减按钮
     __deleteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     __deleteBtn.frame = CGRectZero;
@@ -92,20 +91,24 @@
     //店名
     __store_name_label.frame = CGRectMake(60, 10, 200, 20);
     //图
-    __goods_image_view.frame = CGRectMake( 10, __store_name_label.frame.origin.y+__store_name_label.frame.size.height+10, 90, 90);
+    __goods_image_view.frame = CGRectMake( 40, __store_name_label.frame.origin.y+__store_name_label.frame.size.height+10, 90, 90);
     //名字
     __goods_name_label.frame = CGRectMake(__goods_image_view.frame.origin.x+__goods_image_view.frame.size.width+5, __goods_image_view.frame.origin.y-10, 130, 65);
     //单价
-    __goods_price_label.frame = CGRectMake(__goods_name_label.frame.origin.x, __goods_name_label.frame.origin.y+__goods_name_label.frame.size.height+10, 100, 30);
+    __goods_price_label.frame = CGRectMake(__goods_name_label.frame.origin.x+__goods_name_label.frame.size.width-5, __goods_name_label.frame.origin.y, SCREEN_WIDTH-__goods_name_label.frame.origin.x-__goods_name_label.frame.size.width-5, 35);
     //总价
     __goods_sum.frame = CGRectMake(__goods_name_label.frame.origin.x+__goods_name_label.frame.size.width+5, __goods_name_label.frame.origin.y, SCREEN_WIDTH-__goods_name_label.frame.origin.x-__goods_name_label.frame.size.width-5, 35);//
     //减
-    __deleteBtn.frame = CGRectMake(SCREEN_WIDTH-105, __goods_sum.frame.origin.y+__goods_sum.frame.size.height+30, 30, 30);
+    __deleteBtn.frame = CGRectMake(__goods_name_label.frame.origin.x, __goods_name_label.frame.origin.y+__goods_name_label.frame.size.height+10, 30, 30);
     //数量
     __goods_num_label.frame = CGRectMake(__deleteBtn.frame.origin.x+__deleteBtn.frame.size.width,__deleteBtn.frame.origin.y, 40, 30);
     //加
     __addBtn.frame = CGRectMake(__goods_num_label.frame.origin.x+__goods_num_label.frame.size.width,__goods_num_label.frame.origin.y, 30, 30);
-
+    //删除
+    UIButton *_shanchuButton=[UIButton buttonWithType:UIButtonTypeCustom];
+    _shanchuButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-40,__addBtn.frame.origin.y, 30, 30)];
+    [_shanchuButton setImage:IMAGE(@"delete") forState:0];
+    [self.contentView addSubview:_shanchuButton];
 }
 
 
