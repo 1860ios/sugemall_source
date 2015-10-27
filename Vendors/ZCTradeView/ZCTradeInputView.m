@@ -176,7 +176,10 @@ typedef enum {
     
     // 画字
     NSString *title = @"请输入交易密码";
-    
+    if(_otherTitle)
+    {
+        title = _otherTitle;
+    }
     CGSize size = [title sizeWithFont:[UIFont systemFontOfSize:ZCScreenWidth * 0.053125] andMaxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
     CGFloat titleW = size.width;
     CGFloat titleH = size.height;

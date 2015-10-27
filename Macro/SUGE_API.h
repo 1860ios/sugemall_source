@@ -1412,6 +1412,16 @@ store_id= 店铺ID
 
 #define SUGE_PARTNER             [SUGE_BASE_URL stringByAppendingString:@"index.php?act=member_teams&op=team_partner"]
 
-
+/*
+ 请求参数
+ 
+ name 用户姓名
+ idcard 身份证号码
+ key 用户登录token
+ 返回数据
+ 
+ 0 核对失败，1 核对成功，2 没有实名认证
+ */
+#define SUGE_VALIDATEID             [SUGE_BASE_URL stringByAppendingString:@"index.php?act=member_security&op=check_identity"]
 
 #endif

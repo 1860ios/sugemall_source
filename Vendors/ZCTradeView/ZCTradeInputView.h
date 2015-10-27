@@ -29,6 +29,8 @@ static NSString *ZCTradeInputViewPwdKey = @"ZCTradeInputViewPwdKey";
 
 @interface ZCTradeInputView : UIView
 @property (nonatomic, weak) id<ZCTradeInputViewDelegate> delegate;
+@property(nonatomic, copy) NSString*otherTitle;
+
 @end
 // 版权属于原作者
 // http://code4app.com (cn) http://code4app.net (en)

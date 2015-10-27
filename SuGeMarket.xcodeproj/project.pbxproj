@@ -64,6 +64,7 @@
 		3B1C40781AFAF1BF0073F064 /* mailbox.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B1C40771AFAF1BF0073F064 /* mailbox.png */; };
 		3B1C407B1AFAF8210073F064 /* libUMessage_Sdk_1.1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B642EFF1AF9BF0600B51B7F /* libUMessage_Sdk_1.1.0.a */; };
 		3B1C407F1AFB15DB0073F064 /* suge_personel_waitpay_order.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B1C407E1AFB15DB0073F064 /* suge_personel_waitpay_order.png */; };
+		3B20F5991BDF5FDD006A8B29 /* LBValidateIdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B20F5971BDF5FDD006A8B29 /* LBValidateIdViewController.m */; };
 		3B2F80611AE7A0C10051D69C /* LBNavBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2F80601AE7A0C10051D69C /* LBNavBarView.m */; };
 		3B3338C31B09796A00E257E4 /* LBClassifyViewContrtoller.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B3338991B09796900E257E4 /* LBClassifyViewContrtoller.m */; };
 		3B3338C51B09796A00E257E4 /* LBHomeViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B3338A11B09796900E257E4 /* LBHomeViewCell.m */; };
@@ -154,11 +155,11 @@
 		3B6C857A1AFE046A00CEE712 /* page_top_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B6C85721AFE046A00CEE712 /* page_top_1@2x.png */; };
 		3B6C857B1AFE046A00CEE712 /* page_top_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B6C85731AFE046A00CEE712 /* page_top_2@2x.png */; };
 		3B6C857C1AFE046A00CEE712 /* page_top_3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B6C85741AFE046A00CEE712 /* page_top_3@2x.png */; };
-		3B765F2D1BDDBC01002B0C4D /* baiquan_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B765F2B1BDDBC01002B0C4D /* baiquan_normal.png */; settings = {ASSET_TAGS = (); }; };
-		3B765F2E1BDDBC01002B0C4D /* lanquan_select.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B765F2C1BDDBC01002B0C4D /* lanquan_select.png */; settings = {ASSET_TAGS = (); }; };
-		3B765F301BDDEF68002B0C4D /* invite_partner.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B765F2F1BDDEF68002B0C4D /* invite_partner.png */; settings = {ASSET_TAGS = (); }; };
-		3B765F331BDE1DDB002B0C4D /* jinrudianpu.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B765F311BDE1DDB002B0C4D /* jinrudianpu.png */; settings = {ASSET_TAGS = (); }; };
-		3B765F341BDE1DDB002B0C4D /* lianxikehu.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B765F321BDE1DDB002B0C4D /* lianxikehu.png */; settings = {ASSET_TAGS = (); }; };
+		3B765F2D1BDDBC01002B0C4D /* baiquan_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B765F2B1BDDBC01002B0C4D /* baiquan_normal.png */; };
+		3B765F2E1BDDBC01002B0C4D /* lanquan_select.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B765F2C1BDDBC01002B0C4D /* lanquan_select.png */; };
+		3B765F301BDDEF68002B0C4D /* invite_partner.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B765F2F1BDDEF68002B0C4D /* invite_partner.png */; };
+		3B765F331BDE1DDB002B0C4D /* jinrudianpu.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B765F311BDE1DDB002B0C4D /* jinrudianpu.png */; };
+		3B765F341BDE1DDB002B0C4D /* lianxikehu.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B765F321BDE1DDB002B0C4D /* lianxikehu.png */; };
 		3B7F14F11AF22FD900F8AA03 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B7F14F01AF22FD900F8AA03 /* AVFoundation.framework */; };
 		3B8109471B1E9AED00D4A4C1 /* LBAreaListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B8109461B1E9AED00D4A4C1 /* LBAreaListModel.m */; };
 		3B81094A1B1E9EAC00D4A4C1 /* LBAreaModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B8109491B1E9EAC00D4A4C1 /* LBAreaModel.m */; };
@@ -590,6 +591,8 @@
 		3B1C40771AFAF1BF0073F064 /* mailbox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mailbox.png; sourceTree = "<group>"; };
 		3B1C40791AFAF6F90073F064 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		3B1C407E1AFB15DB0073F064 /* suge_personel_waitpay_order.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = suge_personel_waitpay_order.png; sourceTree = "<group>"; };
+		3B20F5961BDF5FDD006A8B29 /* LBValidateIdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBValidateIdViewController.h; sourceTree = "<group>"; };
+		3B20F5971BDF5FDD006A8B29 /* LBValidateIdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBValidateIdViewController.m; sourceTree = "<group>"; };
 		3B2F805F1AE7A0C10051D69C /* LBNavBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBNavBarView.h; sourceTree = "<group>"; };
 		3B2F80601AE7A0C10051D69C /* LBNavBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBNavBarView.m; sourceTree = "<group>"; };
 		3B3338981B09796900E257E4 /* LBClassifyViewContrtoller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBClassifyViewContrtoller.h; sourceTree = "<group>"; };
@@ -1482,6 +1485,7 @@
 				3BC48A021B55FEF100A12DDE /* LBBling1ViewController.m */,
 				3B1A179C1B53544200C1D1BE /* LBPayMMViewController.h */,
 				3B1A179D1B53544200C1D1BE /* LBPayMMViewController.m */,
+				3B20F5931BDF5FDD006A8B29 /* password */,
 			);
 			name = Safe;
 			sourceTree = "<group>";
@@ -1519,6 +1523,15 @@
 				3B1A17A01B5387A300C1D1BE /* LBExtendStoreModel.m */,
 			);
 			path = ShoppingCarList;
+			sourceTree = "<group>";
+		};
+		3B20F5931BDF5FDD006A8B29 /* password */ = {
+			isa = PBXGroup;
+			children = (
+				3B20F5961BDF5FDD006A8B29 /* LBValidateIdViewController.h */,
+				3B20F5971BDF5FDD006A8B29 /* LBValidateIdViewController.m */,
+			);
+			path = password;
 			sourceTree = "<group>";
 		};
 		3B3338951B09796900E257E4 /* Module */ = {
@@ -3287,6 +3300,7 @@
 				3BDE1FDB1B01F13800E75EE2 /* OTCover.m in Sources */,
 				3B1A17AC1B54EDFF00C1D1BE /* LBBlingStep1lViewController.m in Sources */,
 				3B868BE21BDCE92100DB9545 /* LBArticlesViewController.m in Sources */,
+				3B20F5991BDF5FDD006A8B29 /* LBValidateIdViewController.m in Sources */,
 				3B15955A1B181444006A15D4 /* openssl_wrapper.m in Sources */,
 				3BFE1DA51AF0C0B000448A8B /* LBExtendOrderGoods.m in Sources */,
 				0488B37C1AEC8F9C00926718 /* SVIndefiniteAnimatedView.m in Sources */,

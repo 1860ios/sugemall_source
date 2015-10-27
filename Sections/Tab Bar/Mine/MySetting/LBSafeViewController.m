@@ -22,6 +22,7 @@
 #import "LBBlingStep1lViewController.h"
 #import "LBBlingStepViewController.h"
 #import "LBVMoblieViewController.h"
+#import "LBValidateIdViewController.h"
 
 static NSString *cid=  @"cid";
 
@@ -207,7 +208,7 @@ static NSString *cid=  @"cid";
     LBBlingStep1lViewController *step1 = [[LBBlingStep1lViewController alloc] init];
     LBBlingStepViewController *step = [[LBBlingStepViewController alloc] init];
     LBVMoblieViewController *vmoblie = [[LBVMoblieViewController alloc] init];
-    LBPayMMViewController *payMM11=[[LBPayMMViewController alloc]init];
+    LBValidateIdViewController *valide=[[LBValidateIdViewController alloc]init];
     [_tableView deselectRowAtIndexPath:indexPath animated:YES];
     switch (indexPath.section) {
         case 0:
@@ -242,8 +243,9 @@ static NSString *cid=  @"cid";
             [self.navigationController pushViewController:[LBBankViewController new] animated:YES];
             break;
         case 4:
-            payMM11.numString=mobile;
-            [self.navigationController pushViewController:payMM11 animated:YES];
+            valide.numString=mobile;
+            [self.navigationController pushViewController:valide animated:YES];
+
             break;
     }
 }
