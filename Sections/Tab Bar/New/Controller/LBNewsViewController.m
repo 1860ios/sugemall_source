@@ -16,10 +16,13 @@
 #import "LBUserInfo.h"
 #import "LBLognInViewController.h"
 #import "LBAddressListViewController.h"
+#import "LBArticleView.h"
+#import "LBMessageViewController.h"
 
 @interface LBNewsViewController ()
 {
     NSMutableDictionary *newsDic;
+    NSArray *keyArray;
 }
 @end
 
@@ -27,7 +30,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    keyArray = @[@"activity",@"business",@"member_msg",@"order_msg",@"system",@"wealth_msg"];
     self.view.backgroundColor = [UIColor whiteColor];
     self.tableView.tableFooterView = [UIView new];
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -80,7 +83,7 @@
         }
     }
     NSInteger index1 = indexPath.row;
-    NSArray *key = @[@"activity_article",@"edu_article",@"order_msg",@"system_article",@"system_msg",@"wealth_msg"];
+    
     UIImageView *iconImage = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 60, 60)];
     UILabel *name = [[UILabel alloc] initWithFrame:CGRectMake(iconImage.frame.origin.x+iconImage.frame.size.width+10, 5, 100, 40)];
     if (index1 == 0) {
@@ -89,7 +92,7 @@
         name.frame = CGRectMake(iconImage.frame.origin.x+iconImage.frame.size.width+10, 15, 100, 25);
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }else{
-        NSDictionary *dic2 = [newsDic valueForKey:key[index1-1]];
+        NSDictionary *dic2 = [newsDic valueForKey:keyArray[index1-1]];
         NSString *image_url = [dic2 valueForKey:@"msg_pic"];
         [iconImage sd_setImageWithURL:[NSURL URLWithString:image_url] placeholderImage:IMAGE(@"")];
         name.text = [dic2 valueForKey:@"msg_name"];
@@ -118,11 +121,34 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSInteger row =indexPath.row;
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row == 0) {
+    if (row == 0) {
         LBAddressListViewController *address = [LBAddressListViewController new];
         address.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:address animated:YES];
+    }else{
+        NSDictionary *dic2 = [newsDic valueForKey:keyArray[row-1]];
+        NSString *type = [dic2 valueForKey:@"type"];
+        NSString *title = [dic2 valueForKey:@"msg_name"];
+        //文章
+        if ([type isEqualToString:@"0"]) {
+            NSString *acid = [dic2 valueForKey:@"ac_id"];
+            LBArticleView *article = [[LBArticleView alloc] init];
+            article.hidesBottomBarWhenPushed = YES;
+            article._title =title;
+            article.ac_id = acid;
+            [self.navigationController pushViewController:article animated:YES];
+        }
+        //订单/caifu//会员
+        else{
+            NSString *type = keyArray[row-1];
+            LBMessageViewController *message = [[LBMessageViewController alloc] init];
+            message._type = type;
+            message._title = title;
+            message.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:message animated:YES];
+        }
     }
 }
 

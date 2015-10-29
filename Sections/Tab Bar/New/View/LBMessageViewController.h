@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LBMyMessageViewController : UIViewController
-
+@interface LBMessageViewController : UIViewController
+@property (nonatomic, assign) NSString *_type;
+@property (nonatomic, assign) NSString *_title;
 @end

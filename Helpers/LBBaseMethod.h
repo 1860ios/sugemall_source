@@ -6,6 +6,10 @@
 //  Copyright © 2015年 Josin_Q. All rights reserved.
 //
 
+#import "UtilsMacro.h"
+#import "AppMacro.h"
+#import "SUGE_API.h"
+#import "LBUserInfo.h"
 #import <Foundation/Foundation.h>
 
 @interface LBBaseMethod : NSObject

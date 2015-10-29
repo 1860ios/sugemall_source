@@ -18,14 +18,14 @@
 #import <TSMessage.h>
 #import "SUGE_API.h"
 #import "UILabel+FlickerNumber.h"
-
+#import "LBMyBlotterCell.h"
 
 static NSString *cid = @"cid";
 
 @interface LBMyBlotterViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     NSMutableArray *BlotterDatas;
-    NSDictionary *typeDic;
+
     UILabel *yueLabel;
     double money1;
 }
@@ -34,16 +34,14 @@ static NSString *cid = @"cid";
 
 @implementation LBMyBlotterViewController
 @synthesize _tableView;
-@synthesize _yue;
 @synthesize _type;
 @synthesize _title;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = _title;
-    money1 = [_yue doubleValue];
     self.view.backgroundColor = [UIColor whiteColor];
-    typeDic = @{@"order_pay":@"下单支付预存款",@"order_freeze":@"下单冻结预存款",@"order_cancel":@"取消订单解冻预存款",@"order_comb_pay":@"下单支付被冻结的预存款",@"recharge":@"充值",@"cash_apply":@"申请提现冻结预存款",@"cash_pay":@"提现成功",@"cash_del":@"取消提现申请，解冻预存款",@"refund":@"退款"};
+   
     [self loadBlotterTableView];
     [self loadBlotterDatas];
     [self loadBlotterHeaderView];
@@ -61,7 +59,7 @@ static NSString *cid = @"cid";
     yueLabel.textAlignment = NSTextAlignmentCenter;
 //    yueLabel.adjustsFontSizeToFitWidth = YES;
     yueLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:35];
-    yueLabel.text = @"0000";
+    yueLabel.text = @"00";
     [headerView addSubview:yueLabel];
     
     UIImageView *linView = [[UIImageView alloc] initWithFrame:CGRectMake(0, headerView.frame.size.height-40, SCREEN_WIDTH, 25)];
@@ -82,7 +80,7 @@ static NSString *cid = @"cid";
     
     });
     _tableView.tableFooterView = [UIView new];
-    [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:cid];
+    [_tableView registerClass:[LBMyBlotterCell class] forCellReuseIdentifier:cid];
     [self.view addSubview:_tableView];
     
 }
@@ -96,14 +94,36 @@ static NSString *cid = @"cid";
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json",@"text/json",nil];
     
     NSDictionary *dict;
+    NSString *url = nil;
     if ([_title isEqualToString:@"账单"]) {
         dict = @{@"key":key};
-    }else{
+        url= SUGE_PD_LOG_LSIT;
+    }else if ([_title isEqualToString:@"储值金额"]){
+        dict = @{@"key":key};
+        url= SUGE_YUE_BINADONG;
+    }else if ([_type isEqualToString:@"recharge_commis"]){
         dict = @{@"key":key,@"type":_type};
+        url= SUGE_PD_LOG_LSIT;
+    }else if ([_type isEqualToString:@"cash_pay"]){
+        dict = @{@"key":key,@"type":_type};
+        url= SUGE_PD_LOG_LSIT;
+    }else if ([_type isEqualToString:@"cash_apply"]){
+        dict = @{@"key":key,@"type":_type};
+        url= SUGE_PD_LOG_LSIT;
     }
-    [manager POST:SUGE_PD_LOG_LSIT parameters:dict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [manager POST:url parameters:dict success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"流水账:%@",responseObject);
-        BlotterDatas = responseObject[@"datas"][@"list"];
+        if ([_title isEqualToString:@"储值金额"]){
+            BlotterDatas = responseObject[@"datas"][@"recharge_list"];
+        }else{
+            BlotterDatas = responseObject[@"datas"][@"list"];
+            float sum = 0.0;
+            for (int i = 0; i < BlotterDatas.count; i++) {
+                float amount = [BlotterDatas[i][@"lg_av_amount"] floatValue];
+                sum = sum + amount;
+            }
+            [yueLabel dd_setNumber:[NSNumber numberWithFloat:sum] duration:2];
+            }
         [_tableView reloadData];
 
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -132,42 +152,13 @@ static NSString *cid = @"cid";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger row = indexPath.row;
-    UITableViewCell *cell = nil;
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cid];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
-    //
-    UIImageView *v1 = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 10, 10)];
-    v1.image = IMAGE(@"liushui3");//绿色liushui2
-    [cell addSubview:v1];
-//订单号
-    UILabel *snLabel = [[UILabel alloc] initWithFrame:CGRectMake(v1.frame.origin.x+v1.frame.size.width, 0, SCREEN_WIDTH/2, 40)];
-    snLabel.numberOfLines = 2;
-    snLabel.adjustsFontSizeToFitWidth = YES;
-    snLabel.text = BlotterDatas[row][@"lg_desc"];
-
-    [cell addSubview:snLabel];
-//时间
-    UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(snLabel.frame.origin.x+snLabel.frame.size.width, 0, SCREEN_WIDTH-snLabel.frame.origin.x-snLabel.frame.size.width-10,20)];
-    timeLabel.textAlignment = NSTextAlignmentRight;
-
-    timeLabel.text = BlotterDatas[row][@"lg_add_time"];
-    [cell addSubview:timeLabel];
-//type
-
-    UILabel *typeLabel = [[UILabel alloc] initWithFrame:CGRectMake(snLabel.frame.origin.x, snLabel.frame.origin.y+snLabel.frame.size.height, snLabel.frame.size.width, 25)];
-    typeLabel.numberOfLines = 2;
-    NSString *type1 =BlotterDatas[row][@"lg_type"];
-    typeLabel.text = [typeDic valueForKey:type1];
-    [cell addSubview:typeLabel];
-//消费
-    UILabel *wasteLabel = [[UILabel alloc]initWithFrame:CGRectMake(timeLabel.frame.origin.x,typeLabel.frame.origin.y , timeLabel.frame.size.width, 25)];
-    wasteLabel.textAlignment = NSTextAlignmentRight;
-    wasteLabel.text = BlotterDatas[row][@"lg_av_amount"];
-    [cell addSubview:wasteLabel];
     
-    
+    LBMyBlotterCell *cell = [tableView dequeueReusableCellWithIdentifier:cid];
+   if ([_title isEqualToString:@"储值金额"]){
+       [cell addValueForBlotterCell2:BlotterDatas[row]];
+   }else{
+       [cell addValueForBlotterCell1:BlotterDatas[row]];
+   }
     return cell;
 }
 
@@ -175,12 +166,14 @@ static NSString *cid = @"cid";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-//    if (![_yue isEqual:[NSNull null]]) {
-        [yueLabel dd_setNumber:[NSNumber numberWithFloat:money1] duration:2];
-//    }
 
     [MobClick beginLogPageView:@"我的推荐"];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:YES];
+    _title = nil;
 }
 
 @end

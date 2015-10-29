@@ -47,7 +47,7 @@
     }
 
     self.lianxikefu = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.lianxikefu.frame = CGRectMake(30, gradeLabel.frame.origin.y+gradeLabel.frame.size.height+5, 120, 30);
+    self.lianxikefu.frame = CGRectMake(30, gradeLabel.frame.origin.y+gradeLabel.frame.size.height+15, 120, 30);
     [self.lianxikefu setImage:IMAGE(@"lianxikehu") forState:UIControlStateNormal];
     [self addSubview:self.lianxikefu];
 

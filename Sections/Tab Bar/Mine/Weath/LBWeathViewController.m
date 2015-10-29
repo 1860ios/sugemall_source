@@ -125,8 +125,6 @@ static NSString *collectionCell=@"collectionCell";
 {
     LBMyBlotterViewController *blotter=[[LBMyBlotterViewController alloc]init];
     blotter._title = @"账单";
-//    blotter._type = @"cash_apply";
-    blotter._yue = num7;
     blotter.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:blotter animated:YES];
     
@@ -257,33 +255,41 @@ static NSString *collectionCell=@"collectionCell";
 }
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    LBMyPointViewController *point=[[LBMyPointViewController alloc]init];
-    LBMyBlotterViewController *blotter=[[LBMyBlotterViewController alloc]init];
 
     switch (indexPath.row) {
-        case 0:
+        case 0:{
+            LBMyPointViewController *point=[[LBMyPointViewController alloc]init];
+            point.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:point animated:YES];
+        }
             break;
         case 1:{
+            LBMyBlotterViewController *blotter=[[LBMyBlotterViewController alloc]init];
             blotter._title = @"提现中";
             blotter._type = @"cash_apply";
-            blotter._yue = num2;
             blotter.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:blotter animated:YES];
         }
             break;
         case 2:{
+            LBMyBlotterViewController *blotter=[[LBMyBlotterViewController alloc]init];
             blotter._title = @"已提现";
-            blotter._yue = num3;
             blotter.hidesBottomBarWhenPushed = YES;
             blotter._type = @"cash_pay";
             [self.navigationController pushViewController:blotter animated:YES];
         }
             break;
         case 3:{
+            LBMyBlotterViewController *blotter=[[LBMyBlotterViewController alloc]init];
             blotter._title = @"储值佣金";
             blotter._type = @"recharge_commis";
-            blotter._yue = num4;
+            blotter.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:blotter animated:YES];
+        }
+            break;
+        case 4:{
+            LBMyBlotterViewController *blotter=[[LBMyBlotterViewController alloc]init];
+            blotter._title = @"储值金额";
             blotter.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:blotter animated:YES];
         }

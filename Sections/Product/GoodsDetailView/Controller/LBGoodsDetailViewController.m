@@ -543,7 +543,7 @@ static NSString *collectionView_cid = @"collectionViewcid";
     }else if (section == 2){
         return 45;
     }else if (section == 3){
-        return 120;
+        return 140;
     }else{
         return 170;
     }

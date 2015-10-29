@@ -65,6 +65,9 @@
 */
 - (void)viewDidLoad {
     [super viewDidLoad];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
 
     [self getRefundData];
 

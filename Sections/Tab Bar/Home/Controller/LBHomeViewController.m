@@ -33,7 +33,7 @@
 #import "LBMyRefereeViewController.h"
 #import "LBVoucherHostViewController.h"
 #import "MJRefresh.h"
-#import "LBMyMessageViewController.h"
+//#import "LBMyMessageViewController.h"
 #import "LBBaseMethod.h"
 #import "RecipeCollectionReusableView.h"
 #import "MZTimerLabel.h"
@@ -460,12 +460,12 @@ static NSString *collectionView_header_cid = @"HeaderView";
 #pragma mark not
 - (void)pushView:(NSNotification *)not
 {
-    NSString *type =  [[not userInfo] valueForKey:@"type"];
-    if ([type isEqualToString:@"1"] ) {
-        LBMyMessageViewController *mess = [[LBMyMessageViewController alloc] init];
-        mess.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:mess animated:YES];
-    }
+//    NSString *type =  [[not userInfo] valueForKey:@"type"];
+//    if ([type isEqualToString:@"1"] ) {
+//        LBMyMessageViewController *mess = [[LBMyMessageViewController alloc] init];
+//        mess.hidesBottomBarWhenPushed = YES;
+//        [self.navigationController pushViewController:mess animated:YES];
+//    }
     
 }
 #pragma mark collectionview

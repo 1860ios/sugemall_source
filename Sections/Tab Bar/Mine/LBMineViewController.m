@@ -30,7 +30,6 @@
 #import "SVProgressHUD.h"
 #import "LBMyRefereeViewController.h"
 #import "LBMyQRCodeViewController.h"
-#import "LBMyMessageViewController.h"
 #import <RKNotificationHub.h>
 #import "XMBadgeView.h"
 #import "LBCommissionViewController.h"
@@ -373,18 +372,18 @@ static NSString *collectionView_cid = @"collectionViewcid";
     
 }
 
-- (void)goToMymessage
-{
-    BOOL isLogin = [LBUserInfo sharedUserSingleton].isLogin;
-    if (isLogin) {
-        LBMyMessageViewController *myMessage = [[LBMyMessageViewController alloc] init];
-        myMessage.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:myMessage
-                                             animated:YES];
-    }else{
-        [self goSigin];
-    }
-}
+//- (void)goToMymessage
+//{
+//    BOOL isLogin = [LBUserInfo sharedUserSingleton].isLogin;
+//    if (isLogin) {
+//        LBMyMessageViewController *myMessage = [[LBMyMessageViewController alloc] init];
+//        myMessage.hidesBottomBarWhenPushed = YES;
+//        [self.navigationController pushViewController:myMessage
+//                                             animated:YES];
+//    }else{
+//        [self goSigin];
+//    }
+//}
 
 
 #pragma mark  加载数据

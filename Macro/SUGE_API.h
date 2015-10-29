@@ -10,6 +10,23 @@
 #define SuGeMarket_SUGE_API_h
 
 #define SUGE_BASE_URL   @"http://test.sugemall.com/mobile/" //前缀
+#define SUGE_BASE_URL1   @"http://test.sugemall.com/wap/tmpl/member/article_detail.html?" //前缀
+///
+///余额充值列表
+///
+#define SUGE_PREDEPOSIT [SUGE_BASE_URL stringByAppendingString:@"index.php?act=suge_article&op=article_cover_list"]
+
+
+///
+///文章刘表
+///
+#define SUGE_ARTICLE [SUGE_BASE_URL stringByAppendingString:@"index.php?act=suge_article&op=article_cover_list"]
+
+///
+///文章详情
+///
+#define SUGE_ARTICLE_DETAIL [SUGE_BASE_URL1 stringByAppendingString:@"index.php?act=suge_article&op=article_detail"]
+
 
 /**
  *  设为默认
@@ -317,6 +334,10 @@
  key=6246ccdfcfa5fc671a67f68945b45609
  */
 #define SUGE_PD_LOG_LSIT     [SUGE_BASE_URL stringByAppendingString:@"index.php?act=predeposit&op=pd_log_list"]
+///
+///余额变动
+///
+#define SUGE_YUE_BINADONG     [SUGE_BASE_URL stringByAppendingString:@"index.php?act=predeposit&op=index"]
 
 
 //申请提现记录详情
@@ -338,7 +359,7 @@
  返回数据 qrcode_url 二维码生成地址
 */
  //消息推送
-#define SUGE_MSG  [SUGE_BASE_URL stringByAppendingString:@"index.php?act=member_index&op=msg_list"]
+#define SUGE_MSG  [SUGE_BASE_URL stringByAppendingString:@"index.php?act=suge_message&op=message_list"]
  
 
 //我的积分
@@ -1423,5 +1444,7 @@ store_id= 店铺ID
  0 核对失败，1 核对成功，2 没有实名认证
  */
 #define SUGE_VALIDATEID             [SUGE_BASE_URL stringByAppendingString:@"index.php?act=member_security&op=check_identity"]
+
+
 
 #endif

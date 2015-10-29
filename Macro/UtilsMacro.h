@@ -57,6 +57,7 @@
 
 //定义UIImage对象
 #define IMAGE(imageName) [UIImage imageNamed:[NSString stringWithFormat:@"%@",imageName]]
+#define SUGE_PIC @"dd_03_@2x"
 
 //文件目录
 #define APP_DOCUMENT                [NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]
