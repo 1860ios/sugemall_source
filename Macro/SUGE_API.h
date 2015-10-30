@@ -52,6 +52,10 @@
  */
 #define SUGE_GROUP_BUY     [SUGE_BASE_URL stringByAppendingString:@"index.php?act=suge_groupbuy"]
 
+/**
+ * 抢购详情
+ */
+#define SUGE_GROUP_BUY_DETAIL     [SUGE_BASE_URL stringByAppendingString:@"index.php?act=suge_groupbuy&op=groupbuy_detail"]
 
 /**
  *  红包

@@ -11,6 +11,8 @@
 #import "SUGE_API.h"
 #import "LBUserInfo.h"
 #import <Foundation/Foundation.h>
+#import <UIImageView+WebCache.h>
+#import "SVProgressHUD.h"
 
 @interface LBBaseMethod : NSObject
 //网络请求的GET方法

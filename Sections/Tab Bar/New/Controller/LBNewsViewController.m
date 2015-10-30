@@ -72,9 +72,9 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifier=@"UITableViewCellIdentifierKey1";
-    //首先根据标识去缓存池取
+
     UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    //如果缓存池没有到则重新创建并放到缓存池中
+    
     if(!cell){
         cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }else{

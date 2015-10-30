@@ -136,7 +136,7 @@ static NSString *cid = @"cid";
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cid];
     }
-    LBSafeViewController *safe = [[LBSafeViewController alloc] init];
+//    LBSafeViewController *safe = [[LBSafeViewController alloc] init];
 
     if (section == 0) {
         //avator

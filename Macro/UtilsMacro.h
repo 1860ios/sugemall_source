@@ -58,6 +58,9 @@
 //定义UIImage对象
 #define IMAGE(imageName) [UIImage imageNamed:[NSString stringWithFormat:@"%@",imageName]]
 #define SUGE_PIC @"dd_03_@2x"
+//ios navbar
+
+#define IOS_NAVBAR          if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0){self.edgesForExtendedLayout = UIRectEdgeNone;}
 
 //文件目录
 #define APP_DOCUMENT                [NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]

@@ -32,6 +32,13 @@
 }
 
 @end
+@interface RecipeCollectionReusableView()
+{
+    NSMutableArray *groupidArray;
+    NSMutableArray *goodsidArray;
+}
+@end
+
 @implementation RecipeCollectionReusableView
 @synthesize qianggou_group_price,qianggou_imageview,qianggou_name,qianggou_price,qianggou_time,qianggou_timer_label,qianggouScrollView,_scrollView;
 
@@ -122,20 +129,27 @@
         [qianggou_timer setCountDownTime:count_don_1]; //** Or you can use [timer3 setCountDownToDate:aDate]gsx;
         [qianggou_timer start];
         [goodsView addSubview:qianggou_timer_label];
+        
+
         //立即抢购
         UIButton *qianggou_button = [UIButton buttonWithType:UIButtonTypeCustom];
         qianggou_button.frame = CGRectMake(qianggou_time.frame.origin.x, qianggou_time.frame.origin.y+qianggou_time.frame.size.height+10, qianggou_name.frame.size.width/2, 35);
         NSString *button_text = value[i][@"button_text"];
-        if ([button_text isEqualToString:@"立即抢购"]) {
-            [qianggou_button setBackgroundColor:APP_COLOR];
-            qianggou_button.enabled = YES;
-        }else{
-            qianggou_button.enabled = NO;
-            [qianggou_button setBackgroundColor:[UIColor lightGrayColor]];
-
-        }
+        [qianggou_button setBackgroundColor:APP_COLOR];
+        qianggou_button.enabled = YES;
+//        if ([button_text isEqualToString:@"立即抢购"]) {
+//            [qianggou_button setBackgroundColor:APP_COLOR];
+//            qianggou_button.enabled = YES;
+//        }else{
+//            qianggou_button.enabled = NO;
+//            [qianggou_button setBackgroundColor:[UIColor lightGrayColor]];
+//        }
+        [groupidArray addObject:value[i][@"groupbuy_id"]];
+        [goodsidArray addObject:value[i][@"goods_id"]];
+        
         [qianggou_button setTitle:button_text forState:UIControlStateNormal];
         [qianggou_button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [qianggou_button setTag:945+i];
         qianggou_button.layer.cornerRadius = 3;
         qianggou_button.layer.masksToBounds = YES;
         [qianggou_button addTarget:self action:@selector(postQianggou_method:) forControlEvents:UIControlEventTouchUpInside];
@@ -147,9 +161,23 @@
     }
 }
 
+//后台
+- (void)releaseQianggouButton:(NSTimer *)timer
+{
+    int tag = [[[timer userInfo] valueForKey:@"buttonTag"] intValue];
+    UIButton *qianggouButton1 = (UIButton *)[self viewWithTag:945+tag];
+    [qianggouButton1 setTitle:@"立即抢购" forState:UIControlStateNormal];
+    qianggouButton1.enabled = YES;
+    [qianggouButton1 setBackgroundColor:APP_COLOR];
+}
+//抢购
 - (void)postQianggou_method:(UIButton *)btn
 {
-//    LBPurchaseViewController *purchase=[[LBPurchaseViewController alloc]init];
+    NSInteger index = btn.tag-945;
+    NSString *groupID = groupidArray[index];
+    NSString *goodsID = goodsidArray[index];
+    NSDictionary *dic1= @{@"goods_id":goodsID,@"groupbuy_id":groupID};
+    [NOTIFICATION_CENTER postNotificationName:@"POSTGROUPDETAIL" object:nil userInfo:dic1];
     
 }
 
@@ -183,6 +211,8 @@
 
 - (void)loadReHeaderView
 {
+    groupidArray = [NSMutableArray array];
+    goodsidArray = [NSMutableArray array];
     headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH,164)];
     [self addSubview:headerView];
     [self load_scrollview];

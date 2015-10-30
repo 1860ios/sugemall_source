@@ -40,17 +40,7 @@
     });
 
     
-    
 }
-//- (void)webViewDidFinishLoad:(UIWebView *)webView
-//{
-//    [SVProgressHUD dismiss];
-//}
-//- (void)webViewDidStartLoad:(UIWebView *)webView
-//{
-//    [SVProgressHUD showWithStatus:@"加载中..." maskType:SVProgressHUDMaskTypeClear] ;
-//}
-
 
 
 @end

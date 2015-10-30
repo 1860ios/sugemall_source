@@ -40,6 +40,9 @@
 #import "NotificationMacro.h"
 #import "LBShoppingCarViewController.h"
 #import "LBClassifyPageView.h"
+#import "LBGroupBuyViewControlller.h"
+
+
 @implementation UIButton (FillColor)
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor forState:(UIControlState)state {
@@ -291,6 +294,9 @@ static NSString *collectionView_header_cid = @"HeaderView";
     [NOTIFICATION_CENTER addObserver:self selector:@selector(psuhZhuanti:) name:SUGE_ZHUANTI object:nil];
     //一级分类
     [NOTIFICATION_CENTER addObserver:self selector:@selector(psuhFenlei:) name:@"pushclassify" object:nil];
+    //抢购
+    [NOTIFICATION_CENTER addObserver:self selector:@selector(psuhGROUPDETAIL:) name:@"POSTGROUPDETAIL" object:nil];
+    
     
 }
 //imageButton事件
@@ -323,10 +329,22 @@ static NSString *collectionView_header_cid = @"HeaderView";
         [self.navigationController pushViewController:goodsDetail animated:YES];
     }
 }
+//抢购详情
+- (void)psuhGROUPDETAIL:(NSNotification *)not
+{
+    NSString *goodsid = [[not userInfo] valueForKey:@"goods_id"];
+    NSString *groupid = [[not userInfo] valueForKey:@"groupbuy_id"];
+    LBGroupBuyViewControlller *groupbuy = [[LBGroupBuyViewControlller alloc] init];
+    groupbuy.goods_id = goodsid;
+    groupbuy.groupbuy_id = groupid;
+    groupbuy.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:groupbuy animated:YES];
+}
+
 //分类
 - (void)psuhFenlei:(NSNotification *)not
 {
-    NSString *gcid = [[not userInfo] valueForKey:@"gc_id"];
+//    NSString *gcid = [[not userInfo] valueForKey:@"gc_id"];
     LBClassifyPageView *classify = [LBClassifyPageView new];
     classify.nameArray = datasArray;
     classify.idArray = datas1Array;
@@ -530,9 +548,9 @@ static NSString *collectionView_header_cid = @"HeaderView";
     cell.layer.borderColor = [UIColor lightGrayColor].CGColor;
     cell.layer.borderWidth = 0.5f;
     
-    //    while ([cell.contentView.subviews lastObject]) {
-    //        [(UIView *)[cell.contentView.subviews lastObject] removeFromSuperview];
-    //    }
+//        while ([cell.contentView.subviews lastObject]) {
+//            [(UIView *)[cell.contentView.subviews lastObject] removeFromSuperview];
+//        }
     NSInteger  row = indexPath.row;
     singleGood = goodsArray[row];
     [cell addValueForCell:singleGood];

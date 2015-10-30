@@ -30,9 +30,8 @@
     self.delegate = self;
     self.title = @"分类";
     [self loadNOTIFICATION_CENTER];
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-    }
+
+    IOS_NAVBAR
     
     [super viewDidLoad];
 }
