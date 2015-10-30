@@ -84,10 +84,11 @@
     float count_don_1 = [count_don floatValue];
     [_qianggou_timer setCountDownTime:count_don_1];
     [_qianggou_timer start];
-//    [NSTimer scheduledTimerWithTimeInterval:count_don_1 target:self selector:@selector(releaseQianggouButton:) userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:i] forKey:@"buttonTag"] repeats:YES];/
-    if (count_don_1!=0) {
-        [NSTimer scheduledTimerWithTimeInterval:count_don_1 target:self selector:@selector(postNotReleaseButton:) userInfo:nil repeats:YES];
-
+    NSString *button_text = value[@"button_text"];
+    if ([button_text isEqualToString:@"即将开始"]) {
+        if (count_don_1!=0) {
+            [NSTimer scheduledTimerWithTimeInterval:count_don_1 target:self selector:@selector(postNotReleaseButton:) userInfo:nil repeats:YES];
+        }
     }
 }
 - (void)postNotReleaseButton:(NSNotification *)not

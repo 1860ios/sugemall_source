@@ -126,7 +126,7 @@
         
         NSString *count_don =  value[i][@"count_down"];
         float count_don_1 = [count_don floatValue];
-        [qianggou_timer setCountDownTime:count_don_1]; //** Or you can use [timer3 setCountDownToDate:aDate]gsx;
+        [qianggou_timer setCountDownTime:count_don_1];
         [qianggou_timer start];
         [goodsView addSubview:qianggou_timer_label];
         
@@ -137,13 +137,11 @@
         NSString *button_text = value[i][@"button_text"];
         [qianggou_button setBackgroundColor:APP_COLOR];
         qianggou_button.enabled = YES;
-//        if ([button_text isEqualToString:@"立即抢购"]) {
-//            [qianggou_button setBackgroundColor:APP_COLOR];
-//            qianggou_button.enabled = YES;
-//        }else{
-//            qianggou_button.enabled = NO;
-//            [qianggou_button setBackgroundColor:[UIColor lightGrayColor]];
-//        }
+        if ([button_text isEqualToString:@"即将开始"]) {
+            if (count_don_1!=0) {
+                [NSTimer scheduledTimerWithTimeInterval:count_don_1 target:self selector:@selector(releaseQianggouButton:) userInfo:nil repeats:YES];
+            }
+        }
         [groupidArray addObject:value[i][@"groupbuy_id"]];
         [goodsidArray addObject:value[i][@"goods_id"]];
         
@@ -164,11 +162,7 @@
 //后台
 - (void)releaseQianggouButton:(NSTimer *)timer
 {
-    int tag = [[[timer userInfo] valueForKey:@"buttonTag"] intValue];
-    UIButton *qianggouButton1 = (UIButton *)[self viewWithTag:945+tag];
-    [qianggouButton1 setTitle:@"立即抢购" forState:UIControlStateNormal];
-    qianggouButton1.enabled = YES;
-    [qianggouButton1 setBackgroundColor:APP_COLOR];
+    [NOTIFICATION_CENTER postNotificationName:@"POSTNOT_UPDATE_DATAS" object:nil];
 }
 //抢购
 - (void)postQianggou_method:(UIButton *)btn

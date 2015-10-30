@@ -296,6 +296,8 @@ static NSString *collectionView_header_cid = @"HeaderView";
     [NOTIFICATION_CENTER addObserver:self selector:@selector(psuhFenlei:) name:@"pushclassify" object:nil];
     //抢购
     [NOTIFICATION_CENTER addObserver:self selector:@selector(psuhGROUPDETAIL:) name:@"POSTGROUPDETAIL" object:nil];
+    //更新抢购数据
+    [NOTIFICATION_CENTER addObserver:self selector:@selector(updateQianggou:) name:@"POSTNOT_UPDATE_DATAS" object:nil];
     
     
 }
@@ -329,6 +331,13 @@ static NSString *collectionView_header_cid = @"HeaderView";
         [self.navigationController pushViewController:goodsDetail animated:YES];
     }
 }
+//更新抢购数据
+- (void)updateQianggou:(NSNotification *)not
+{
+    [self requestQianggouDatas:@"16,18,20"];
+}
+
+
 //抢购详情
 - (void)psuhGROUPDETAIL:(NSNotification *)not
 {
